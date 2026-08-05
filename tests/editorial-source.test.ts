@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { loadNews, loadNewsRoutes, loadTopThrees } from "../src/data/editorial";
+import {
+  canRegisterForActivity,
+  loadActivityRoutes,
+  loadNews,
+  loadNewsRoutes,
+  loadTopThrees,
+} from "../src/data/editorial";
 import { createLudoHubClient } from "../src/lib/ludohub";
 
 const ludo = { slug: "paquis-secheron", name: "Pâquis-Sécheron" };
@@ -104,6 +110,96 @@ describe("sélection de la source éditoriale", () => {
       body: ["Titre", "Premier paragraphe.", "<script>privé</script>"],
     });
     expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("disponibilité du formulaire d'inscription", () => {
+  const registration = {
+    enabled: true,
+    capacity: 10,
+    isAtCapacity: false,
+    fullMessage: null,
+  };
+
+  it("refuse toujours une activité archivée, même avec enabled=true", () => {
+    expect(canRegisterForActivity({
+      archived: true,
+      detailAvailable: true,
+      registration,
+    }, "live")).toBe(false);
+  });
+
+  it("exige une fiche live détaillée et explicitement activée", () => {
+    expect(canRegisterForActivity({
+      archived: false,
+      detailAvailable: true,
+      registration,
+    }, "live")).toBe(true);
+    expect(canRegisterForActivity({
+      archived: false,
+      detailAvailable: true,
+      registration,
+    }, "demo")).toBe(false);
+  });
+
+  it("rejette un détail archivé encore inscrit derrière une liste active", async () => {
+    const schedule = {
+      type: "permanent",
+      recurrenceRule: null,
+      dates: [],
+    };
+    const activity = {
+      id: "activity-live",
+      slug: "activity-live",
+      title: "Activité",
+      summary: "Résumé",
+      location: null,
+      image: null,
+      lifecycle: "active",
+      featuredRank: null,
+      publishedAt,
+      schedule,
+    };
+    const fetcher = vi.fn().mockImplementation((url: URL) => {
+      if (url.pathname.endsWith("/activities/archive")) {
+        return Promise.resolve(response({
+          ludo,
+          site: null,
+          timeZone: "Europe/Zurich",
+          activities: [],
+        }));
+      }
+      if (url.pathname.endsWith("/activities/activity-live")) {
+        return Promise.resolve(response({
+          ludo,
+          site: null,
+          timeZone: "Europe/Zurich",
+          activity: {
+            ...activity,
+            lifecycle: "archived",
+            bodyMarkdown: "Détail",
+            schedule: { ...schedule, exceptions: [] },
+            registration,
+          },
+        }));
+      }
+      return Promise.resolve(response({
+        ludo,
+        site: null,
+        timeZone: "Europe/Zurich",
+        activities: [activity],
+      }));
+    });
+    const content = await loadActivityRoutes(createLudoHubClient({
+      baseUrl: "https://ludohub.example",
+      fetch: fetcher,
+    }));
+    expect(content.items[0]).toMatchObject({
+      archived: false,
+      detailAvailable: false,
+      registration: null,
+    });
+    expect(canRegisterForActivity(content.items[0], content.mode)).toBe(false);
   });
 });
 

@@ -93,6 +93,12 @@ export type ActivitySchedule = {
   exceptions: Array<{ excludedAt: string; reason: string | null }>;
 };
 export type ActivitySchedulePreview = Omit<ActivitySchedule, "exceptions">;
+export type ActivityRegistration = {
+  enabled: boolean;
+  capacity: number | null;
+  isAtCapacity: boolean;
+  fullMessage: string | null;
+};
 export type ActivitySummary = {
   id: string;
   slug: string;
@@ -108,6 +114,7 @@ export type ActivitySummary = {
 export type ActivityItem = Omit<ActivitySummary, "schedule"> & {
   bodyMarkdown: string;
   schedule: ActivitySchedule;
+  registration: ActivityRegistration;
 };
 export type ActivitiesPayload = {
   ludo: Ludo;
@@ -117,6 +124,12 @@ export type ActivitiesPayload = {
 };
 export type ActivityDetailPayload = Omit<ActivitiesPayload, "activities"> & {
   activity: ActivityItem;
+};
+export type ActivityRegistrationReceipt = {
+  accepted: true;
+  receiptId: string;
+  status: "received" | "waitlisted";
+  message: string;
 };
 
 export type TopThreeSummary = {

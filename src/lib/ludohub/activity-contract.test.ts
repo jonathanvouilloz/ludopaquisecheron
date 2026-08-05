@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { activityDetailPayload, documentsPayload } from "./validators.js";
+import {
+  activityDetailPayload,
+  activityRegistrationReceipt,
+  ACTIVITY_RECEIVED_MESSAGE,
+  ACTIVITY_WAITLIST_MESSAGE,
+  documentsPayload,
+} from "./validators.js";
 
 const ludo = { slug: "paquis-secheron", name: "Pâquis-Sécheron" };
 const context = { ludo, site: null };
@@ -15,11 +21,120 @@ const activityBase = {
   featuredRank: null,
   publishedAt: "2026-08-05T12:30:00+02:00",
   bodyMarkdown: "Détail",
+  registration: {
+    enabled: true,
+    capacity: 12,
+    isAtCapacity: false,
+    fullMessage: null,
+  },
 };
 const detailWith = (schedule: Record<string, unknown>) => ({
   ...context,
   timeZone: "Europe/Zurich",
   activity: { ...activityBase, schedule },
+});
+
+describe("contrat d'inscription aux activités", () => {
+  it("exige et projette les informations publiques d'inscription", () => {
+    const parsed = activityDetailPayload(
+      detailWith({ type: "permanent", recurrenceRule: null, dates: [], exceptions: [] }),
+    );
+    expect(parsed?.activity.registration).toEqual(activityBase.registration);
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: { ...parsed?.activity, registration: undefined },
+    })).toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        registration: {
+          ...activityBase.registration,
+          isAtCapacity: true,
+          fullMessage: ACTIVITY_WAITLIST_MESSAGE,
+        },
+      },
+    })).not.toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        registration: {
+          ...activityBase.registration,
+          isAtCapacity: true,
+          fullMessage: "Texte distant arbitraire",
+        },
+      },
+    })).toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        registration: { ...activityBase.registration, isAtCapacity: true },
+      },
+    })).toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        registration: {
+          enabled: false,
+          capacity: null,
+          isAtCapacity: false,
+          fullMessage: null,
+        },
+      },
+    })).not.toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        lifecycle: "archived",
+        registration: activityBase.registration,
+      },
+    })).toBeNull();
+    expect(activityDetailPayload({
+      ...parsed,
+      activity: {
+        ...parsed?.activity,
+        registration: { ...activityBase.registration, capacity: 0 },
+      },
+    })).toBeNull();
+  });
+
+  it("n'accepte qu'un reçu strict received ou waitlisted", () => {
+    const valid = {
+      accepted: true,
+      receiptId: "registration-42",
+      status: "waitlisted",
+      message: ACTIVITY_WAITLIST_MESSAGE,
+      internal: "secret",
+    };
+    expect(activityRegistrationReceipt(valid)).toEqual({
+      accepted: true,
+      receiptId: "registration-42",
+      status: "waitlisted",
+      message: ACTIVITY_WAITLIST_MESSAGE,
+    });
+    expect(activityRegistrationReceipt({ ...valid, accepted: false })).toBeNull();
+    expect(activityRegistrationReceipt({ ...valid, receiptId: "" })).toBeNull();
+    expect(activityRegistrationReceipt({ ...valid, status: "confirmed" })).toBeNull();
+    expect(activityRegistrationReceipt({
+      ...valid,
+      status: "received",
+      message: ACTIVITY_WAITLIST_MESSAGE,
+    })).toBeNull();
+    expect(activityRegistrationReceipt({
+      ...valid,
+      status: "received",
+      message: ACTIVITY_RECEIVED_MESSAGE,
+    })).toMatchObject({ status: "received", message: ACTIVITY_RECEIVED_MESSAGE });
+    expect(activityRegistrationReceipt({
+      ...valid,
+      message: `${ACTIVITY_WAITLIST_MESSAGE} secret`,
+    })).toBeNull();
+    expect(ACTIVITY_WAITLIST_MESSAGE.match(/Nous vous contacterons si une place se libère\./g)).toHaveLength(1);
+  });
 });
 
 describe("contrat précis des calendriers d'activité", () => {

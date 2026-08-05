@@ -1,6 +1,7 @@
 import { ludohub, type LudoHubClient } from "../lib/ludohub";
 import type {
   ActivitiesPayload,
+  ActivityRegistration,
   DocumentsPayload,
   GalleryPayload,
   NewsPayload,
@@ -32,7 +33,20 @@ export type ActivityView = NewsView & {
   schedule: string;
   archived: boolean;
   featuredRank: number | null;
+  registration: ActivityRegistration | null;
 };
+
+export function canRegisterForActivity(
+  item: Pick<ActivityView, "archived" | "detailAvailable" | "registration">,
+  sourceMode: EditorialSource["mode"],
+): boolean {
+  return (
+    sourceMode === "live" &&
+    !item.archived &&
+    item.detailAvailable &&
+    item.registration?.enabled === true
+  );
+}
 export type TopThreeView = {
   slug: string;
   theme: string;
@@ -116,6 +130,7 @@ const demoActivities: ActivityView[] = [
     status: "demo",
     archived: false,
     featuredRank: 1,
+    registration: null,
     detailAvailable: true,
   },
 ];
@@ -134,6 +149,7 @@ const demoArchivedActivities: ActivityView[] = [
     status: "demo",
     archived: true,
     featuredRank: null,
+    registration: null,
     detailAvailable: true,
   },
 ];
@@ -407,6 +423,7 @@ export async function loadActivities(
       status: "live",
       archived: item.lifecycle === "archived",
       featuredRank: item.featuredRank,
+      registration: null,
       detailAvailable: false,
     })),
   };
@@ -438,6 +455,8 @@ export async function loadActivityRoutes(
         location: item.location || result.data.site || "Les deux lieux",
         schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
         dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
+        archived: item.lifecycle === "archived",
+        registration: item.registration,
         detailAvailable: true,
       };
     }),

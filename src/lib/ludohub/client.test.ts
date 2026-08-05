@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createLudoHubClient } from "./client.js";
-import { publicContactEndpoint, readLudoHubConfig } from "./config.js";
+import {
+  publicActivityRegistrationEndpoint,
+  publicContactEndpoint,
+  readLudoHubConfig,
+} from "./config.js";
 import type { SitesPayload } from "./types.js";
 
 const sites: SitesPayload = {
@@ -358,6 +362,16 @@ describe("configuration contact public", () => {
     expect(config.tenantSlug).toBe("paquis-secheron");
     expect(publicContactEndpoint(config)).toBe(
       "https://ludohub.example/api/public/contact/v1/paquis-secheron",
+    );
+  });
+
+  it("dérive et encode l'endpoint d'inscription séparé", () => {
+    const config = readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: "https://ludohub.example",
+      LUDOHUB_PUBLIC_LUDO_SLUG: "tenant test",
+    });
+    expect(publicActivityRegistrationEndpoint("été/2026", config)).toBe(
+      "https://ludohub.example/api/public/registrations/v1/tenant%20test/activities/%C3%A9t%C3%A9%2F2026",
     );
   });
 });

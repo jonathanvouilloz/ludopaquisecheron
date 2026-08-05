@@ -1,6 +1,7 @@
 import type {
   ActivitiesPayload,
   ActivityDetailPayload,
+  ActivityRegistrationReceipt,
   ActivitySchedule,
   ActivitySchedulePreview,
   AnnouncementsPayload,
@@ -482,8 +483,40 @@ const parseActivityItem = (value: unknown) => {
   const base = parseActivityBase(value);
   const bodyMarkdown = text(source?.bodyMarkdown);
   const schedule = parseSchedule(source?.schedule, true);
-  return source && base && bodyMarkdown !== null && schedule
-    ? { ...base, bodyMarkdown, schedule }
+  const registrationSource = record(source?.registration);
+  const capacity = registrationSource
+    ? registrationSource.capacity === null
+      ? null
+      : integer(registrationSource.capacity)
+    : null;
+  const registration =
+    registrationSource &&
+    typeof registrationSource.enabled === "boolean" &&
+    (registrationSource.capacity === null ||
+      (capacity !== null && capacity > 0)) &&
+    typeof registrationSource.isAtCapacity === "boolean" &&
+    nullableText(registrationSource.fullMessage) &&
+    (!registrationSource.enabled
+      ? registrationSource.capacity === null &&
+        registrationSource.isAtCapacity === false &&
+        registrationSource.fullMessage === null
+      : registrationSource.isAtCapacity
+        ? registrationSource.fullMessage === ACTIVITY_WAITLIST_MESSAGE
+        : registrationSource.fullMessage === null) &&
+    (base?.lifecycle !== "archived" ||
+      (registrationSource.enabled === false &&
+        registrationSource.capacity === null &&
+        registrationSource.isAtCapacity === false &&
+        registrationSource.fullMessage === null))
+      ? {
+          enabled: registrationSource.enabled,
+          capacity,
+          isAtCapacity: registrationSource.isAtCapacity,
+          fullMessage: registrationSource.fullMessage,
+        }
+      : null;
+  return source && base && bodyMarkdown !== null && schedule && registration
+    ? { ...base, bodyMarkdown, schedule, registration }
     : null;
 };
 const parseActivityContext = (source: RecordValue) => {
@@ -504,6 +537,29 @@ export const activityDetailPayload: Parser<ActivityDetailPayload> = (value) => {
   const activity = parseActivityItem(source?.activity);
   return source && context && activity ? { ...context, activity } : null;
 };
+
+export const activityRegistrationReceipt: Parser<ActivityRegistrationReceipt> = (
+  value,
+) => {
+  const source = record(value);
+  const receiptId = nonEmpty(source?.receiptId);
+  const status = oneOf(source?.status, ["received", "waitlisted"] as const);
+  const message = text(source?.message);
+  return source &&
+    source.accepted === true &&
+    receiptId &&
+    status &&
+    message &&
+    ((status === "received" && message === ACTIVITY_RECEIVED_MESSAGE) ||
+      (status === "waitlisted" && message === ACTIVITY_WAITLIST_MESSAGE))
+    ? { accepted: true, receiptId, status, message }
+    : null;
+};
+
+export const ACTIVITY_WAITLIST_MESSAGE =
+  "Nous vous contacterons si une place se libère.";
+export const ACTIVITY_RECEIVED_MESSAGE =
+  "Votre inscription a bien été reçue.";
 
 const parseTopThreeBase = (value: unknown) => {
   const source = record(value);

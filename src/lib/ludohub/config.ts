@@ -63,3 +63,13 @@ export function publicContactEndpoint(
   url.pathname = `${url.pathname.replace(/\/api\/public\/v1$/, "/api/public/contact/v1")}/${encodeURIComponent(config.tenantSlug)}`;
   return url.toString();
 }
+
+export function publicActivityRegistrationEndpoint(
+  activitySlug: string,
+  config = readLudoHubConfig(),
+): string | null {
+  if (!config.apiBase || !activitySlug.trim()) return null;
+  const url = new URL(config.apiBase);
+  url.pathname = `${url.pathname.replace(/\/api\/public\/v1$/, "/api/public/registrations/v1")}/${encodeURIComponent(config.tenantSlug)}/activities/${encodeURIComponent(activitySlug)}`;
+  return url.toString();
+}

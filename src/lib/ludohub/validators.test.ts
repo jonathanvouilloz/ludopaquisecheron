@@ -40,6 +40,12 @@ const oneOffSchedule = {
   recurrenceRule: null,
   dates: [{ startsAt: publishedAt, endsAt: "2026-08-05T14:30:00+02:00" }],
 };
+const activityRegistration = {
+  enabled: true,
+  capacity: null,
+  isAtCapacity: false,
+  fullMessage: null,
+};
 
 describe("projection récursive", () => {
   it("recrée le payload et supprime les clés inconnues à tous les niveaux", () => {
@@ -244,6 +250,7 @@ describe("activités", () => {
         activity: {
           ...activityBase,
           bodyMarkdown: "Détail",
+          registration: activityRegistration,
           schedule: {
             ...oneOffSchedule,
             dates: Array(367).fill(oneOffSchedule.dates[0]),
@@ -262,6 +269,7 @@ describe("activités", () => {
         activity: {
           ...activityBase,
           bodyMarkdown: "Détail",
+          registration: activityRegistration,
           schedule: {
             type: "permanent",
             recurrenceRule: null,
