@@ -1,0 +1,79 @@
+:root {
+  --color-brand: #4a57c8;
+  --color-brand-dark: #313a92;
+  --color-brand-mid: #6e79d3;
+  --color-brand-muted: #929ade;
+  --color-brand-pale: #b7bce9;
+  --color-brand-soft: #dbddf4;
+  --color-accent: #be5b45;
+  --color-accent-soft: #f0d8d2;
+  --color-secondary: #4a57c8;
+  --color-highlight: #f4d43e;
+  --color-surface: #fffefb;
+  --color-surface-soft: #fffefb;
+  --color-ink: #22233e;
+  --color-ink-muted: #565a73;
+  --color-border: #d8daf2;
+  --color-success: #26734d;
+  --color-danger: #a83232;
+  --color-on-brand: #fffefb;
+  --color-on-brand-muted: #e5e7fb;
+  --color-age-label: var(--color-highlight);
+  --color-shadow-rgb: 49 58 146;
+
+  --font-display: 'Bubblegum Sans', 'Fredoka', sans-serif;
+  --font-ui: 'Fredoka', 'Open Sans', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+
+  --text-display-xl: clamp(3.5rem, 8vw, 6.75rem);
+  --text-display-lg: clamp(2.8rem, 6vw, 5rem);
+  --text-heading-lg: clamp(1.8rem, 3vw, 2.5rem);
+  --text-heading-md: 1.375rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-label: 0.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-pill: 999px;
+  --radius-organic: 42% 58% 55% 45% / 45% 42% 58% 55%;
+
+  --shadow-card: 0 6px 0 rgb(var(--color-shadow-rgb) / 10%);
+  --shadow-card-hover: 0 3px 0 rgb(var(--color-shadow-rgb) / 12%);
+  --shadow-control: 0 3px 0 rgb(34 35 62 / 12%);
+  --max-content: 70rem;
+  --max-reading: 45rem;
+  --transition-tactile: 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-gentle: 280ms ease;
+}
+
+html[data-ludo-theme='secheron'] {
+  --color-brand: #69b34c;
+  --color-brand-dark: #245c35;
+  --color-brand-mid: #8bc874;
+  --color-brand-muted: #b0da9e;
+  --color-brand-pale: #d3ecc9;
+  --color-brand-soft: #edf7e8;
+  --color-accent: #ff6b4a;
+  --color-accent-soft: #ffe0d8;
+  --color-secondary: #3532b6;
+  --color-highlight: #ffc928;
+  --color-border: #d5e6cf;
+  --color-on-brand: #162412;
+  --color-on-brand-muted: #243e2b;
+  --color-age-label: #245c35;
+  --color-shadow-rgb: 36 92 53;
+}

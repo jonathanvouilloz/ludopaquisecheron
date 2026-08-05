@@ -1,0 +1,17 @@
+---
+import type { AgeGroup } from '../data/site'
+
+interface Props {
+  group: AgeGroup
+}
+
+const { group } = Astro.props
+---
+
+<a class:list={['age-card', `accent-${group.accent}`]} href={`#age-${group.key}`}>
+  <span class="age-card__symbol" aria-hidden="true"><i class={`ph ph-${group.icon}`}></i></span>
+  <span class="age-card__range">{group.range}</span>
+  <strong>{group.title}</strong>
+  <span>{group.description}</span>
+  <em>Voir la sélection <i class="ph ph-arrow-right" aria-hidden="true"></i></em>
+</a>

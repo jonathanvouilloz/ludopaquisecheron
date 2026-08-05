@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import WaveDivider from '../components/WaveDivider.astro'
+import ButtonLink from '../components/ButtonLink.astro'
+import SectionHeading from '../components/SectionHeading.astro'
+import AgeCard from '../components/AgeCard.astro'
+import GameCard from '../components/GameCard.astro'
+import LocationCard from '../components/LocationCard.astro'
+import { ageGroups, featuredGames, locations } from '../data/site'
+
+const homeGames = [
+  featuredGames.find((game) => game.name === 'Little Mémo')!,
+  featuredGames.find((game) => game.name === 'Blokus')!,
+  featuredGames.find((game) => game.name === '6 qui prend !')!,
+]
+---
+
+<BaseLayout title="Ludothèque Pâquis-Sécheron — Deux lieux, mille façons de jouer">
+  <p class="work-notice">Aperçu de travail · les horaires et coordonnées doivent être confirmés avant publication</p>
+  <Header />
+
+  <main id="contenu">
+    <section class="hero">
+      <div class="shell hero__grid">
+        <div>
+          <h1>Deux lieux,<br /><span class="highlight">mille façons</span><br />de jouer.</h1>
+          <p class="hero__lead">Aux Pâquis et à Sécheron, venez jouer sur place, découvrir de nouveaux jeux et partager un moment avec d’autres familles.</p>
+          <div class="hero__actions">
+            <ButtonLink href="#infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
+            <ButtonLink href="#jeux-par-age" variant="outline">Choisir un jeu</ButtonLink>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-label="Entrée de la ludothèque des Pâquis">
+          <div class="hero-art__photo">
+            <img src="/images/exterieur-paquis.png" alt="Entrée de la ludothèque des Pâquis" width="354" height="354" />
+          </div>
+          <span class="hero-art__shape hero-art__shape--rose" aria-hidden="true"><i class="ph ph-star-four"></i></span>
+          <span class="hero-art__shape hero-art__shape--yellow" aria-hidden="true">●</span>
+          <span class="hero-art__dots" aria-hidden="true">{Array.from({ length: 12 }, () => <i></i>)}</span>
+        </div>
+      </div>
+    </section>
+
+    <WaveDivider tone="brand" rider />
+
+    <section class="section section--brand" id="jeux-par-age">
+      <div class="shell">
+        <SectionHeading
+          title="On commence par quel âge ?"
+          description="Quatre portes d’entrée simples. Chaque sélection présentera trois coups de cœur choisis par l’équipe, sans transformer le site en catalogue géant."
+          inverse
+        />
+        <div class="age-grid">
+          {ageGroups.map((group) => <AgeCard group={group} />)}
+        </div>
+      </div>
+    </section>
+
+    <WaveDivider tone="cutout" flip />
+
+    <section class="section section--surface">
+      <div class="shell games-showcase">
+        <div class="games-showcase__intro">
+          <h2>Trois jeux à essayer cette semaine</h2>
+          <p>Les exemples viennent du contenu archivé. À terme, l’équipe changera directement ces sélections depuis LudoHub.</p>
+          <ButtonLink href="#jeux-par-age" variant="brand">Toutes les sélections</ButtonLink>
+        </div>
+        <div class="game-list">
+          {homeGames.map((game, index) => <GameCard game={game} rank={index + 1} />)}
+        </div>
+      </div>
+    </section>
+
+    <div class="toy-separator" aria-hidden="true"><i class="ph ph-circle"></i><i class="ph ph-square"></i><i class="ph ph-star-four"></i><i class="ph ph-triangle"></i></div>
+
+    <section class="section section--surface section--locations" id="infos-pratiques">
+      <div class="shell">
+        <SectionHeading
+          title="Choisissez votre ludothèque"
+          description="Les deux lieux partagent la même équipe et le même esprit d’accueil, avec des adresses et horaires propres."
+        />
+        <div class="location-grid">
+          {locations.map((location) => <LocationCard location={location} />)}
+        </div>
+      </div>
+    </section>
+
+    <WaveDivider tone="brand" flip />
+
+    <section class="section section--brand" id="association">
+      <div class="shell manifesto-grid">
+        <div class="manifesto-mark" aria-hidden="true">Joue !</div>
+        <div class="manifesto-copy">
+          <h2>Un lieu pour se rencontrer et grandir ensemble.</h2>
+          <p>L’équipe conseille, explique les règles, accompagne les parties et prépare des espaces de jeu pour tous les âges. L’association crée un cadre ouvert où enfants, familles et institutions trouvent leur place.</p>
+          <div class="promise-list" aria-label="Les engagements de la ludothèque">
+            <span>Jouer librement sur place</span>
+            <span>Être conseillé sans jugement</span>
+            <span>Emprunter des jeux variés</span>
+            <span>Partager entre générations</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WaveDivider tone="cutout" />
+
+    <section class="section section--surface" id="actualites">
+      <div class="shell">
+        <SectionHeading
+          title="À retrouver bientôt"
+          description="Ces blocs montrent les futurs contenus dynamiques. Aucune fausse actualité n’est publiée dans le prototype."
+        />
+        <div class="editorial-grid">
+          <article class="editorial-card">
+            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-newspaper-clipping"></i></div>
+            <h3>Actualités</h3>
+            <p>Fermetures, rendez-vous et nouvelles de l’association seront publiés depuis LudoHub.</p>
+          </article>
+          <article class="editorial-card" id="activites">
+            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-calendar-dots"></i></div>
+            <h3>Activités</h3>
+            <p>Pré-ados, jeux & goûter, animations et accueils institutionnels auront leurs pages détaillées.</p>
+          </article>
+          <article class="editorial-card">
+            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-images"></i></div>
+            <h3>Galerie</h3>
+            <p>Des images choisies et légendées raconteront les espaces et les temps forts de la ludothèque.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <WaveDivider tone="dark" flip />
+  <Footer />
+</BaseLayout>

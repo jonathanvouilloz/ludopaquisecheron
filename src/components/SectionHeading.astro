@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string
+  description?: string
+  inverse?: boolean
+  align?: 'left' | 'center'
+}
+
+const { title, description, inverse = false, align = 'left' } = Astro.props
+---
+
+<header class:list={['section-heading', { 'section-heading--inverse': inverse, 'section-heading--center': align === 'center' }]}>
+  <h2>{title}</h2>
+  {description && <p class="section-heading__copy">{description}</p>}
+</header>

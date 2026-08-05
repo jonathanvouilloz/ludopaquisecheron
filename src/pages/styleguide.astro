@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import WaveDivider from '../components/WaveDivider.astro'
+import ButtonLink from '../components/ButtonLink.astro'
+import AgeCard from '../components/AgeCard.astro'
+import GameCard from '../components/GameCard.astro'
+import LocationCard from '../components/LocationCard.astro'
+import { ageGroups, featuredGames, locations } from '../data/site'
+
+const swatches = [
+  { name: 'Bleu Ludo', value: '#4A57C8', token: '--color-brand' },
+  { name: 'Bleu moyen', value: '#6E79D3', token: '--color-brand-mid' },
+  { name: 'Pervenche', value: '#929ADE', token: '--color-brand-muted' },
+  { name: 'Bleu clair', value: '#B7BCE9', token: '--color-brand-pale' },
+  { name: 'Brume bleue', value: '#DBDDF4', token: '--color-brand-soft' },
+  { name: 'Rose terre', value: '#BE5B45', token: '--color-accent' },
+  { name: 'Jaune jeu', value: '#F4D43E', token: '--color-highlight' },
+  { name: 'Vert Sécheron', value: '#69B34C', token: '--theme-secheron-primary' },
+  { name: 'Vert forêt', value: '#245C35', token: '--theme-secheron-dark' },
+  { name: 'Violet Sécheron', value: '#3532B6', token: '--theme-secheron-secondary' },
+  { name: 'Corail Sécheron', value: '#FF6B4A', token: '--theme-secheron-accent' },
+  { name: 'Encre', value: '#22233E', token: '--color-ink' },
+]
+---
+
+<BaseLayout title="Styleguide — Ludothèque Pâquis-Sécheron" noindex>
+  <Header activePath="/styleguide" />
+  <main id="contenu">
+    <section class="styleguide-hero">
+      <div class="shell">
+        <h1>Ondes de jeu</h1>
+        <p>Une identité joyeuse et locale construite avec des aplats francs, des vagues organiques et une typographie ronde — inspirée par l’énergie de SoundCarrot, adaptée à un service public de quartier.</p>
+        <ButtonLink href="/" variant="light">Voir la page d’accueil</ButtonLink>
+      </div>
+    </section>
+
+    <WaveDivider tone="cutout" />
+
+    <section class="styleguide-section">
+      <div class="shell">
+        <h2>Palette</h2>
+        <div class="swatch-grid">
+          {swatches.map((swatch) => (
+            <article class="swatch">
+              <div class="swatch__color" style={`--swatch: ${swatch.value}`}></div>
+              <div class="swatch__meta"><strong>{swatch.name}</strong><code>{swatch.value} · {swatch.token}</code></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="styleguide-section">
+      <div class="shell">
+        <h2>Typographie</h2>
+        <div class="type-specimen">
+          <div><p class="eyebrow">Bubblegum Sans · Display</p><p class="display">Mille façons de jouer.</p></div>
+          <div><p class="eyebrow">Fredoka · Interface</p><p class="ui">Jeux par âge · Voir les horaires · Aux Pâquis</p></div>
+          <div><p class="eyebrow">Open Sans · Lecture</p><p>La ludothèque accueille les enfants, les familles, les adultes, les seniors et les institutions. Le texte reste simple, généreux et facile à parcourir.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="styleguide-section">
+      <div class="shell">
+        <h2>Boutons</h2>
+        <div class="component-row">
+          <ButtonLink href="#">Action principale</ButtonLink>
+          <ButtonLink href="#" variant="brand">Action indigo</ButtonLink>
+          <ButtonLink href="#" variant="outline">Action secondaire</ButtonLink>
+        </div>
+      </div>
+    </section>
+
+    <section class="styleguide-section section--brand">
+      <div class="shell">
+        <h2 style="color: var(--color-surface)">Choisir par âge</h2>
+        <div class="age-grid">{ageGroups.map((group) => <AgeCard group={group} />)}</div>
+      </div>
+    </section>
+
+    <WaveDivider tone="cutout" />
+
+    <section class="styleguide-section">
+      <div class="shell">
+        <h2>Cartes de contenu</h2>
+        <div class="component-stack">
+          <div class="game-list">
+            {featuredGames.slice(0, 2).map((game, index) => <GameCard game={game} rank={index + 1} />)}
+          </div>
+          <div class="location-grid">
+            {locations.map((location) => <LocationCard location={location} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="styleguide-section section--soft">
+      <div class="shell">
+        <h2>Vagues et rythme</h2>
+        <p class="reading-width">Les vagues séparent les grands chapitres. Elles sont structurelles, décoratives et toujours ignorées par les technologies d’assistance.</p>
+      </div>
+    </section>
+  </main>
+
+  <WaveDivider tone="dark" flip />
+  <Footer />
+</BaseLayout>

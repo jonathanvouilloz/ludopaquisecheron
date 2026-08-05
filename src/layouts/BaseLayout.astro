@@ -1,0 +1,48 @@
+---
+import '../styles/global.css'
+import '@phosphor-icons/web/regular'
+
+interface Props {
+  title: string
+  description?: string
+  noindex?: boolean
+}
+
+const {
+  title,
+  description = 'Deux ludothèques de quartier pour jouer, découvrir et partager à Genève.',
+  noindex = false,
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="fr" data-ludo-theme="paquis">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        try {
+          const storedTheme = localStorage.getItem('ludo-theme')
+          document.documentElement.dataset.ludoTheme = storedTheme === 'secheron' ? 'secheron' : 'paquis'
+        } catch {
+          document.documentElement.dataset.ludoTheme = 'paquis'
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <slot />
+  </body>
+</html>

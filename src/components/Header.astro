@@ -1,0 +1,103 @@
+---
+import { navigation } from '../data/site'
+
+interface Props {
+  activePath?: string
+}
+
+const { activePath = '/' } = Astro.props
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner shell">
+    <a class="wordmark" href="/" aria-label="Ludothèque Pâquis-Sécheron — Accueil">
+      <span class="wordmark__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><strong>Ludo</strong><small>Pâquis · Sécheron</small></span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Navigation principale">
+      {navigation.map((item) => (
+        <a href={item.href} aria-current={activePath === item.href ? 'page' : undefined}>
+          <i class={`ph ph-${item.icon}`} aria-hidden="true"></i><span>{item.label}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="ludo-switch" data-ludo-switch role="group" aria-label="Choisir l’ambiance de la ludothèque">
+      <button type="button" data-theme-value="paquis" aria-pressed="true"><span aria-hidden="true"></span>Pâquis</button>
+      <button type="button" data-theme-value="secheron" aria-pressed="false"><span aria-hidden="true"></span>Sécheron</button>
+    </div>
+
+    <details class="mobile-menu">
+      <summary aria-label="Ouvrir le menu"><i class="ph ph-list" aria-hidden="true"></i></summary>
+      <nav aria-label="Navigation mobile">
+        <div class="ludo-switch ludo-switch--mobile" data-ludo-switch role="group" aria-label="Choisir l’ambiance de la ludothèque">
+          <button type="button" data-theme-value="paquis" aria-pressed="true"><span aria-hidden="true"></span>Pâquis</button>
+          <button type="button" data-theme-value="secheron" aria-pressed="false"><span aria-hidden="true"></span>Sécheron</button>
+        </div>
+        {navigation.map((item) => (
+          <a href={item.href} aria-current={activePath === item.href ? 'page' : undefined}>
+            <i class={`ph ph-${item.icon}`} aria-hidden="true"></i>{item.label}
+          </a>
+        ))}
+        <a class="button button--brand" href="#infos-pratiques"><i class="ph ph-clock" aria-hidden="true"></i>Voir les horaires</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]')
+  const mobileMenu = header?.querySelector<HTMLDetailsElement>('.mobile-menu')
+  const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-theme-value]')
+
+  const applyTheme = (theme: 'paquis' | 'secheron') => {
+    document.documentElement.dataset.ludoTheme = theme
+    themeButtons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.themeValue === theme))
+    })
+    try {
+      localStorage.setItem('ludo-theme', theme)
+    } catch {
+      // Le thème reste actif pour la session si le stockage est indisponible.
+    }
+  }
+
+  const initialTheme = document.documentElement.dataset.ludoTheme === 'secheron' ? 'secheron' : 'paquis'
+  applyTheme(initialTheme)
+
+  themeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      applyTheme(button.dataset.themeValue === 'secheron' ? 'secheron' : 'paquis')
+    })
+  })
+
+  if (header) {
+    let lastY = window.scrollY
+    let frame = 0
+
+    window.addEventListener('scroll', () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        const currentY = window.scrollY
+        const delta = currentY - lastY
+        const menuIsOpen = mobileMenu?.open === true
+
+        header.classList.toggle('site-header--scrolled', currentY > 24)
+
+        if (currentY < 96 || delta < -4 || menuIsOpen) {
+          header.classList.remove('site-header--hidden')
+        } else if (delta > 4) {
+          header.classList.add('site-header--hidden')
+        }
+
+        if (Math.abs(delta) > 4) lastY = currentY
+        frame = 0
+      })
+    }, { passive: true })
+
+    mobileMenu?.addEventListener('toggle', () => {
+      if (mobileMenu.open) header.classList.remove('site-header--hidden')
+    })
+  }
+</script>

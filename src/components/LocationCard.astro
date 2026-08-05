@@ -1,0 +1,30 @@
+---
+import type { Location } from '../data/site'
+
+interface Props {
+  location: Location
+}
+
+const { location } = Astro.props
+---
+
+<article class:list={['location-card', `location-card--${location.color}`]}>
+  <header class="location-card__top">
+    <span class="location-card__pin" aria-hidden="true"><i class="ph ph-map-pin"></i></span>
+    <div class="location-card__heading">
+      <h3>{location.name}</h3>
+      <p>{location.summary}</p>
+    </div>
+  </header>
+  <dl class="location-card__facts">
+    <div><dt><i class="ph ph-map-pin" aria-hidden="true"></i>Adresse</dt><dd>{location.address}</dd></div>
+    <div><dt><i class="ph ph-train-regional" aria-hidden="true"></i>Transports</dt><dd>{location.transit}</dd></div>
+    <div><dt><i class="ph ph-phone" aria-hidden="true"></i>Téléphone</dt><dd><a href={`tel:${location.phone.replaceAll(' ', '')}`}>{location.phone}</a></dd></div>
+  </dl>
+  <section class="location-card__schedule" aria-labelledby={`schedule-${location.key}`}>
+    <h4 id={`schedule-${location.key}`}><i class="ph ph-clock" aria-hidden="true"></i>Horaires</h4>
+    <ul>
+      {location.schedule.map((slot) => <li><span>{slot.day}</span><strong>{slot.hours}</strong></li>)}
+    </ul>
+  </section>
+</article>

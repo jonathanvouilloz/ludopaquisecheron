@@ -1,0 +1,23 @@
+---
+import type { FeaturedGame } from '../data/site'
+
+interface Props {
+  game: FeaturedGame
+  rank?: number
+}
+
+const { game, rank } = Astro.props
+---
+
+<article class:list={['game-card', `accent-${game.accent}`]}>
+  <div class="game-card__visual" aria-hidden="true">
+    {rank && <span class="game-card__rank">{rank}</span>}
+    <span>{game.name.slice(0, 1)}</span>
+    <i></i><i></i><i></i>
+  </div>
+  <div class="game-card__body">
+    <h3>{game.name}</h3>
+    <p class="game-card__age">{game.age}</p>
+    <p>{game.description}</p>
+  </div>
+</article>

@@ -1,0 +1,106 @@
+import { readFile } from 'node:fs/promises'
+import { describe, expect, it } from 'vitest'
+
+const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8')
+
+describe('contrat du prototype visuel', () => {
+  it('centralise les couleurs et les dimensions dans les tokens', async () => {
+    const css = await read('../src/styles/global.css')
+    const tokens = await read('../src/styles/tokens.css')
+    expect(css).toContain("@import './tokens.css'")
+    expect(css).toContain('var(--color-brand)')
+    expect(css).toContain("background-attachment: fixed")
+    expect(css).toContain("url('/cursors/play-hand.svg')")
+    expect(css).toMatch(/\.section--surface\s*\{\s*background:\s*transparent/)
+    expect(css).toContain('@media (prefers-reduced-motion: reduce)')
+    expect(tokens).toContain('--color-brand: #4a57c8')
+    expect(tokens).toContain('--color-accent: #be5b45')
+    expect(tokens).not.toContain('#ff8a3d')
+  })
+
+  it('présente le système dans une route styleguide dédiée', async () => {
+    const page = await read('../src/pages/styleguide.astro')
+    expect(page).toContain('Palette')
+    expect(page).toContain('Typographie')
+    expect(page).toContain('Boutons')
+    expect(page).toContain('Cartes de contenu')
+  })
+
+  it('compose l’accueil avec des vagues et les deux lieux', async () => {
+    const page = await read('../src/pages/index.astro')
+    expect(page).toContain('WaveDivider')
+    expect(page).toContain('tone="cutout"')
+    expect(page).toContain('Deux lieux, mille façons de jouer')
+    expect(page).toContain('locations.map')
+    expect(page).not.toContain('eyebrow=')
+    expect(page).not.toContain('class="eyebrow"')
+  })
+
+  it('utilise Phosphor pour le système iconographique', async () => {
+    const layout = await read('../src/layouts/BaseLayout.astro')
+    const header = await read('../src/components/Header.astro')
+    expect(layout).toContain("@phosphor-icons/web/regular")
+    expect(header).toContain('ph-')
+  })
+
+  it('propose les thèmes persistants Pâquis et Sécheron', async () => {
+    const layout = await read('../src/layouts/BaseLayout.astro')
+    const header = await read('../src/components/Header.astro')
+    const tokens = await read('../src/styles/tokens.css')
+    const css = await read('../src/styles/global.css')
+    expect(header).toContain('data-ludo-switch')
+    expect(header).toContain('data-theme-value="paquis"')
+    expect(header).toContain('data-theme-value="secheron"')
+    expect(layout).toContain("localStorage.getItem('ludo-theme')")
+    expect(tokens).toContain("html[data-ludo-theme='secheron']")
+    expect(tokens).toContain('--color-brand: #69b34c')
+    expect(tokens).toContain('--color-brand-dark: #245c35')
+    expect(tokens).toContain('--color-accent: #ff6b4a')
+    expect(tokens).toContain('--color-secondary: #3532b6')
+    expect(tokens).toContain('--color-shadow-rgb: 36 92 53')
+    expect(css).toContain("url('/patterns/toy-field-secheron.svg')")
+    expect(css).toMatch(/\.hero h1\s*\{[^}]*color:\s*var\(--color-brand-dark\)/s)
+    expect(css).toMatch(/\.button--brand\s*\{[^}]*background:\s*var\(--color-brand-dark\)/s)
+    expect(css).toMatch(/\.button--outline\s*\{[^}]*border-color:\s*var\(--color-brand\)[^}]*color:\s*var\(--color-brand-dark\)/s)
+    expect(css).toMatch(/\.game-card h3\s*\{[^}]*color:\s*var\(--color-brand-dark\)/s)
+    expect(css).toMatch(/\.manifesto-mark\s*\{[^}]*color:\s*var\(--color-brand-dark\)/s)
+  })
+
+  it('utilise une navigation flottante qui révèle seulement l’icône active', async () => {
+    const header = await read('../src/components/Header.astro')
+    const css = await read('../src/styles/global.css')
+    expect(header).toContain("classList.add('site-header--hidden')")
+    expect(header).toContain("classList.remove('site-header--hidden')")
+    expect(css).toMatch(/\.site-header\s*\{[^}]*position:\s*sticky/s)
+    expect(css).toContain('.site-header--hidden')
+    expect(css).toContain(".desktop-nav a:not([aria-current='page']) i")
+    expect(header).toContain("window.addEventListener('scroll'")
+  })
+
+  it('clarifie les cartes de jeux et les horaires des lieux', async () => {
+    const gameCard = await read('../src/components/GameCard.astro')
+    const locationCard = await read('../src/components/LocationCard.astro')
+    const css = await read('../src/styles/global.css')
+
+    expect(gameCard.indexOf('<h3>')).toBeLessThan(gameCard.indexOf('game-card__age'))
+    expect(css).toMatch(/\.game-card\s*\{[^}]*cursor:\s*url\('\/cursors\/play-hand\.svg'\)/s)
+    expect(css).toMatch(/\.game-card h3\s*\{[^}]*font-size:\s*1\.75rem/s)
+    expect(locationCard).not.toContain('<details')
+    expect(locationCard).not.toContain('class="eyebrow"')
+    expect(locationCard).toContain('class="location-card__schedule"')
+    expect(locationCard).toContain('{slot.day}')
+    expect(locationCard).toContain('{slot.hours}')
+  })
+
+  it('fait rouler un petit personnage sur une vague sans imposer son animation', async () => {
+    const wave = await read('../src/components/WaveDivider.astro')
+    const home = await read('../src/pages/index.astro')
+    const css = await read('../src/styles/global.css')
+
+    expect(wave).toContain('rider?: boolean')
+    expect(wave).toContain('class="wave-rider"')
+    expect(home).toContain('<WaveDivider tone="brand" rider />')
+    expect(css).toContain('@keyframes wave-ride')
+    expect(css).toMatch(/prefers-reduced-motion:[\s\S]*\.wave-rider[\s\S]*animation:\s*none !important/)
+  })
+})
