@@ -7,7 +7,7 @@ Nouveau socle public de la Ludothèque Pâquis-Sécheron, recréé depuis zéro 
 - **Phase 1 clôturée le 5 août 2026** : direction artistique et prototype statique V0.4 validés.
 - Le point de situation canonique, les preuves de validation et le périmètre de la phase suivante sont dans `docs/PROJECT-STATUS.md`.
 - Les données sont statiques dans `src/data/site.ts`.
-- Aucun CMS et aucune connexion LudoHub dans cette phase.
+- La fondation de connexion LudoHub est disponible mais les pages conservent leurs données statiques tant que leur migration n'est pas activée.
 - Les contenus issus de l’ancien site sont des sources provisoires à confirmer avant publication.
 
 ## Commandes
@@ -33,6 +33,7 @@ pnpm preview
 - `docs/BRAND.md` — identité et voix.
 - `docs/CONTENT-MAP.md` — contenus disponibles et future séparation statique/dynamique.
 - `docs/DESIGN-REVIEW.md` — vérification visuelle desktop/mobile et audit anti-slop.
+- `docs/LUDOHUB-API.md` — configuration du client public, états de source et stratégie de repli.
 
 ## Sources
 
