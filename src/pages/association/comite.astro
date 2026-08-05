@@ -1,0 +1,8 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { committee } from '../../data/editorial'
+---
+<EditorialLayout title="Le comité" description="Le comité de l’association de la ludothèque." question="Qui porte l’association ?" intro="La composition sera affichée après validation des noms, rôles et accords de publication.">
+  <span slot="kicker">Association · comité</span>
+  <section class="editorial-section" aria-labelledby="comite"><div class="editorial-section__heading"><h2 id="comite">Composition du comité</h2><p>Cette page distingue volontairement l’absence de données validées d’un problème d’affichage.</p></div>{committee.length ? <div class="content-grid">{committee.map((person) => <article class="content-card"><div class="content-card__meta"><span>{person.role}</span></div><h2>{person.name}</h2><p>{person.bio}</p></article>)}</div> : <div class="status-panel"><h3>Composition à confirmer</h3><p>Aucun nom n’est publié tant que la liste et les autorisations ne sont pas validées.</p></div>}</section>
+</EditorialLayout>

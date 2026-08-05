@@ -1,0 +1,20 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+---
+
+<PracticalLayout title="Comment fonctionne la ludothèque ?" activePath="/infos-pratiques/fonctionnement">
+  <QuestionHero question="Comment fonctionne la ludothèque ?" answer="On peut venir jouer sur place. L’emprunt de jeux demande une inscription ; l’équipe vous explique les règles et vous aide à choisir." icon="arrows-clockwise" />
+  <div class="shell practical-content practical-content--reading">
+    <ProvisionalNotice />
+    <div class="steps-list">
+      <section><span>1</span><div><h2>Venir pendant les horaires d’ouverture</h2><p>Choisissez les Pâquis ou Sécheron et consultez les horaires annoncés avant votre déplacement.</p></div></section>
+      <section><span>2</span><div><h2>Jouer et demander conseil</h2><p>L’équipe peut présenter les espaces, proposer un jeu adapté et aider à démarrer une partie.</p></div></section>
+      <section><span>3</span><div><h2>Emprunter après inscription</h2><p>Les conditions précises, tarifs et durées d’emprunt issus de l’ancien site restent à confirmer.</p></div></section>
+      <section><span>4</span><div><h2>Rapporter le jeu au lieu convenu</h2><p>Vérifiez les horaires de prêts et retours, notamment le samedi à Sécheron.</p></div></section>
+    </div>
+    <PracticalNav />
+  </div>
+</PracticalLayout>

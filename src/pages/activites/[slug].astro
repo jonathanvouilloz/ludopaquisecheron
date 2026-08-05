@@ -1,0 +1,15 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { activities, archivedActivities } from '../../data/editorial'
+export function getStaticPaths() {
+  return [...activities, ...archivedActivities].map((item) => ({ params: { slug: item.slug }, props: { item } }))
+}
+const { item } = Astro.props
+---
+<EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/activites">
+  <span slot="kicker">Activité · {item.status === 'archive' ? 'archive fictive' : 'exemple'}</span>
+  <article class="editorial-section detail-layout">
+    <div class="prose">{item.body.map((paragraph: string) => <p>{paragraph}</p>)}<div class="status-panel"><h2>{item.status === 'archive' ? 'Activité terminée' : 'Ne pas se déplacer sur cette base'}</h2><p>{item.status === 'archive' ? 'Cette archive est un exemple et ne documente pas un événement réel.' : 'La date, l’horaire et les modalités ne sont pas confirmés.'}</p></div><a class="share-link" href={Astro.url.pathname}><i class="ph ph-link" aria-hidden="true"></i>Lien permanent vers cette activité</a></div>
+    <aside class="detail-aside" aria-label="Informations sur l’activité"><dl><div><dt>Quand</dt><dd>{item.schedule}</dd></div><div><dt>Où</dt><dd>{item.location}</dd></div><div><dt>Pour qui</dt><dd>{item.audience}</dd></div></dl></aside>
+  </article>
+</EditorialLayout>

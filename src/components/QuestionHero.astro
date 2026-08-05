@@ -1,0 +1,20 @@
+---
+interface Props {
+  question: string
+  answer: string
+  icon?: string
+}
+
+const { question, answer, icon = 'question-mark' } = Astro.props
+---
+
+<section class="question-hero">
+  <div class="shell question-hero__grid">
+    <div>
+      <h1>{question}</h1>
+      <p>{answer}</p>
+      <div class="question-hero__actions"><slot /></div>
+    </div>
+    <div class="question-hero__mark" aria-hidden="true"><i class={`ph ph-${icon}`}></i></div>
+  </div>
+</section>

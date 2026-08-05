@@ -1,0 +1,26 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+import ButtonLink from '../../components/ButtonLink.astro'
+---
+
+<PracticalLayout title="Comment s’inscrire à la ludothèque ?" activePath="/infos-pratiques/inscription">
+  <QuestionHero question="Comment inscrire ma famille ?" answer="L’inscription sert à emprunter des jeux. Comme les conditions archivées ne sont pas encore validées, contactez l’équipe ou demandez-les lors de votre première visite." icon="identification-card">
+    <ButtonLink href="/contact" variant="brand" icon="envelope-simple">Demander les modalités</ButtonLink>
+  </QuestionHero>
+  <div class="shell practical-content practical-content--reading">
+    <ProvisionalNotice />
+    <section class="answer-panel prose-panel">
+      <h2>Ce que vous pouvez préparer</h2>
+      <ul class="check-list">
+        <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Les coordonnées de la personne responsable de l’inscription.</span></li>
+        <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Le nom des enfants ou membres du foyer concernés.</span></li>
+        <li><i class="ph ph-question" aria-hidden="true"></i><span>Demandez à l’équipe les justificatifs, tarifs et moyens de paiement actuellement acceptés.</span></li>
+      </ul>
+      <p><strong>Aucun tarif ni document obligatoire n’est affiché ici tant que l’équipe ne les a pas confirmés.</strong></p>
+    </section>
+    <PracticalNav />
+  </div>
+</PracticalLayout>

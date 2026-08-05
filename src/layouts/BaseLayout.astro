@@ -6,17 +6,19 @@ interface Props {
   title: string
   description?: string
   noindex?: boolean
+  forcedTheme?: 'paquis' | 'secheron'
 }
 
 const {
   title,
   description = 'Deux ludothèques de quartier pour jouer, découvrir et partager à Genève.',
   noindex = false,
+  forcedTheme,
 } = Astro.props
 ---
 
 <!doctype html>
-<html lang="fr" data-ludo-theme="paquis">
+<html lang="fr" data-ludo-theme={forcedTheme ?? 'paquis'} data-theme-locked={forcedTheme ?? undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -31,7 +33,12 @@ const {
     />
     <title>{title}</title>
     <script is:inline>
+      const forcedTheme = document.documentElement.dataset.themeLocked;
       (() => {
+        if (forcedTheme === 'paquis' || forcedTheme === 'secheron') {
+          document.documentElement.dataset.ludoTheme = forcedTheme
+          return
+        }
         try {
           const storedTheme = localStorage.getItem('ludo-theme')
           document.documentElement.dataset.ludoTheme = storedTheme === 'secheron' ? 'secheron' : 'paquis'

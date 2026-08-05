@@ -1,0 +1,34 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+import ButtonLink from '../../components/ButtonLink.astro'
+import { practicalPlaces } from '../../data/practical'
+---
+
+<PracticalLayout title="Infos pratiques — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques">
+  <QuestionHero question="Que dois-je savoir avant de venir ?" answer="Choisissez un lieu pour les horaires, ou trouvez directement la réponse utile pour jouer sur place, emprunter et vous inscrire." icon="info">
+    <ButtonLink href="/paquis" variant="brand" icon="map-pin">Voir les Pâquis</ButtonLink>
+    <ButtonLink href="/secheron" variant="outline" icon="map-pin">Voir Sécheron</ButtonLink>
+  </QuestionHero>
+  <div class="shell practical-content">
+    <ProvisionalNotice />
+    <section aria-labelledby="choisir-lieu">
+      <h2 id="choisir-lieu">Quel lieu voulez-vous rejoindre ?</h2>
+      <div class="place-choice">
+        {Object.values(practicalPlaces).map((place) => (
+          <a href={`/${place.key}`}>
+            <i class="ph ph-map-pin" aria-hidden="true"></i>
+            <span><strong>{place.name}</strong><small>{place.address}</small><small>{place.transit}</small></span>
+            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </a>
+        ))}
+      </div>
+    </section>
+    <section class="practical-directory" aria-labelledby="autres-questions">
+      <div><h2 id="autres-questions">Vous avez une autre question ?</h2><p>Les réponses sont rangées par besoin, sans jargon administratif.</p></div>
+      <PracticalNav />
+    </section>
+  </div>
+</PracticalLayout>

@@ -1,0 +1,8 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { team } from '../../data/editorial'
+---
+<EditorialLayout title="L’équipe" description="Les personnes qui accueillent à la ludothèque." question="Qui vous accueille sur place ?" intro="Les portraits et présentations seront publiés avec l’accord des personnes concernées. Les cartes actuelles sont des emplacements.">
+  <span slot="kicker">Association · équipe</span>
+  <section class="editorial-section" aria-labelledby="equipe"><div class="editorial-section__heading"><h2 id="equipe">L’équipe</h2><p>Un visage, un rôle et une courte présentation suffisent pour préparer la rencontre.</p></div>{team.length ? <div class="content-grid">{team.map((person) => <article class="content-card"><div class="content-card__meta"><span>{person.role}</span><span>Profil provisoire</span></div><h2>{person.name}</h2><p>{person.bio}</p></article>)}</div> : <div class="status-panel"><h3>Les profils ne sont pas encore publiés</h3><p>L’équipe reste joignable depuis la page Contact.</p></div>}</section>
+</EditorialLayout>

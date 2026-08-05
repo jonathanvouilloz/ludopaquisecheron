@@ -1,0 +1,8 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { documents } from '../../data/editorial'
+---
+<EditorialLayout title="Documents" description="Les documents publics de l’association." question="Quels documents peut-on consulter ?" intro="Seules les versions publiques et approuvées seront téléchargeables. Aucun faux fichier n’est proposé dans ce prototype.">
+  <span slot="kicker">Association · documents</span>
+  <section class="editorial-section" aria-labelledby="documents"><div class="editorial-section__heading"><h2 id="documents">Documents à publier</h2><p>Chaque entrée indique son état pour éviter un lien cassé ou une version obsolète.</p></div>{documents.length ? <div class="content-grid">{documents.map((document) => <article class="content-card"><div class="content-card__meta"><span>À venir</span></div><h2>{document.title}</h2><p>{document.state}</p><span class="content-card__link" aria-disabled="true"><i class="ph ph-file" aria-hidden="true"></i>Téléchargement indisponible</span></article>)}</div> : <div class="status-panel"><h3>Aucun document publié</h3><p>Les versions approuvées apparaîtront ici.</p></div>}</section>
+</EditorialLayout>

@@ -1,11 +1,15 @@
 ---
-import { navigation } from '../data/site'
+import { discoverNavigation, primaryNavigation } from '../data/site'
 
 interface Props {
   activePath?: string
 }
 
 const { activePath = '/' } = Astro.props
+const isDiscoverPath = discoverNavigation.some((item) => activePath.startsWith(item.href))
+const isActive = (href: string) => href === '/actualites'
+  ? isDiscoverPath
+  : activePath.startsWith(href)
 ---
 
 <header class="site-header" data-site-header>
@@ -16,8 +20,8 @@ const { activePath = '/' } = Astro.props
     </a>
 
     <nav class="desktop-nav" aria-label="Navigation principale">
-      {navigation.map((item) => (
-        <a href={item.href} aria-current={activePath === item.href ? 'page' : undefined}>
+      {primaryNavigation.map((item) => (
+        <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
           <i class={`ph ph-${item.icon}`} aria-hidden="true"></i><span>{item.label}</span>
         </a>
       ))}
@@ -35,12 +39,12 @@ const { activePath = '/' } = Astro.props
           <button type="button" data-theme-value="paquis" aria-pressed="true"><span aria-hidden="true"></span>Pâquis</button>
           <button type="button" data-theme-value="secheron" aria-pressed="false"><span aria-hidden="true"></span>Sécheron</button>
         </div>
-        {navigation.map((item) => (
-          <a href={item.href} aria-current={activePath === item.href ? 'page' : undefined}>
+        {primaryNavigation.map((item) => (
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
             <i class={`ph ph-${item.icon}`} aria-hidden="true"></i>{item.label}
           </a>
         ))}
-        <a class="button button--brand" href="#infos-pratiques"><i class="ph ph-clock" aria-hidden="true"></i>Voir les horaires</a>
+        <a class="button button--brand" href="/infos-pratiques"><i class="ph ph-clock" aria-hidden="true"></i>Voir les horaires</a>
       </nav>
     </details>
   </div>
@@ -50,24 +54,35 @@ const { activePath = '/' } = Astro.props
   const header = document.querySelector<HTMLElement>('[data-site-header]')
   const mobileMenu = header?.querySelector<HTMLDetailsElement>('.mobile-menu')
   const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-theme-value]')
+  const lockedTheme = document.documentElement.dataset.themeLocked
 
   const applyTheme = (theme: 'paquis' | 'secheron') => {
     document.documentElement.dataset.ludoTheme = theme
     themeButtons.forEach((button) => {
       button.setAttribute('aria-pressed', String(button.dataset.themeValue === theme))
     })
-    try {
-      localStorage.setItem('ludo-theme', theme)
-    } catch {
-      // Le thème reste actif pour la session si le stockage est indisponible.
+    if (!lockedTheme) {
+      try {
+        localStorage.setItem('ludo-theme', theme)
+      } catch {
+        // Le thème reste actif pour la session si le stockage est indisponible.
+      }
     }
   }
 
   const initialTheme = document.documentElement.dataset.ludoTheme === 'secheron' ? 'secheron' : 'paquis'
   applyTheme(initialTheme)
 
+  if (lockedTheme) {
+    themeButtons.forEach((button) => {
+      button.disabled = true
+      button.title = `Ambiance ${lockedTheme === 'secheron' ? 'Sécheron' : 'Pâquis'} imposée sur cette page`
+    })
+  }
+
   themeButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      if (lockedTheme) return
       applyTheme(button.dataset.themeValue === 'secheron' ? 'secheron' : 'paquis')
     })
   })

@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string
+  summary: string
+  href: string
+  meta: string[]
+  linkLabel?: string
+}
+const { title, summary, href, meta, linkLabel = 'Lire la suite' } = Astro.props
+---
+<article class="content-card">
+  <div class="content-card__meta">{meta.map((item) => <span>{item}</span>)}</div>
+  <h2>{title}</h2>
+  <p>{summary}</p>
+  <a class="content-card__link" href={href}>{linkLabel}<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+</article>

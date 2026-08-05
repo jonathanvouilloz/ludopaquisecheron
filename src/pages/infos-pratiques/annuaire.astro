@@ -1,0 +1,25 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+import { practicalPlaces } from '../../data/practical'
+---
+
+<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/annuaire">
+  <QuestionHero question="Qui dois-je appeler avant de venir ?" answer="Appelez directement le lieu que vous souhaitez visiter. L’adresse e-mail est commune aux deux ludothèques." icon="address-book" />
+  <div class="shell practical-content">
+    <ProvisionalNotice />
+    <div class="directory-grid">
+      {Object.values(practicalPlaces).map((place) => (
+        <section class="answer-panel">
+          <h2>{place.name}</h2>
+          <p>{place.address}</p>
+          <a class="contact-action" href={`tel:${place.phone.replaceAll(' ', '')}`}><i class="ph ph-phone" aria-hidden="true"></i>{place.phone}</a>
+          <a class="contact-action" href={`mailto:${place.email}`}><i class="ph ph-envelope-simple" aria-hidden="true"></i>{place.email}</a>
+        </section>
+      ))}
+    </div>
+    <PracticalNav />
+  </div>
+</PracticalLayout>

@@ -1,0 +1,8 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { missionPoints } from '../../data/editorial'
+---
+<EditorialLayout title="Notre mission" description="La mission de la Ludothèque Pâquis-Sécheron." question="Pourquoi une ludothèque de quartier ?" intro="La mission ci-dessous synthétise le cadrage du futur site. Sa formulation institutionnelle reste à approuver.">
+  <span slot="kicker">Association · mission</span>
+  <section class="editorial-section" aria-labelledby="mission"><div class="editorial-section__heading"><h2 id="mission">Jouer, rencontrer, découvrir</h2><p>Trois engagements simples structurent la présentation de l’association.</p></div><ol class="rank-list">{missionPoints.map((point, index) => <li class="rank-card"><span class="rank-card__number">{index + 1}</span><div><h2>Engagement à valider</h2><p>{point}</p></div></li>)}</ol></section>
+</EditorialLayout>

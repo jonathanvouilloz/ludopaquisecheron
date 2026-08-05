@@ -1,0 +1,31 @@
+---
+import type { PracticalPlace } from '../data/practical'
+
+interface Props { place: PracticalPlace }
+const { place } = Astro.props
+---
+
+<div class="place-essentials">
+  <section class="answer-panel" aria-labelledby={`horaires-${place.key}`}>
+    <h2 id={`horaires-${place.key}`}><i class="ph ph-clock" aria-hidden="true"></i> Horaires annoncés</h2>
+    <ul class="schedule-list">
+      {place.schedule.map((slot) => <li><span>{slot.day}</span><strong>{slot.hours}</strong></li>)}
+    </ul>
+  </section>
+  <section class="answer-panel" aria-labelledby={`venir-${place.key}`}>
+    <h2 id={`venir-${place.key}`}><i class="ph ph-map-pin" aria-hidden="true"></i> Venir sur place</h2>
+    <dl class="contact-facts">
+      <div><dt>Adresse</dt><dd>{place.address}</dd></div>
+      <div><dt>Transports</dt><dd>{place.transit}</dd></div>
+      <div><dt>Téléphone</dt><dd><a href={`tel:${place.phone.replaceAll(' ', '')}`}>{place.phone}</a></dd></div>
+    </dl>
+  </section>
+</div>
+
+<section class="visit-checklist section--soft-block" aria-labelledby={`avant-${place.key}`}>
+  <div>
+    <h2 id={`avant-${place.key}`}>Avant de venir</h2>
+    <p>Trois repères simples pour préparer votre visite.</p>
+  </div>
+  <ul>{place.arrival.map((item) => <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>{item}</span></li>)}</ul>
+</section>

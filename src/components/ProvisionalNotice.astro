@@ -1,0 +1,8 @@
+---
+import { practicalStatus } from '../data/practical'
+---
+
+<aside class="provisional-notice" aria-label={practicalStatus.label}>
+  <i class="ph ph-warning-circle" aria-hidden="true"></i>
+  <p><strong>{practicalStatus.label}</strong><span>{practicalStatus.note}</span></p>
+</aside>

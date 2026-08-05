@@ -1,0 +1,20 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+---
+
+<PracticalLayout title="Questions fréquentes — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/faq">
+  <QuestionHero question="Puis-je venir sans m’inscrire ?" answer="Oui pour découvrir les lieux et jouer sur place pendant les horaires d’ouverture. Une inscription est nécessaire pour emprunter." icon="question" />
+  <div class="shell practical-content practical-content--reading">
+    <ProvisionalNotice />
+    <section class="faq-list" aria-label="Questions fréquentes">
+      <details open><summary>Les enfants peuvent-ils venir seuls ?</summary><p>Les informations archivées indiquent que les enfants restent sous la responsabilité de l’adulte qui les accompagne. Demandez à l’équipe les règles selon l’âge.</p></details>
+      <details><summary>Faut-il réserver pour jouer sur place ?</summary><p>Aucune réservation générale n’est annoncée dans les données disponibles. Pour un groupe ou une institution, contactez l’équipe avant de venir.</p></details>
+      <details><summary>Puis-je rendre un jeu dans l’autre ludothèque ?</summary><p>Ce point n’est pas confirmé. Appelez le lieu où vous avez emprunté le jeu avant de vous déplacer.</p></details>
+      <details><summary>Les horaires changent-ils pendant les vacances ?</summary><p>Des fermetures ou horaires spéciaux sont possibles. Vérifiez les informations récentes ou téléphonez avant votre visite.</p></details>
+    </section>
+    <PracticalNav />
+  </div>
+</PracticalLayout>

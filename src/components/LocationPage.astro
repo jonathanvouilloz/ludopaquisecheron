@@ -1,0 +1,27 @@
+---
+import PracticalLayout from '../layouts/PracticalLayout.astro'
+import QuestionHero from './QuestionHero.astro'
+import ProvisionalNotice from './ProvisionalNotice.astro'
+import PlaceEssentials from './PlaceEssentials.astro'
+import ButtonLink from './ButtonLink.astro'
+import type { PracticalPlace } from '../data/practical'
+
+interface Props { place: PracticalPlace }
+const { place } = Astro.props
+---
+
+<PracticalLayout
+  title={`${place.name} — Horaires et accès`}
+  description={`Horaires, adresse et accès de la ${place.name}. Informations provisoires à confirmer.`}
+  activePath={`/${place.key}`}
+  forcedTheme={place.key}
+>
+  <QuestionHero question={place.question} answer={place.introduction} icon="clock">
+    <ButtonLink href={`tel:${place.phone.replaceAll(' ', '')}`} variant="brand" icon="phone">Appeler {place.shortName}</ButtonLink>
+    <ButtonLink href="/infos-pratiques" variant="outline" icon="info">Préparer ma visite</ButtonLink>
+  </QuestionHero>
+  <div class="shell practical-content">
+    <ProvisionalNotice />
+    <PlaceEssentials place={place} />
+  </div>
+</PracticalLayout>

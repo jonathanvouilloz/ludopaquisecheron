@@ -44,6 +44,22 @@ export const navigation: NavigationItem[] = [
   { label: 'Infos pratiques', href: '/#infos-pratiques', icon: 'map-pin' },
 ]
 
+export const primaryNavigation: NavigationItem[] = [
+  { label: 'Pâquis', href: '/paquis', icon: 'map-pin' },
+  { label: 'Sécheron', href: '/secheron', icon: 'map-pin' },
+  { label: 'Découvrir', href: '/actualites', icon: 'compass' },
+  { label: 'Infos pratiques', href: '/infos-pratiques', icon: 'info' },
+  { label: 'Contact', href: '/contact', icon: 'envelope-simple' },
+]
+
+export const discoverNavigation: NavigationItem[] = [
+  { label: 'Actualités', href: '/actualites', icon: 'newspaper-clipping' },
+  { label: 'Activités', href: '/activites', icon: 'calendar-dots' },
+  { label: 'Top 3', href: '/top-3', icon: 'trophy' },
+  { label: 'Galerie', href: '/galerie', icon: 'images' },
+  { label: 'Association', href: '/association', icon: 'users-three' },
+]
+
 export const locations: Location[] = [
   {
     key: 'paquis',

@@ -1,0 +1,18 @@
+---
+import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
+import { news } from '../../data/editorial'
+
+export function getStaticPaths() { return news.map((item) => ({ params: { slug: item.slug }, props: { item } })) }
+const { item } = Astro.props
+---
+<EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/actualites">
+  <span slot="kicker">Actualité · exemple</span>
+  <article class="editorial-section detail-layout">
+    <div class="prose">
+      {item.body.map((paragraph: string) => <p>{paragraph}</p>)}
+      <div class="status-panel"><h2>Information provisoire</h2><p>Cette publication sert à tester le futur site. Vérifiez les horaires et annonces en contactant la ludothèque.</p></div>
+      <a class="share-link" href={Astro.url.pathname} aria-label={`Lien permanent vers ${item.title}`}><i class="ph ph-link" aria-hidden="true"></i>Lien permanent vers cette actualité</a>
+    </div>
+    <aside class="detail-aside" aria-label="Repères de la publication"><dl><div><dt>Date</dt><dd>{item.dateLabel}</dd></div><div><dt>Lieu</dt><dd>{item.location}</dd></div><div><dt>Statut</dt><dd>Exemple non publié</dd></div></dl></aside>
+  </article>
+</EditorialLayout>
