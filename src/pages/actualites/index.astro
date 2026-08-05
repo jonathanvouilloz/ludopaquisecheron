@@ -1,12 +1,14 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
 import ContentCard from '../../components/editorial/ContentCard.astro'
-import { news } from '../../data/editorial'
+import { loadNews } from '../../data/editorial'
+
+const content = await loadNews()
 ---
-<EditorialLayout title="Actualités" description="Les nouvelles de la Ludothèque Pâquis-Sécheron." question="Quoi de neuf à la ludothèque ?" intro="Retrouvez ici les informations utiles, fermetures et nouvelles de l’association. Les contenus visibles aujourd’hui sont des exemples de mise en page.">
+<EditorialLayout title="Actualités" description="Les nouvelles de la Ludothèque Pâquis-Sécheron." question="Quoi de neuf à la ludothèque ?" intro="Retrouvez ici les informations utiles, fermetures et nouvelles de l’association." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Actualités</span>
   <section class="editorial-section" aria-labelledby="actualites-publiees">
-    <div class="editorial-section__heading"><h2 id="actualites-publiees">À lire</h2><p>Chaque actualité possède une adresse stable afin de pouvoir être envoyée à une famille ou partagée avec un partenaire.</p></div>
-    {news.length ? <div class="content-grid">{news.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/actualites/${item.slug}`} meta={[item.dateLabel, item.location, 'Exemple']} />)}</div> : <div class="status-panel"><h3>Aucune actualité publiée</h3><p>Les prochaines informations validées apparaîtront ici.</p></div>}
+    <div class="editorial-section__heading"><h2 id="actualites-publiees">À lire</h2><p>Chaque actualité possède une adresse stable pour être partagée facilement.</p></div>
+    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/actualites/${item.slug}`} meta={[item.dateLabel, item.location, content.mode === 'live' ? 'Publié' : 'Exemple']} />)}</div> : <div class="status-panel"><h3>Aucune actualité publiée</h3><p>Les prochaines informations apparaîtront ici. Pour une question urgente, <a href="/contact">contactez la ludothèque</a>.</p></div>}
   </section>
 </EditorialLayout>

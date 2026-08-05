@@ -1,8 +1,20 @@
 ---
 import { practicalStatus } from '../data/practical'
+import type { PracticalSource } from '../data/practical'
+import type { LudoHubFailureReason } from '../lib/ludohub/types.js'
+
+interface Props { source: PracticalSource; reason?: LudoHubFailureReason }
+const { source, reason } = Astro.props
+const reasonText = reason === 'not_configured'
+  ? 'LudoHub n’est pas configuré pour ce build.'
+  : reason
+    ? 'LudoHub est temporairement indisponible ou sa réponse n’a pas pu être validée.'
+    : 'Cette rubrique n’est pas encore fournie par LudoHub.'
 ---
 
-<aside class="provisional-notice" aria-label={practicalStatus.label}>
-  <i class="ph ph-warning-circle" aria-hidden="true"></i>
-  <p><strong>{practicalStatus.label}</strong><span>{practicalStatus.note}</span></p>
-</aside>
+{source === 'fallback' && (
+  <aside class="provisional-notice" aria-label={practicalStatus.label} data-content-source="fallback">
+    <i class="ph ph-warning-circle" aria-hidden="true"></i>
+    <p><strong>{practicalStatus.label}</strong><span>{reasonText} {practicalStatus.note}</span></p>
+  </aside>
+)}

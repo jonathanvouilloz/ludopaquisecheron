@@ -36,6 +36,33 @@ afterEach(() => {
 });
 
 describe("client public LudoHub", () => {
+  it("conserve isHomepage et retire les champs privés des Top 3", async () => {
+    const payload = {
+      ludo: sites.ludo,
+      site: null,
+      topThrees: [{
+        id: "top-home",
+        slug: "top-home",
+        theme: "Accueil",
+        isHomepage: true,
+        games: [{ name: "A" }, { name: "B" }, { name: "C" }],
+        publishedAt: "2026-08-05T12:00:00.000Z",
+        internalNote: "secret",
+      }],
+    };
+    const client = createLudoHubClient({
+      baseUrl: "https://ludohub.example",
+      fetch: vi.fn().mockResolvedValue(envelope(payload)),
+    });
+    const result = await client.topThrees();
+    expect(result).toMatchObject({
+      source: "live",
+      data: { topThrees: [{ slug: "top-home", isHomepage: true }] },
+    });
+    expect(JSON.stringify(result)).not.toContain("internalNote");
+    expect(JSON.stringify(result)).not.toContain("secret");
+  });
+
   it("valide une enveloppe V1 et retourne la source live", async () => {
     const fetcher = vi.fn().mockResolvedValue(envelope(sites));
     const client = createLudoHubClient({

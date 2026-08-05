@@ -175,10 +175,52 @@ describe("sites, annonces et actualités", () => {
         ],
       }),
     ).toBeNull();
+    expect(
+      directoryPayload({
+        ludo,
+        entries: [
+          {
+            id: "e",
+            slug: "partenaire",
+            name: "Partenaire",
+            descriptionMarkdown: null,
+            address: null,
+            postalCode: null,
+            city: "Genève",
+            phone: null,
+            email: null,
+            website: null,
+            directionsUrl: "https://maps.example/e",
+            officialUrl: null,
+            sortOrder: 0,
+          },
+        ],
+      }),
+    ).toMatchObject({ entries: [{ officialUrl: null }] });
   });
 });
 
 describe("activités", () => {
+  it.each([0, -1, 4, "1"])("rejette featuredRank=%s hors du contrat 1..3", (featuredRank) => {
+    expect(
+      activitiesPayload({
+        ...context,
+        timeZone: "Europe/Zurich",
+        activities: [{ ...activityBase, featuredRank, schedule: oneOffSchedule }],
+      }),
+    ).toBeNull();
+  });
+
+  it.each([null, 1, 2, 3])("accepte featuredRank=%s", (featuredRank) => {
+    expect(
+      activitiesPayload({
+        ...context,
+        timeZone: "Europe/Zurich",
+        activities: [{ ...activityBase, featuredRank, schedule: oneOffSchedule }],
+      }),
+    ).not.toBeNull();
+  });
+
   it("borne les aperçus à 3 dates et les détails à 366 dates/exceptions", () => {
     expect(
       activitiesPayload({
@@ -244,6 +286,7 @@ describe("tops trois", () => {
             id: "t",
             slug: "top",
             theme: "Coop",
+            isHomepage: false,
             publishedAt,
             games: [{ name: "A" }, { name: "B" }],
           },
@@ -257,12 +300,44 @@ describe("tops trois", () => {
           id: "t",
           slug: "top",
           theme: "Coop",
+          isHomepage: true,
           publishedAt,
           games: [game, game, game, game],
           sites: [],
         },
       }),
     ).toBeNull();
+  });
+
+  it("exige et projette strictement isHomepage dans la liste et le détail", () => {
+    const summary = {
+      id: "t",
+      slug: "top",
+      theme: "Coop",
+      isHomepage: true,
+      publishedAt,
+      games: [{ name: "A" }, { name: "B" }, { name: "C" }],
+      internalFlag: "privé",
+    };
+    const parsedList = topThreesPayload({ ...context, topThrees: [summary] });
+    expect(parsedList?.topThrees[0]).toEqual({
+      id: "t",
+      slug: "top",
+      theme: "Coop",
+      isHomepage: true,
+      publishedAt,
+      games: [{ name: "A" }, { name: "B" }, { name: "C" }],
+    });
+    expect(topThreesPayload({ ...context, topThrees: [{ ...summary, isHomepage: undefined }] })).toBeNull();
+    expect(topThreesPayload({ ...context, topThrees: [{ ...summary, isHomepage: "true" }] })).toBeNull();
+
+    const detail = {
+      ...summary,
+      games: [game, game, game],
+      sites: [],
+    };
+    expect(topThreeDetailPayload({ ...context, topThree: detail })?.topThree.isHomepage).toBe(true);
+    expect(topThreeDetailPayload({ ...context, topThree: { ...detail, isHomepage: null } })).toBeNull();
   });
 });
 

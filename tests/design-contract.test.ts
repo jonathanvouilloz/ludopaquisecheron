@@ -31,7 +31,7 @@ describe('contrat du prototype visuel', () => {
     expect(page).toContain('WaveDivider')
     expect(page).toContain('tone="cutout"')
     expect(page).toContain('Deux lieux, mille façons de jouer')
-    expect(page).toContain('locations.map')
+    expect(page).toContain('homeLocations.map')
     expect(page).not.toContain('eyebrow=')
     expect(page).not.toContain('class="eyebrow"')
   })

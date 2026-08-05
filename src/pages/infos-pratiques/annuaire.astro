@@ -3,22 +3,29 @@ import PracticalLayout from '../../layouts/PracticalLayout.astro'
 import QuestionHero from '../../components/QuestionHero.astro'
 import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
 import PracticalNav from '../../components/PracticalNav.astro'
-import { practicalPlaces } from '../../data/practical'
+import { loadPracticalDirectory } from '../../data/practical'
+
+const directoryResult = await loadPracticalDirectory()
 ---
 
-<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/annuaire">
+<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/annuaire" noindex={directoryResult.source === 'fallback'}>
   <QuestionHero question="Qui dois-je appeler avant de venir ?" answer="Appelez directement le lieu que vous souhaitez visiter. L’adresse e-mail est commune aux deux ludothèques." icon="address-book" />
   <div class="shell practical-content">
-    <ProvisionalNotice />
+    <ProvisionalNotice source={directoryResult.source} reason={directoryResult.reason} />
     <div class="directory-grid">
-      {Object.values(practicalPlaces).map((place) => (
+      {directoryResult.data.map((entry) => (
         <section class="answer-panel">
-          <h2>{place.name}</h2>
-          <p>{place.address}</p>
-          <a class="contact-action" href={`tel:${place.phone.replaceAll(' ', '')}`}><i class="ph ph-phone" aria-hidden="true"></i>{place.phone}</a>
-          <a class="contact-action" href={`mailto:${place.email}`}><i class="ph ph-envelope-simple" aria-hidden="true"></i>{place.email}</a>
+          <h2>{entry.name}</h2>
+          <p>{[entry.address, entry.postalCode, entry.city].filter(Boolean).join(', ')}</p>
+          {entry.descriptionMarkdown && <p>{entry.descriptionMarkdown}</p>}
+          {entry.phone && <a class="contact-action" href={`tel:${entry.phone.replaceAll(' ', '')}`}><i class="ph ph-phone" aria-hidden="true"></i>{entry.phone}</a>}
+          {entry.email && <a class="contact-action" href={`mailto:${entry.email}`}><i class="ph ph-envelope-simple" aria-hidden="true"></i>{entry.email}</a>}
+          {entry.website && <a class="contact-action" href={entry.website}><i class="ph ph-globe" aria-hidden="true"></i>Site internet</a>}
+          {entry.officialUrl && <a class="contact-action" href={entry.officialUrl}><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Fiche officielle</a>}
+          {entry.directionsUrl && <a class="contact-action" href={entry.directionsUrl}><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Itinéraire</a>}
         </section>
       ))}
+      {directoryResult.source === 'empty' && <section class="status-panel"><h2>Annuaire vide</h2><p>Aucun contact n’est actuellement publié dans LudoHub.</p></section>}
     </div>
     <PracticalNav />
   </div>

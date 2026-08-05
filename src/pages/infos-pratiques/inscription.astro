@@ -6,12 +6,12 @@ import PracticalNav from '../../components/PracticalNav.astro'
 import ButtonLink from '../../components/ButtonLink.astro'
 ---
 
-<PracticalLayout title="Comment s’inscrire à la ludothèque ?" activePath="/infos-pratiques/inscription">
+<PracticalLayout title="Comment s’inscrire à la ludothèque ?" activePath="/infos-pratiques/inscription" noindex>
   <QuestionHero question="Comment inscrire ma famille ?" answer="L’inscription sert à emprunter des jeux. Comme les conditions archivées ne sont pas encore validées, contactez l’équipe ou demandez-les lors de votre première visite." icon="identification-card">
     <ButtonLink href="/contact" variant="brand" icon="envelope-simple">Demander les modalités</ButtonLink>
   </QuestionHero>
   <div class="shell practical-content practical-content--reading">
-    <ProvisionalNotice />
+    <ProvisionalNotice source="fallback" />
     <section class="answer-panel prose-panel">
       <h2>Ce que vous pouvez préparer</h2>
       <ul class="check-list">

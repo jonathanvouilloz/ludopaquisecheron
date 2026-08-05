@@ -1,10 +1,10 @@
 ---
 import EditorialLayout from '../components/editorial/EditorialLayout.astro'
-import { topGames } from '../data/editorial'
+import { loadTopThrees } from '../data/editorial'
+
+const content = await loadTopThrees()
 ---
-<EditorialLayout title="Top 3 des jeux" description="Trois jeux choisis par l’équipe de la ludothèque." question="Quel jeu essayer cette semaine ?" intro="L’équipe pourra proposer trois coups de cœur, avec un conseil simple plutôt qu’un catalogue. Les choix affichés ici sont des emplacements provisoires.">
+<EditorialLayout title="Top 3 des jeux" description="Trois jeux choisis par l’équipe de la ludothèque." question="Quel jeu essayer cette semaine ?" intro="L’équipe propose trois coups de cœur, avec un conseil simple plutôt qu’un catalogue." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Sélection de l’équipe</span>
-  <section class="editorial-section" aria-labelledby="selection"><div class="editorial-section__heading"><h2 id="selection">Trois places, pas plus</h2><p>Le classement donne un point de départ. Il ne mesure ni la qualité absolue d’un jeu ni sa disponibilité en temps réel.</p></div>
-    {topGames.length ? <ol class="rank-list">{topGames.map((game) => <li class="rank-card"><span class="rank-card__number" aria-label={`Rang ${game.rank}`}>{game.rank}</span><div><h2>{game.name}</h2><p><strong>{game.age}</strong> · {game.reason}</p></div></li>)}</ol> : <div class="status-panel"><h3>Aucune sélection publiée</h3><p>L’équipe prépare ses trois prochains conseils.</p></div>}
-  </section>
+  {content.items.length ? content.items.map((selection) => <section class="editorial-section" aria-labelledby={`selection-${selection.slug}`}><div class="editorial-section__heading"><h2 id={`selection-${selection.slug}`}>{selection.theme}</h2><p>Sélection publiée le {selection.dateLabel}. Le classement ne préjuge pas de la disponibilité des jeux.</p></div><ol class="rank-list">{selection.games.map((game) => <li class="rank-card"><span class="rank-card__number" aria-label={`Rang ${game.rank}`}>{game.rank}</span><div><h2>{game.name}</h2><p>{game.reason}</p></div></li>)}</ol></section>) : <section class="editorial-section"><div class="status-panel"><h3>Aucune sélection publiée</h3><p>L’équipe prépare ses prochains conseils. <a href="/contact">Demandez conseil directement</a>.</p></div></section>}
 </EditorialLayout>

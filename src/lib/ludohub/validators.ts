@@ -454,6 +454,8 @@ const parseActivityBase = (value: unknown) => {
     image === undefined ||
     !lifecycle ||
     !nullableInteger(source.featuredRank) ||
+    (source.featuredRank !== null &&
+      (source.featuredRank < 1 || source.featuredRank > 3)) ||
     !publishedAt
   )
     return null;
@@ -508,9 +510,10 @@ const parseTopThreeBase = (value: unknown) => {
   const id = nonEmpty(source?.id);
   const slug = nonEmpty(source?.slug);
   const theme = nonEmpty(source?.theme);
+  const isHomepage = source?.isHomepage;
   const publishedAt = timestamp(source?.publishedAt);
-  return source && id && slug && theme && publishedAt
-    ? { id, slug, theme, publishedAt }
+  return source && id && slug && theme && typeof isHomepage === "boolean" && publishedAt
+    ? { id, slug, theme, isHomepage, publishedAt }
     : null;
 };
 const parseGameSummary = (value: unknown) => {
@@ -714,7 +717,8 @@ const parseDirectoryEntry = (value: unknown) => {
   const city = nonEmpty(source?.city);
   const website = source?.website === null ? null : httpUrl(source?.website);
   const directionsUrl = httpUrl(source?.directionsUrl);
-  const officialUrl = httpUrl(source?.officialUrl);
+  const officialUrl =
+    source?.officialUrl === null ? null : httpUrl(source?.officialUrl);
   const sortOrder = integer(source?.sortOrder);
   if (
     !source ||
@@ -729,7 +733,7 @@ const parseDirectoryEntry = (value: unknown) => {
     !nullableEmail(source.email) ||
     (website === null && source.website !== null) ||
     !directionsUrl ||
-    !officialUrl ||
+    (officialUrl === null && source.officialUrl !== null) ||
     sortOrder === null
   )
     return null;

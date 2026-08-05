@@ -5,10 +5,10 @@ import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
 import PracticalNav from '../../components/PracticalNav.astro'
 ---
 
-<PracticalLayout title="Comment fonctionne la ludothèque ?" activePath="/infos-pratiques/fonctionnement">
+<PracticalLayout title="Comment fonctionne la ludothèque ?" activePath="/infos-pratiques/fonctionnement" noindex>
   <QuestionHero question="Comment fonctionne la ludothèque ?" answer="On peut venir jouer sur place. L’emprunt de jeux demande une inscription ; l’équipe vous explique les règles et vous aide à choisir." icon="arrows-clockwise" />
   <div class="shell practical-content practical-content--reading">
-    <ProvisionalNotice />
+    <ProvisionalNotice source="fallback" />
     <div class="steps-list">
       <section><span>1</span><div><h2>Venir pendant les horaires d’ouverture</h2><p>Choisissez les Pâquis ou Sécheron et consultez les horaires annoncés avant votre déplacement.</p></div></section>
       <section><span>2</span><div><h2>Jouer et demander conseil</h2><p>L’équipe peut présenter les espaces, proposer un jeu adapté et aider à démarrer une partie.</p></div></section>

@@ -1,13 +1,15 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
 import ContentCard from '../../components/editorial/ContentCard.astro'
-import { activities } from '../../data/editorial'
+import { loadActivities } from '../../data/editorial'
+
+const content = await loadActivities(false)
 ---
-<EditorialLayout title="Activités" description="Les activités proposées par la Ludothèque Pâquis-Sécheron." question="Que peut-on faire prochainement ?" intro="Les animations confirmées seront présentées avec leur public, leur lieu et leurs modalités. Aucun rendez-vous de démonstration ne vaut inscription.">
+<EditorialLayout title="Activités" description="Les activités proposées par la Ludothèque Pâquis-Sécheron." question="Que peut-on faire prochainement ?" intro="Les animations confirmées sont présentées avec leur date, leur lieu et leurs modalités." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Activités</span>
   <section class="editorial-section" aria-labelledby="activites-a-venir">
-    <div class="editorial-section__heading"><h2 id="activites-a-venir">À venir</h2><p>Les fiches détaillées regroupent les informations nécessaires avant de se déplacer.</p></div>
-    {activities.length ? <div class="content-grid">{activities.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/activites/${item.slug}`} meta={[item.schedule, item.location, 'Exemple']} linkLabel="Voir l’activité" />)}</div> : <div class="status-panel"><h3>Aucune activité annoncée</h3><p>Revenez prochainement ou contactez l’équipe pour connaître le programme.</p></div>}
+    <div class="editorial-section__heading"><h2 id="activites-a-venir">À venir</h2><p>Consultez la fiche détaillée avant de vous déplacer.</p></div>
+    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/activites/${item.slug}`} meta={[item.schedule, item.location, content.mode === 'live' ? 'Publié' : 'Exemple']} linkLabel="Voir l’activité" />)}</div> : <div class="status-panel"><h3>Aucune activité annoncée</h3><p>Revenez prochainement ou <a href="/contact">contactez l’équipe</a> pour connaître le programme.</p></div>}
   </section>
-  <section class="editorial-section"><div class="editorial-section__heading"><h2>Déjà terminé ?</h2><p>Les activités passées sont rangées à part pour ne jamais être confondues avec les rendez-vous à venir.</p></div><a class="share-link" href="/activites/archives"><i class="ph ph-archive" aria-hidden="true"></i>Consulter les archives</a></section>
+  <section class="editorial-section"><div class="editorial-section__heading"><h2>Déjà terminé ?</h2><p>Les activités passées restent consultables sans être confondues avec les rendez-vous à venir.</p></div><a class="share-link" href="/activites/archives"><i class="ph ph-archive" aria-hidden="true"></i>Consulter les archives</a></section>
 </EditorialLayout>

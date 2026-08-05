@@ -5,23 +5,27 @@ import ProvisionalNotice from './ProvisionalNotice.astro'
 import PlaceEssentials from './PlaceEssentials.astro'
 import ButtonLink from './ButtonLink.astro'
 import type { PracticalPlace } from '../data/practical'
+import type { PlaceKey, PracticalSource } from '../data/practical'
+import type { LudoHubFailureReason } from '../lib/ludohub/types.js'
 
-interface Props { place: PracticalPlace }
-const { place } = Astro.props
+interface Props { place: PracticalPlace | null; placeKey: PlaceKey; source: PracticalSource; reason?: LudoHubFailureReason }
+const { place, placeKey, source, reason } = Astro.props
+const label = placeKey === 'paquis' ? 'Pâquis' : 'Sécheron'
 ---
 
 <PracticalLayout
-  title={`${place.name} — Horaires et accès`}
-  description={`Horaires, adresse et accès de la ${place.name}. Informations provisoires à confirmer.`}
-  activePath={`/${place.key}`}
-  forcedTheme={place.key}
+  title={`${place?.name ?? `Ludothèque de ${label}`} — Horaires et accès`}
+  description={`Horaires, adresse et accès de la ludothèque de ${label}.`}
+  activePath={`/${placeKey}`}
+  forcedTheme={placeKey}
+  noindex={source === 'fallback'}
 >
-  <QuestionHero question={place.question} answer={place.introduction} icon="clock">
-    <ButtonLink href={`tel:${place.phone.replaceAll(' ', '')}`} variant="brand" icon="phone">Appeler {place.shortName}</ButtonLink>
+  <QuestionHero question={place?.question ?? `Les horaires de ${label} sont-ils publiés ?`} answer={place?.introduction ?? 'Aucune information de lieu n’est publiée dans LudoHub pour le moment.'} icon="clock">
+    {place?.phone && <ButtonLink href={`tel:${place.phone.replaceAll(' ', '')}`} variant="brand" icon="phone">Appeler {place.shortName}</ButtonLink>}
     <ButtonLink href="/infos-pratiques" variant="outline" icon="info">Préparer ma visite</ButtonLink>
   </QuestionHero>
   <div class="shell practical-content">
-    <ProvisionalNotice />
-    <PlaceEssentials place={place} />
+    <ProvisionalNotice source={source} reason={reason} />
+    {place ? <PlaceEssentials place={place} /> : <section class="status-panel" aria-live="polite"><h2>Aucune information publiée</h2><p>Le lieu existe peut-être, mais LudoHub ne publie actuellement ni adresse ni horaire pour cette page. Utilisez la page contact avant de vous déplacer.</p></section>}
   </div>
 </PracticalLayout>

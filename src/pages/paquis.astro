@@ -1,6 +1,9 @@
 ---
 import LocationPage from '../components/LocationPage.astro'
-import { practicalPlaces } from '../data/practical'
+import { loadPracticalPlaces } from '../data/practical'
+
+const result = await loadPracticalPlaces()
+const place = result.data.find((item) => item.key === 'paquis') ?? null
 ---
 
-<LocationPage place={practicalPlaces.paquis} />
+<LocationPage place={place} placeKey="paquis" source={result.source} reason={result.reason} />

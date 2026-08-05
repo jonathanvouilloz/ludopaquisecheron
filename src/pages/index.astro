@@ -8,17 +8,32 @@ import SectionHeading from '../components/SectionHeading.astro'
 import AgeCard from '../components/AgeCard.astro'
 import GameCard from '../components/GameCard.astro'
 import LocationCard from '../components/LocationCard.astro'
-import { ageGroups, featuredGames, locations } from '../data/site'
+import { ageGroups } from '../data/site'
+import { loadHomepageData } from '../data/home'
 
-const homeGames = [
-  featuredGames.find((game) => game.name === 'Little Mémo')!,
-  featuredGames.find((game) => game.name === 'Blokus')!,
-  featuredGames.find((game) => game.name === '6 qui prend !')!,
-]
+const home = await loadHomepageData()
+const homeGames = (home.selectedTopThree?.games ?? []).map((game, index) => ({
+  name: game.name,
+  ageGroup: 'grands',
+  age: `Choix n°${index + 1}`,
+  description: game.reason,
+  accent: (['yellow', 'periwinkle', 'rose'] as const)[index] ?? 'blue',
+}))
+const homeLocations = home.places.data.map((place) => ({
+  ...place,
+  summary: place.introduction,
+  color: place.key === 'paquis' ? ('rose' as const) : ('yellow' as const),
+}))
 ---
 
-<BaseLayout title="Ludothèque Pâquis-Sécheron — Deux lieux, mille façons de jouer">
-  <p class="work-notice">Aperçu de travail · les horaires et coordonnées doivent être confirmés avant publication</p>
+<BaseLayout
+  title="Ludothèque Pâquis-Sécheron — Deux lieux, mille façons de jouer"
+  noindex={home.noindex}
+>
+  {home.demoNotice && <p class="work-notice">{home.demoNotice}</p>}
+  {home.announcements.items.map((announcement) => (
+    <p class="work-notice"><strong>{announcement.title}</strong> · {announcement.message}</p>
+  ))}
   <Header />
 
   <main id="contenu">
@@ -28,8 +43,8 @@ const homeGames = [
           <h1>Deux lieux,<br /><span class="highlight">mille façons</span><br />de jouer.</h1>
           <p class="hero__lead">Aux Pâquis et à Sécheron, venez jouer sur place, découvrir de nouveaux jeux et partager un moment avec d’autres familles.</p>
           <div class="hero__actions">
-            <ButtonLink href="#infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
-            <ButtonLink href="#jeux-par-age" variant="outline">Choisir un jeu</ButtonLink>
+            <ButtonLink href="/infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
+            <ButtonLink href="/top-3" variant="outline">Choisir un jeu</ButtonLink>
           </div>
         </div>
 
@@ -50,7 +65,7 @@ const homeGames = [
       <div class="shell">
         <SectionHeading
           title="On commence par quel âge ?"
-          description="Quatre portes d’entrée simples. Chaque sélection présentera trois coups de cœur choisis par l’équipe, sans transformer le site en catalogue géant."
+          description="Quatre portes d’entrée simples pour trouver un jeu adapté, sans transformer le site en catalogue géant."
           inverse
         />
         <div class="age-grid">
@@ -64,13 +79,15 @@ const homeGames = [
     <section class="section section--surface">
       <div class="shell games-showcase">
         <div class="games-showcase__intro">
-          <h2>Trois jeux à essayer cette semaine</h2>
-          <p>Les exemples viennent du contenu archivé. À terme, l’équipe changera directement ces sélections depuis LudoHub.</p>
-          <ButtonLink href="#jeux-par-age" variant="brand">Toutes les sélections</ButtonLink>
+          <h2>{home.selectedTopThree?.theme ?? 'Le Top 3 de l’équipe'}</h2>
+          <p>{home.selectedTopThree ? 'Une sélection choisie et publiée par l’équipe.' : 'Aucune sélection n’est publiée sur l’accueil pour le moment.'}</p>
+          <ButtonLink href="/top-3" variant="brand">Toutes les sélections</ButtonLink>
         </div>
-        <div class="game-list">
-          {homeGames.map((game, index) => <GameCard game={game} rank={index + 1} />)}
-        </div>
+        {homeGames.length > 0 ? (
+          <div class="game-list">
+            {homeGames.map((game, index) => <GameCard game={game} rank={index + 1} />)}
+          </div>
+        ) : <p class="empty-state">Le prochain Top 3 est en préparation.</p>}
       </div>
     </section>
 
@@ -82,9 +99,11 @@ const homeGames = [
           title="Choisissez votre ludothèque"
           description="Les deux lieux partagent la même équipe et le même esprit d’accueil, avec des adresses et horaires propres."
         />
-        <div class="location-grid">
-          {locations.map((location) => <LocationCard location={location} />)}
-        </div>
+        {homeLocations.length > 0 ? (
+          <div class="location-grid">
+            {homeLocations.map((location) => <LocationCard location={location} />)}
+          </div>
+        ) : <p class="empty-state">Les informations pratiques ne sont pas publiées pour le moment.</p>}
       </div>
     </section>
 
@@ -111,26 +130,40 @@ const homeGames = [
     <section class="section section--surface" id="actualites">
       <div class="shell">
         <SectionHeading
-          title="À retrouver bientôt"
-          description="Ces blocs montrent les futurs contenus dynamiques. Aucune fausse actualité n’est publiée dans le prototype."
+          title="Les dernières nouvelles"
+          description="Fermetures, rendez-vous et nouvelles publiées par la ludothèque."
         />
-        <div class="editorial-grid">
-          <article class="editorial-card">
-            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-newspaper-clipping"></i></div>
-            <h3>Actualités</h3>
-            <p>Fermetures, rendez-vous et nouvelles de l’association seront publiés depuis LudoHub.</p>
-          </article>
-          <article class="editorial-card" id="activites">
-            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-calendar-dots"></i></div>
-            <h3>Activités</h3>
-            <p>Pré-ados, jeux & goûter, animations et accueils institutionnels auront leurs pages détaillées.</p>
-          </article>
-          <article class="editorial-card">
-            <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-images"></i></div>
-            <h3>Galerie</h3>
-            <p>Des images choisies et légendées raconteront les espaces et les temps forts de la ludothèque.</p>
-          </article>
-        </div>
+        {home.news.items.length > 0 ? (
+          <div class="editorial-grid">
+            {home.news.items.map((item) => (
+              <article class="editorial-card">
+                <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-newspaper-clipping"></i></div>
+                <h3><a href={item.detailAvailable ? `/actualites/${item.slug}` : '/actualites'}>{item.title}</a></h3>
+                <p>{item.summary}</p>
+              </article>
+            ))}
+          </div>
+        ) : <p class="empty-state">Aucune actualité publiée pour le moment.</p>}
+      </div>
+    </section>
+
+    <section class="section section--surface" id="activites">
+      <div class="shell">
+        <SectionHeading
+          title="Activités à la une"
+          description="Les rendez-vous que l’équipe a choisi de mettre en avant."
+        />
+        {home.featuredActivities.length > 0 ? (
+          <div class="editorial-grid">
+            {home.featuredActivities.map((item) => (
+              <article class="editorial-card">
+                <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-calendar-dots"></i></div>
+                <h3><a href={item.detailAvailable ? `/activites/${item.slug}` : '/activites'}>{item.title}</a></h3>
+                <p>{item.summary}</p>
+              </article>
+            ))}
+          </div>
+        ) : <p class="empty-state">Aucune activité n’est mise en avant pour le moment.</p>}
       </div>
     </section>
   </main>

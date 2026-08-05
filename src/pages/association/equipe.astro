@@ -1,8 +1,9 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
-import { team } from '../../data/editorial'
+import { loadProfiles } from '../../data/editorial'
+const content = await loadProfiles('team')
 ---
-<EditorialLayout title="L’équipe" description="Les personnes qui accueillent à la ludothèque." question="Qui vous accueille sur place ?" intro="Les portraits et présentations seront publiés avec l’accord des personnes concernées. Les cartes actuelles sont des emplacements.">
+<EditorialLayout title="L’équipe" description="Les personnes qui accueillent à la ludothèque." question="Qui vous accueille sur place ?" intro="Découvrez les personnes qui conseillent, organisent et accompagnent le jeu." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Association · équipe</span>
-  <section class="editorial-section" aria-labelledby="equipe"><div class="editorial-section__heading"><h2 id="equipe">L’équipe</h2><p>Un visage, un rôle et une courte présentation suffisent pour préparer la rencontre.</p></div>{team.length ? <div class="content-grid">{team.map((person) => <article class="content-card"><div class="content-card__meta"><span>{person.role}</span><span>Profil provisoire</span></div><h2>{person.name}</h2><p>{person.bio}</p></article>)}</div> : <div class="status-panel"><h3>Les profils ne sont pas encore publiés</h3><p>L’équipe reste joignable depuis la page Contact.</p></div>}</section>
+  <section class="editorial-section" aria-labelledby="equipe"><div class="editorial-section__heading"><h2 id="equipe">L’équipe</h2><p>Un visage, un rôle et une courte présentation pour préparer la rencontre.</p></div>{content.items.length ? <div class="content-grid">{content.items.map((person) => <article class="content-card">{person.photo && <img src={person.photo.url} alt={person.photo.alt} loading="lazy" />}<div class="content-card__meta"><span>{person.role}</span>{content.mode === 'demo' && <span>Profil provisoire</span>}</div><h2>{person.name}</h2>{person.bio && <p>{person.bio}</p>}</article>)}</div> : <div class="status-panel"><h3>Les profils ne sont pas encore publiés</h3><p>L’équipe reste joignable depuis la page <a href="/contact">Contact</a>.</p></div>}</section>
 </EditorialLayout>

@@ -123,6 +123,7 @@ export type TopThreeSummary = {
   id: string;
   slug: string;
   theme: string;
+  isHomepage: boolean;
   games: Array<{ name: string }>;
   publishedAt: string;
 };
@@ -213,7 +214,7 @@ export type DirectoryEntry = {
   email: string | null;
   website: string | null;
   directionsUrl: string;
-  officialUrl: string;
+  officialUrl: string | null;
   sortOrder: number;
 };
 export type DirectoryPayload = { ludo: Ludo; entries: DirectoryEntry[] };

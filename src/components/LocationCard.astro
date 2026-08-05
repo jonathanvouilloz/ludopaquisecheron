@@ -1,8 +1,15 @@
 ---
-import type { Location } from '../data/site'
-
 interface Props {
-  location: Location
+  location: {
+    key: 'paquis' | 'secheron'
+    name: string
+    summary: string
+    address: string
+    transit: string
+    phone: string | null
+    schedule: Array<{ day: string; hours: string }>
+    color: 'rose' | 'yellow'
+  }
 }
 
 const { location } = Astro.props
@@ -19,7 +26,10 @@ const { location } = Astro.props
   <dl class="location-card__facts">
     <div><dt><i class="ph ph-map-pin" aria-hidden="true"></i>Adresse</dt><dd>{location.address}</dd></div>
     <div><dt><i class="ph ph-train-regional" aria-hidden="true"></i>Transports</dt><dd>{location.transit}</dd></div>
-    <div><dt><i class="ph ph-phone" aria-hidden="true"></i>Téléphone</dt><dd><a href={`tel:${location.phone.replaceAll(' ', '')}`}>{location.phone}</a></dd></div>
+    <div>
+      <dt><i class="ph ph-phone" aria-hidden="true"></i>Téléphone</dt>
+      <dd>{location.phone ? <a href={`tel:${location.phone.replaceAll(' ', '')}`}>{location.phone}</a> : 'Non publié'}</dd>
+    </div>
   </dl>
   <section class="location-card__schedule" aria-labelledby={`schedule-${location.key}`}>
     <h4 id={`schedule-${location.key}`}><i class="ph ph-clock" aria-hidden="true"></i>Horaires</h4>

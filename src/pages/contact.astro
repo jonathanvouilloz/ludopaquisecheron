@@ -1,34 +1,131 @@
 ---
 import PracticalLayout from '../layouts/PracticalLayout.astro'
 import QuestionHero from '../components/QuestionHero.astro'
-import { practicalPlaces } from '../data/practical'
+import ProvisionalNotice from '../components/ProvisionalNotice.astro'
+import { loadPracticalPlaces } from '../data/practical'
+import { publicContactEndpoint } from '../lib/ludohub/config.js'
+
+const placesResult = await loadPracticalPlaces()
+const contactEndpoint = publicContactEndpoint()
 ---
 
-<PracticalLayout title="Contact — Ludothèque Pâquis-Sécheron" activePath="/contact">
+<PracticalLayout title="Contact — Ludothèque Pâquis-Sécheron" activePath="/contact" noindex={placesResult.source === 'fallback'}>
   <QuestionHero question="Comment joindre l’équipe ?" answer="Pour une réponse immédiate sur une ouverture, appelez directement la ludothèque. Pour une demande moins urgente, utilisez l’adresse e-mail commune." icon="envelope-simple" />
   <div class="shell practical-content contact-layout">
     <section class="contact-direct" aria-labelledby="contact-direct-title">
       <h2 id="contact-direct-title">Les contacts qui fonctionnent</h2>
-      <a class="contact-action" href="mailto:lu.paquissecheron@fase.ch"><i class="ph ph-envelope-simple" aria-hidden="true"></i><span><strong>Écrire à l’équipe</strong><small>lu.paquissecheron@fase.ch</small></span></a>
-      {Object.values(practicalPlaces).map((place) => (
+      <ProvisionalNotice source={placesResult.source} reason={placesResult.reason} />
+      {[...new Set(placesResult.data.map((place) => place.email).filter((email): email is string => Boolean(email)))].map((email) => (
+        <a class="contact-action" href={`mailto:${email}`}><i class="ph ph-envelope-simple" aria-hidden="true"></i><span><strong>Écrire à l’équipe</strong><small>{email}</small></span></a>
+      ))}
+      {placesResult.data.map((place) => place.phone && (
         <a class="contact-action" href={`tel:${place.phone.replaceAll(' ', '')}`}><i class="ph ph-phone" aria-hidden="true"></i><span><strong>Appeler {place.shortName}</strong><small>{place.phone}</small></span></a>
       ))}
-      <p>Les horaires et coordonnées proviennent de l’ancien site et restent à confirmer.</p>
+      {placesResult.source === 'empty' && <p class="status-panel">Aucun e-mail ou téléphone n’est actuellement publié par LudoHub.</p>}
     </section>
 
     <section class="contact-form-panel" aria-labelledby="contact-form-title">
-      <div class="form-status"><i class="ph ph-info" aria-hidden="true"></i><span><strong>Aperçu uniquement</strong> Ce formulaire n’envoie pas encore de message.</span></div>
-      <h2 id="contact-form-title">Préparer mon message</h2>
-      <form aria-describedby="form-fallback">
-        <div class="field"><label for="contact-name">Votre nom</label><input id="contact-name" name="name" autocomplete="name" /></div>
-        <div class="field"><label for="contact-email">Votre e-mail</label><input id="contact-email" name="email" type="email" autocomplete="email" /></div>
+      <div class="form-status" data-contact-status role="status" aria-live="polite"><i class="ph ph-info" aria-hidden="true"></i><span>{contactEndpoint ? 'Le formulaire est prêt.' : 'Le formulaire est indisponible sur cette version du site. Utilisez l’e-mail ou le téléphone.'}</span></div>
+      <h2 id="contact-form-title">Envoyer un message</h2>
+      <form data-contact-form data-contact-endpoint={contactEndpoint ?? undefined} aria-describedby="form-fallback">
+        <div class="field"><label for="contact-name">Votre nom</label><input id="contact-name" name="name" autocomplete="name" required /></div>
+        <div class="field"><label for="contact-email">Votre e-mail</label><input id="contact-email" name="email" type="email" autocomplete="email" required /></div>
         <div class="field"><label for="contact-phone">Votre téléphone <span>(facultatif)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" /></div>
         <div class="field"><label for="contact-recipient">Destinataire</label><select id="contact-recipient" name="recipient"><option value="general">Équipe générale</option><option value="paquis">Pâquis</option><option value="secheron">Sécheron</option></select></div>
-        <div class="field field--wide"><label for="contact-subject">Sujet</label><input id="contact-subject" name="subject" /></div>
-        <div class="field field--wide"><label for="contact-message">Votre question</label><textarea id="contact-message" name="message" rows="6"></textarea></div>
-        <button class="button button--brand" type="button" disabled><span>Envoi bientôt disponible</span><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></button>
+        <div class="field field--wide"><label for="contact-subject">Sujet</label><input id="contact-subject" name="subject" required /></div>
+        <div class="field field--wide"><label for="contact-message">Votre question</label><textarea id="contact-message" name="message" rows="6" required></textarea></div>
+        <div class="contact-honeypot" aria-hidden="true"><label for="contact-website">Site internet</label><input id="contact-website" name="website" tabindex="-1" autocomplete="off" /></div>
+        <button class="button button--brand" type="submit" disabled={!contactEndpoint}><span>{contactEndpoint ? 'Envoyer mon message' : 'Envoi indisponible'}</span><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></button>
       </form>
-      <p id="form-fallback" class="form-fallback">Pour envoyer votre demande aujourd’hui, écrivez à <a href="mailto:lu.paquissecheron@fase.ch">lu.paquissecheron@fase.ch</a> ou appelez l’un des deux lieux.</p>
+      <p id="form-fallback" class="form-fallback">L’e-mail et le téléphone restent disponibles dans la colonne « Les contacts qui fonctionnent », même si l’envoi du formulaire échoue.</p>
     </section>
   </div>
 </PracticalLayout>
+
+<script>
+  import type { ContactRecipient, PublicContactSubmission } from '../lib/ludohub/types.js'
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]')
+  const status = document.querySelector<HTMLElement>('[data-contact-status]')
+  const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]')
+  let idempotencyKey: string | null = null
+
+  const setStatus = (message: string) => {
+    if (status) status.querySelector('span')!.textContent = message
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const endpoint = form.dataset.contactEndpoint
+    if (!endpoint || !submitButton) {
+      setStatus('Le formulaire est indisponible. Utilisez l’e-mail ou le téléphone.')
+      return
+    }
+    if (!form.reportValidity()) return
+    if (!globalThis.crypto?.randomUUID) {
+      setStatus('Votre navigateur ne permet pas un envoi sécurisé. Utilisez l’e-mail ou le téléphone.')
+      return
+    }
+
+    const values = new FormData(form)
+    const phone = String(values.get('phone') ?? '').trim()
+    const payload: PublicContactSubmission = {
+      recipient: String(values.get('recipient')) as ContactRecipient,
+      name: String(values.get('name') ?? '').trim(),
+      email: String(values.get('email') ?? '').trim(),
+      ...(phone ? { phone } : {}),
+      subject: String(values.get('subject') ?? '').trim(),
+      message: String(values.get('message') ?? '').trim(),
+      website: String(values.get('website') ?? ''),
+    }
+    idempotencyKey ??= crypto.randomUUID()
+    submitButton.disabled = true
+    form.setAttribute('aria-busy', 'true')
+    setStatus('Envoi en cours…')
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'Idempotency-Key': idempotencyKey },
+        body: JSON.stringify(payload),
+      })
+      let receipt: unknown = null
+      if (response.status === 200 || response.status === 201) {
+        try {
+          receipt = await response.json()
+        } catch {
+          receipt = null
+        }
+      }
+      const validReceipt =
+        typeof receipt === 'object' &&
+        receipt !== null &&
+        !Array.isArray(receipt) &&
+        'accepted' in receipt &&
+        receipt.accepted === true &&
+        'receiptId' in receipt &&
+        typeof receipt.receiptId === 'string' &&
+        receipt.receiptId.trim().length > 0
+      if ((response.status === 200 || response.status === 201) && validReceipt) {
+        form.reset()
+        idempotencyKey = null
+        setStatus('Message envoyé. Merci, l’équipe vous répondra dès que possible.')
+      } else if (response.status === 400) {
+        setStatus('Certains champs sont invalides. Vérifiez votre message puis réessayez.')
+      } else if (response.status === 429) {
+        setStatus('Trop de tentatives ont été envoyées. Patientez avant de réessayer ou utilisez l’e-mail.')
+      } else {
+        setStatus('Le service d’envoi est indisponible. Utilisez l’e-mail ou le téléphone.')
+      }
+    } catch {
+      setStatus('Le service d’envoi est indisponible. Vérifiez votre connexion ou utilisez l’e-mail.')
+    } finally {
+      form.removeAttribute('aria-busy')
+      submitButton.disabled = false
+    }
+  })
+</script>
+
+<style>
+  .contact-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+</style>

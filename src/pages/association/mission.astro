@@ -1,8 +1,11 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
-import { missionPoints } from '../../data/editorial'
+import { loadDocuments } from '../../data/editorial'
+
+const content = await loadDocuments()
+const missions = content.items.filter((item) => item.kind === 'mission')
 ---
-<EditorialLayout title="Notre mission" description="La mission de la Ludothèque Pâquis-Sécheron." question="Pourquoi une ludothèque de quartier ?" intro="La mission ci-dessous synthétise le cadrage du futur site. Sa formulation institutionnelle reste à approuver.">
+<EditorialLayout title="Notre mission" description="La mission de la Ludothèque Pâquis-Sécheron." question="Pourquoi une ludothèque de quartier ?" intro="Découvrez les engagements qui guident l’accueil, le conseil et la vie de l’association." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Association · mission</span>
-  <section class="editorial-section" aria-labelledby="mission"><div class="editorial-section__heading"><h2 id="mission">Jouer, rencontrer, découvrir</h2><p>Trois engagements simples structurent la présentation de l’association.</p></div><ol class="rank-list">{missionPoints.map((point, index) => <li class="rank-card"><span class="rank-card__number">{index + 1}</span><div><h2>Engagement à valider</h2><p>{point}</p></div></li>)}</ol></section>
+  {missions.length ? missions.map((mission) => <section class="editorial-section" aria-labelledby={`mission-${mission.slug}`}><div class="editorial-section__heading"><h2 id={`mission-${mission.slug}`}>{mission.title}</h2><p>{mission.summary}</p></div><div class="prose">{mission.body.map((paragraph) => <p>{paragraph}</p>)}{!mission.body.length && <div class="status-panel"><h3>Texte détaillé indisponible</h3><p>Le document est publié, mais son texte n’est pas disponible actuellement.</p></div>}{mission.pdf && <a class="share-link" href={mission.pdf.url} target="_blank" rel="noopener noreferrer"><i class="ph ph-file-pdf" aria-hidden="true"></i>Consulter {mission.pdf.fileName}</a>}</div></section>) : <section class="editorial-section"><div class="status-panel"><h3>Mission non publiée</h3><p>L’association prépare ce contenu. <a href="/association">Découvrir les autres rubriques</a>.</p></div></section>}
 </EditorialLayout>
