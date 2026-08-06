@@ -26,3 +26,7 @@ export function absoluteSiteUrl(pathname: string, origin = readSiteOrigin()): st
   if (!origin || !pathname.startsWith('/') || pathname.startsWith('//')) return null
   return new URL(pathname, origin).toString()
 }
+
+export function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c')
+}

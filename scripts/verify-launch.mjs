@@ -84,20 +84,23 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
 
   const legacy = JSON.parse(await readFile(resolve(manifest), 'utf8'))
   const config = JSON.parse(await readFile(resolve(vercel), 'utf8'))
+  if (config.buildCommand !== 'npm run build:launch') errors.push('vercel.json: le build hébergé doit obligatoirement utiliser build:launch.')
   if (legacy.length !== 28 || new Set(legacy.map(({ source }) => source)).size !== 28) errors.push('Manifeste legacy: 28 routes uniques requises.')
-  const routeConfig = config.routes ?? []
+  if ('routes' in config) errors.push('vercel.json: routes ne doit pas être combiné aux propriétés de routage haut niveau.')
+  const goneRewrites = config.rewrites ?? []
   for (const item of legacy) {
     if (item.action === 'keep') continue
     if (item.action === 'gone') {
-      const escaped = item.source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const configured = routeConfig.find((route) => route.src === `^${escaped}/?$`)
-      if (!configured || configured.status !== 410 || configured.dest || configured.headers?.Location) errors.push(`${item.source}: règle 410 Vercel absente ou incohérente.`)
+      const configured = goneRewrites.find((route) => route.source === item.source)
+      if (!configured || configured.destination !== '/api/gone' || item.handler !== '/api/gone' || item.status !== 410) errors.push(`${item.source}: réécriture vers la fonction 410 absente ou incohérente.`)
     } else {
       const configured = (config.redirects ?? []).find((route) => route.source === item.source)
-      if (!configured || configured.destination !== item.destination || configured.permanent !== true) errors.push(`${item.source}: redirection permanente Vercel absente ou incohérente.`)
+      if (!configured || configured.destination !== item.destination || configured.permanent !== true || configured.preserveQueryParams !== true || item.preserveQueryParams !== true) errors.push(`${item.source}: redirection permanente Vercel absente ou incohérente.`)
       if (!(await existsAsOutput(absoluteDist, item.destination))) errors.push(`${item.source}: destination inexistante ${item.destination}.`)
     }
   }
+  if (goneRewrites.length !== 3) errors.push('vercel.json: exactement trois réécritures 410 sont requises.')
+  try { await access(resolve('api/gone.ts')) } catch { errors.push('La fonction api/gone.ts est absente.') }
   if (!pages.has('/404')) errors.push('La page 404 statique est absente.')
   return [...new Set(errors)]
 }

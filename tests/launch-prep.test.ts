@@ -4,8 +4,9 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import legacyRoutes from '../src/data/legacy-routes.json'
-import { absoluteSiteUrl, readSiteOrigin } from '../src/lib/site-origin'
+import { absoluteSiteUrl, readSiteOrigin, serializeJsonLd } from '../src/lib/site-origin'
 import { verifyLaunch } from '../scripts/verify-launch.mjs'
+import gone from '../api/gone'
 
 const projectFile = (path: string) => readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
@@ -29,18 +30,40 @@ describe('préparation déterministe du lancement', () => {
     expect([...destinations].every((destination) => !legacyRoutes.some((item) => item.source === destination && item.action === 'redirect'))).toBe(true)
 
     const vercel = JSON.parse(await projectFile('vercel.json'))
+    expect(vercel.buildCommand).toBe('npm run build:launch')
     for (const item of legacyRoutes.filter((item) => item.action !== 'keep')) {
       if (item.action === 'gone') {
-        const escaped = item.source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const route = vercel.routes.find((candidate: { src?: string }) => candidate.src === `^${escaped}/?$`)
-        expect(route?.status).toBe(410)
+        expect(vercel.rewrites.find((candidate: { source: string }) => candidate.source === item.source)).toEqual({
+          source: item.source, destination: '/api/gone',
+        })
+        expect(item).toMatchObject({ status: 410, handler: '/api/gone' })
       } else {
         expect(vercel.redirects.find((candidate: { source: string }) => candidate.source === item.source)).toEqual({
-          source: item.source, destination: item.destination, permanent: true,
+          source: item.source, destination: item.destination, permanent: true, preserveQueryParams: true,
         })
       }
     }
-    expect(vercel.routes).toHaveLength(3)
+    expect(vercel).not.toHaveProperty('routes')
+    expect(vercel.rewrites).toHaveLength(3)
+    expect(vercel.redirects.every((redirect: { preserveQueryParams?: boolean }) => redirect.preserveQueryParams === true)).toBe(true)
+  })
+
+  it('sert les URL retirées avec une réponse 410 minimale', async () => {
+    const response = gone()
+    expect(response.status).toBe(410)
+    expect(response.headers.get('cache-control')).toBe('no-store')
+    expect(response.headers.get('x-robots-tag')).toBe('noindex, nofollow')
+    expect(response.headers.get('content-type')).toContain('text/plain')
+    expect(await response.text()).toBe('Cette ressource n’est plus disponible.')
+  })
+
+  it('neutralise une fermeture de balise dans les données structurées', () => {
+    const malicious = '</script><script>globalThis.compromised=true</script>'
+    const serialized = serializeJsonLd({ name: malicious })
+    expect(serialized).not.toContain('<')
+    expect(serialized).not.toContain('</script>')
+    expect(serialized).toContain('\\u003c/script>')
+    expect(JSON.parse(serialized)).toEqual({ name: malicious })
   })
 
   it('conserve les pages métier non validées hors index', async () => {

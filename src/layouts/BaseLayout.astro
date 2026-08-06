@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css'
 import '@phosphor-icons/web/regular'
-import { absoluteSiteUrl, readSiteOrigin } from '../lib/site-origin'
+import { absoluteSiteUrl, readSiteOrigin, serializeJsonLd } from '../lib/site-origin'
 
 interface Props {
   title: string
@@ -48,7 +48,7 @@ const jsonLd = organization ? [organization, ...(structuredData ? [structuredDat
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
-    {jsonLd.map((entry) => <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />)}
+    {jsonLd.map((entry) => <script is:inline type="application/ld+json" set:html={serializeJsonLd(entry)} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
