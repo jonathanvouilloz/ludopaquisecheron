@@ -39,8 +39,14 @@ function normalizeApiBase(
 }
 
 export function readLudoHubConfig(
-  environment: LudoHubEnvironment = import.meta
-    .env as unknown as LudoHubEnvironment,
+  environment: LudoHubEnvironment = {
+    ...(import.meta.env as unknown as LudoHubEnvironment),
+    ...(
+      (globalThis as typeof globalThis & {
+        process?: { env?: LudoHubEnvironment };
+      }).process?.env ?? {}
+    ),
+  },
   timeoutMs = DEFAULT_LUDOHUB_TIMEOUT_MS,
 ): LudoHubConfig {
   const base = normalizeApiBase(environment.LUDOHUB_PUBLIC_API_BASE);
