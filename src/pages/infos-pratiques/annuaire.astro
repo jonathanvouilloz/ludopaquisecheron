@@ -8,7 +8,7 @@ import { loadPracticalDirectory } from '../../data/practical'
 const directoryResult = await loadPracticalDirectory()
 ---
 
-<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/annuaire" noindex={directoryResult.source === 'fallback'}>
+<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" description="Coordonnées et itinéraires publiés pour joindre les lieux et contacts de la ludothèque." activePath="/infos-pratiques/annuaire" noindex={directoryResult.source === 'fallback'}>
   <QuestionHero question="Qui dois-je appeler avant de venir ?" answer="Appelez directement le lieu que vous souhaitez visiter. L’adresse e-mail est commune aux deux ludothèques." icon="address-book" />
   <div class="shell practical-content">
     <ProvisionalNotice source={directoryResult.source} reason={directoryResult.reason} />

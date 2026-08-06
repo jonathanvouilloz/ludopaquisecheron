@@ -9,7 +9,7 @@ import { loadPracticalPlaces } from '../../data/practical'
 const placesResult = await loadPracticalPlaces()
 ---
 
-<PracticalLayout title="Infos pratiques — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques" noindex={placesResult.source === 'fallback'}>
+<PracticalLayout title="Infos pratiques — Ludothèque Pâquis-Sécheron" description="Horaires et accès publiés pour préparer une visite aux Pâquis ou à Sécheron." activePath="/infos-pratiques" noindex={placesResult.source === 'fallback'}>
   <QuestionHero question="Que dois-je savoir avant de venir ?" answer="Choisissez un lieu pour les horaires, ou trouvez directement la réponse utile pour jouer sur place, emprunter et vous inscrire." icon="info">
     <ButtonLink href="/paquis" variant="brand" icon="map-pin">Voir les Pâquis</ButtonLink>
     <ButtonLink href="/secheron" variant="outline" icon="map-pin">Voir Sécheron</ButtonLink>

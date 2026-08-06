@@ -9,7 +9,7 @@ const placesResult = await loadPracticalPlaces()
 const contactEndpoint = publicContactEndpoint()
 ---
 
-<PracticalLayout title="Contact — Ludothèque Pâquis-Sécheron" activePath="/contact" noindex={placesResult.source === 'fallback'}>
+<PracticalLayout title="Contact — Ludothèque Pâquis-Sécheron" description="Coordonnées publiées des deux lieux et formulaire pour adresser une demande à l’équipe." activePath="/contact" noindex={placesResult.source === 'fallback'}>
   <QuestionHero question="Comment joindre l’équipe ?" answer="Pour une réponse immédiate sur une ouverture, appelez directement la ludothèque. Pour une demande moins urgente, utilisez l’adresse e-mail commune." icon="envelope-simple" />
   <div class="shell practical-content contact-layout">
     <section class="contact-direct" aria-labelledby="contact-direct-title">

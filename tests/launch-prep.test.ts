@@ -7,6 +7,7 @@ import legacyRoutes from '../src/data/legacy-routes.json'
 import { absoluteSiteUrl, readSiteOrigin, serializeJsonLd } from '../src/lib/site-origin'
 import { verifyLaunch } from '../scripts/verify-launch.mjs'
 import gone from '../api/gone'
+import { validHttpsApiBase } from '../scripts/validate-launch-env.mjs'
 
 const projectFile = (path: string) => readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
@@ -17,6 +18,18 @@ describe('préparation déterministe du lancement', () => {
     expect(readSiteOrigin({ PUBLIC_SITE_ORIGIN: 'https://site.ludo.test/path' })).toBeNull()
     expect(readSiteOrigin({ PUBLIC_SITE_ORIGIN: 'https://site.ludo.test' })?.toString()).toBe('https://site.ludo.test/')
     expect(absoluteSiteUrl('/activites', new URL('https://site.ludo.test'))).toBe('https://site.ludo.test/activites')
+  })
+
+  it('accepte uniquement le chemin public optionnel documenté pour l’API', () => {
+    expect(validHttpsApiBase('https://api.ludo.test')).toBe(true)
+    expect(validHttpsApiBase('https://api.ludo.test/api/public/v1')).toBe(true)
+    expect(validHttpsApiBase('https://api.ludo.test/api/public/v1/')).toBe(true)
+    expect(validHttpsApiBase('https://api.ludo.test/api/public/v2')).toBe(false)
+    expect(validHttpsApiBase('https://api.ludo.test/other')).toBe(false)
+    expect(validHttpsApiBase('https://user:secret@api.ludo.test')).toBe(false)
+    expect(validHttpsApiBase('https://api.ludo.test?preview=1')).toBe(false)
+    expect(validHttpsApiBase('https://api.ludo.test#fragment')).toBe(false)
+    expect(validHttpsApiBase('http://api.ludo.test/api/public/v1')).toBe(false)
   })
 
   it('couvre exactement les 28 URL legacy avec des décisions sans chaîne', async () => {
@@ -67,17 +80,34 @@ describe('préparation déterministe du lancement', () => {
   })
 
   it('conserve les pages métier non validées hors index', async () => {
-    const [base, functioning, registration, sitemap] = await Promise.all([
+    const [base, functioning, registration, sitemap, robots, error500] = await Promise.all([
       projectFile('src/layouts/BaseLayout.astro'),
       projectFile('src/pages/infos-pratiques/fonctionnement.astro'),
       projectFile('src/pages/infos-pratiques/inscription.astro'),
       projectFile('src/pages/sitemap.xml.ts'),
+      projectFile('src/pages/robots.txt.ts'),
+      projectFile('src/pages/500.astro'),
     ])
     expect(base).toContain("'noindex,follow'")
     expect(base).not.toContain('noindex,nofollow')
     expect(functioning).toMatch(/<PracticalLayout[^>]+noindex>/)
     expect(registration).toMatch(/<PracticalLayout[^>]+noindex>/)
     expect(sitemap).toContain('loadIndexableRoutes')
+    expect(robots).not.toContain('Disallow:')
+    expect(error500).toContain('temporairement indisponible')
+    expect(base).not.toContain('og:image')
+  })
+
+  it('donne une description prudente aux pages auparavant génériques', async () => {
+    const pages = await Promise.all([
+      projectFile('src/pages/index.astro'),
+      projectFile('src/pages/contact.astro'),
+      projectFile('src/pages/infos-pratiques/index.astro'),
+      projectFile('src/pages/infos-pratiques/faq.astro'),
+      projectFile('src/pages/infos-pratiques/annuaire.astro'),
+      projectFile('src/pages/styleguide.astro'),
+    ])
+    expect(pages.every((page) => /description="[^"]{40,}"/.test(page))).toBe(true)
   })
 
   it('audite un dist autonome avec une origine .test', async () => {
@@ -93,6 +123,7 @@ describe('préparation déterministe du lancement', () => {
       await writeFile(join(directory, 'index.html'), html(route))
     }
     await writeFile(join(dist, '404.html'), html('/404', true))
+    await writeFile(join(dist, '500.html'), html('/500', true))
     await writeFile(join(dist, 'sitemap.xml'), `<urlset>${indexable.map((route) => `<url><loc>${origin}${route === '/' ? '/' : route}</loc></url>`).join('')}</urlset>`)
     await writeFile(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`)
     const options = {
@@ -104,5 +135,9 @@ describe('préparation déterministe du lancement', () => {
     await expect(verifyLaunch(options)).resolves.toEqual([])
     await writeFile(join(dist, 'index.html'), html('/') + '<p>Prototype de travail</p>')
     await expect(verifyLaunch(options)).resolves.toContain('/: contenu de repli/démonstration détecté.')
+    await writeFile(join(dist, 'index.html'), html('/').replace(/<script type="application\/ld\+json">.*?<\/script>/, ''))
+    await expect(verifyLaunch(options)).resolves.toContain('/: JSON-LD requis sur une page indexable.')
+    await writeFile(join(dist, 'index.html'), html('/').replace('"Organization"', '"Person"'))
+    await expect(verifyLaunch(options)).resolves.toContain('/: type JSON-LD absent ou non autorisé.')
   })
 })

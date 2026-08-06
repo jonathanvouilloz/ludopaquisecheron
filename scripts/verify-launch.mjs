@@ -2,7 +2,8 @@ import { readdir, readFile, access } from 'node:fs/promises'
 import { resolve, relative, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-const EXPECTED_NOINDEX = new Set(['/404', '/styleguide', '/infos-pratiques/fonctionnement', '/infos-pratiques/inscription'])
+const EXPECTED_NOINDEX = new Set(['/404', '/500', '/styleguide', '/infos-pratiques/fonctionnement', '/infos-pratiques/inscription'])
+const ALLOWED_JSON_LD_TYPES = new Set(['Organization', 'Place', 'BreadcrumbList'])
 const UNSAFE_MARKERS = [/data-content-source=["']fallback/i, /mode d[ée]monstration/i, /profil provisoire/i, /contenu provisoire/i, /prototype/i]
 
 async function filesBelow(directory) {
@@ -64,9 +65,15 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
       if (!/<meta[^>]+name=["']twitter:card["']/i.test(html)) errors.push(`${route}: métadonnée Twitter absente.`)
     }
     if (!EXPECTED_NOINDEX.has(route) && UNSAFE_MARKERS.some((pattern) => pattern.test(html))) errors.push(`${route}: contenu de repli/démonstration détecté.`)
+    let validJsonLd = 0
     for (const script of html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
-      try { JSON.parse(script[1]) } catch { errors.push(`${route}: JSON-LD invalide.`) }
+      try {
+        const parsed = JSON.parse(script[1])
+        if (parsed?.['@context'] !== 'https://schema.org' || !ALLOWED_JSON_LD_TYPES.has(parsed?.['@type'])) errors.push(`${route}: type JSON-LD absent ou non autorisé.`)
+        else validJsonLd += 1
+      } catch { errors.push(`${route}: JSON-LD invalide.`) }
     }
+    if (!isNoindex && validJsonLd === 0) errors.push(`${route}: JSON-LD requis sur une page indexable.`)
     for (const href of internalLinks(html)) {
       const pathname = href.split(/[?#]/, 1)[0]
       if (pathname && !(await existsAsOutput(absoluteDist, pathname))) errors.push(`${route}: lien interne cassé vers ${pathname}.`)
@@ -80,7 +87,7 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
   for (const url of sitemapUrls) if (!expectedUrls.has(url)) errors.push(`sitemap.xml: URL exclue ou inconnue ${url}.`)
 
   const robots = await readFile(resolve(absoluteDist, 'robots.txt'), 'utf8')
-  if (!robots.includes(`Sitemap: ${new URL('/sitemap.xml', origin)}`) || /Disallow:\s*\/$/m.test(robots)) errors.push('robots.txt: configuration de lancement invalide.')
+  if (!robots.includes(`Sitemap: ${new URL('/sitemap.xml', origin)}`) || /Disallow:/i.test(robots)) errors.push('robots.txt: configuration de lancement invalide.')
 
   const legacy = JSON.parse(await readFile(resolve(manifest), 'utf8'))
   const config = JSON.parse(await readFile(resolve(vercel), 'utf8'))
@@ -102,6 +109,7 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
   if (goneRewrites.length !== 3) errors.push('vercel.json: exactement trois réécritures 410 sont requises.')
   try { await access(resolve('api/gone.ts')) } catch { errors.push('La fonction api/gone.ts est absente.') }
   if (!pages.has('/404')) errors.push('La page 404 statique est absente.')
+  if (!pages.has('/500')) errors.push('La page 500 statique est absente.')
   return [...new Set(errors)]
 }
 

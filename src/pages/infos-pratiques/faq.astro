@@ -8,7 +8,7 @@ import { loadPracticalFaqs } from '../../data/practical'
 const faqsResult = await loadPracticalFaqs()
 ---
 
-<PracticalLayout title="Questions fréquentes — Ludothèque Pâquis-Sécheron" activePath="/infos-pratiques/faq" noindex={faqsResult.source === 'fallback'}>
+<PracticalLayout title="Questions fréquentes — Ludothèque Pâquis-Sécheron" description="Réponses publiées aux questions fréquentes avant de jouer sur place ou d’emprunter un jeu." activePath="/infos-pratiques/faq" noindex={faqsResult.source === 'fallback'}>
   <QuestionHero question="Puis-je venir sans m’inscrire ?" answer="Oui pour découvrir les lieux et jouer sur place pendant les horaires d’ouverture. Une inscription est nécessaire pour emprunter." icon="question" />
   <div class="shell practical-content practical-content--reading">
     <ProvisionalNotice source={faqsResult.source} reason={faqsResult.reason} />
