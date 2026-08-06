@@ -102,7 +102,7 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
       if (!configured || configured.destination !== '/api/gone' || item.handler !== '/api/gone' || item.status !== 410) errors.push(`${item.source}: réécriture vers la fonction 410 absente ou incohérente.`)
     } else {
       const configured = (config.redirects ?? []).find((route) => route.source === item.source)
-      if (!configured || configured.destination !== item.destination || configured.permanent !== true || configured.preserveQueryParams !== true || item.preserveQueryParams !== true) errors.push(`${item.source}: redirection permanente Vercel absente ou incohérente.`)
+      if (!configured || configured.destination !== item.destination || configured.permanent !== true || item.preserveQueryParams !== true) errors.push(`${item.source}: redirection permanente Vercel absente ou incohérente.`)
       if (!(await existsAsOutput(absoluteDist, item.destination))) errors.push(`${item.source}: destination inexistante ${item.destination}.`)
     }
   }

@@ -52,13 +52,14 @@ describe('préparation déterministe du lancement', () => {
         expect(item).toMatchObject({ status: 410, handler: '/api/gone' })
       } else {
         expect(vercel.redirects.find((candidate: { source: string }) => candidate.source === item.source)).toEqual({
-          source: item.source, destination: item.destination, permanent: true, preserveQueryParams: true,
+          source: item.source, destination: item.destination, permanent: true,
         })
+        expect(item.preserveQueryParams).toBe(true)
       }
     }
     expect(vercel).not.toHaveProperty('routes')
     expect(vercel.rewrites).toHaveLength(3)
-    expect(vercel.redirects.every((redirect: { preserveQueryParams?: boolean }) => redirect.preserveQueryParams === true)).toBe(true)
+    expect(vercel.redirects.every((redirect: { preserveQueryParams?: boolean }) => redirect.preserveQueryParams === undefined)).toBe(true)
   })
 
   it('sert les URL retirées avec une réponse 410 minimale', async () => {
