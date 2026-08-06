@@ -9,7 +9,7 @@ import { publicMembershipFormUrl } from '../../lib/ludohub/config.js'
 const membershipFormUrl = publicMembershipFormUrl()
 ---
 
-<PracticalLayout title="Comment s’inscrire à la ludothèque ?" activePath="/infos-pratiques/inscription" noindex>
+<PracticalLayout title="Comment s’inscrire à la ludothèque ?" description="Préparer une adhésion familiale et contacter l’équipe lorsque le formulaire est indisponible." activePath="/infos-pratiques/inscription" noindex>
   <QuestionHero question="Comment inscrire ma famille ?" answer="L’inscription sert à emprunter des jeux. Vous pouvez préparer la demande en ligne, puis finaliser les éventuelles étapes restantes avec l’équipe." icon="identification-card">
     {membershipFormUrl
       ? <a class="button button--brand" href={membershipFormUrl} target="_blank" rel="noopener noreferrer"><span>Ouvrir le formulaire familial</span><i class="ph ph-arrow-square-out" aria-hidden="true"></i></a>

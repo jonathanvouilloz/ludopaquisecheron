@@ -39,6 +39,7 @@ import {
   topThreesPayload,
   type Parser,
 } from "./validators.js";
+import { launchFixtureFetch } from './launch-fixture.js'
 
 export type ReadOptions<T> = { fallback?: T; timeoutMs?: number };
 export type ListOptions<T> = ReadOptions<T> & { site?: string; limit?: number };
@@ -287,4 +288,12 @@ export const createLudoHubClient = (options: LudoHubClientOptions = {}) =>
   new LudoHubClient(options);
 
 /** Client par défaut destiné aux frontmatters Astro et à `getStaticPaths`. */
-export const ludohub = createLudoHubClient();
+const launchEnvironment = import.meta.env as { PUBLIC_LAUNCH_FIXTURE_MODE?: string; PUBLIC_SITE_ORIGIN?: string; LUDOHUB_PUBLIC_API_BASE?: string }
+const useLaunchFixture = launchEnvironment.PUBLIC_LAUNCH_FIXTURE_MODE === 'live'
+if (useLaunchFixture) {
+  const fixtureHosts = [launchEnvironment.PUBLIC_SITE_ORIGIN, launchEnvironment.LUDOHUB_PUBLIC_API_BASE].map((value) => {
+    try { return new URL(value ?? '').hostname } catch { return '' }
+  })
+  if (fixtureHosts.some((host) => !host.endsWith('.test'))) throw new Error('La fixture live est réservée aux origines .test.')
+}
+export const ludohub = createLudoHubClient(useLaunchFixture ? { fetch: launchFixtureFetch } : {});

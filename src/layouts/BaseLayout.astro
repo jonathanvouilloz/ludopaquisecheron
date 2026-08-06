@@ -1,12 +1,14 @@
 ---
 import '../styles/global.css'
 import '@phosphor-icons/web/regular'
+import { absoluteSiteUrl, readSiteOrigin } from '../lib/site-origin'
 
 interface Props {
   title: string
   description?: string
   noindex?: boolean
   forcedTheme?: 'paquis' | 'secheron'
+  structuredData?: Record<string, unknown> | null
 }
 
 const {
@@ -14,7 +16,20 @@ const {
   description = 'Deux ludothèques de quartier pour jouer, découvrir et partager à Genève.',
   noindex = false,
   forcedTheme,
+  structuredData = null,
 } = Astro.props
+const origin = readSiteOrigin()
+const canonicalPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '')
+const canonical = absoluteSiteUrl(canonicalPath, origin)
+const effectiveNoindex = noindex || !origin
+const socialTitle = title
+const organization = canonical && !effectiveNoindex ? {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Ludothèque Pâquis-Sécheron',
+  url: origin!.toString(),
+} : null
+const jsonLd = organization ? [organization, ...(structuredData ? [structuredData] : [])] : []
 ---
 
 <!doctype html>
@@ -23,7 +38,17 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <meta name="robots" content={effectiveNoindex ? 'noindex,follow' : 'index,follow'} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CH" />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={description} />
+    {jsonLd.map((entry) => <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

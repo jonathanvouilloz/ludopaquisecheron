@@ -10,12 +10,13 @@ interface Props {
   activePath: string
   forcedTheme?: 'paquis' | 'secheron'
   noindex?: boolean
+  structuredData?: Record<string, unknown> | null
 }
 
-const { title, description, activePath, forcedTheme, noindex = false } = Astro.props
+const { title, description, activePath, forcedTheme, noindex = false, structuredData = null } = Astro.props
 ---
 
-<BaseLayout title={title} description={description} forcedTheme={forcedTheme} noindex={noindex}>
+<BaseLayout title={title} description={description} forcedTheme={forcedTheme} noindex={noindex} structuredData={structuredData}>
   <Header activePath={activePath} />
   <main id="contenu"><slot /></main>
   <WaveDivider tone="dark" flip />

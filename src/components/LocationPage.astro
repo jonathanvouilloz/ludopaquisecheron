@@ -11,6 +11,11 @@ import type { LudoHubFailureReason } from '../lib/ludohub/types.js'
 interface Props { place: PracticalPlace | null; placeKey: PlaceKey; source: PracticalSource; reason?: LudoHubFailureReason }
 const { place, placeKey, source, reason } = Astro.props
 const label = placeKey === 'paquis' ? 'Pâquis' : 'Sécheron'
+const placeStructuredData = source === 'live' && place ? {
+  '@context': 'https://schema.org',
+  '@type': 'Place',
+  name: place.name,
+} : null
 ---
 
 <PracticalLayout
@@ -19,6 +24,7 @@ const label = placeKey === 'paquis' ? 'Pâquis' : 'Sécheron'
   activePath={`/${placeKey}`}
   forcedTheme={placeKey}
   noindex={source === 'fallback'}
+  structuredData={placeStructuredData}
 >
   <QuestionHero question={place?.question ?? `Les horaires de ${label} sont-ils publiés ?`} answer={place?.introduction ?? 'Aucune information de lieu n’est publiée dans LudoHub pour le moment.'} icon="clock">
     {place?.phone && <ButtonLink href={`tel:${place.phone.replaceAll(' ', '')}`} variant="brand" icon="phone">Appeler {place.shortName}</ButtonLink>}

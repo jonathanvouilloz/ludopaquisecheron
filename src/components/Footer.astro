@@ -1,3 +1,8 @@
+---
+import { readSiteOrigin } from '../lib/site-origin'
+const launchCandidate = readSiteOrigin() !== null
+---
+
 <footer class="site-footer">
   <div class="shell site-footer__grid">
     <div>
@@ -18,7 +23,7 @@
     </div>
   </div>
   <div class="shell site-footer__bottom">
-    <span>Prototype de travail — informations à confirmer</span>
+    {!launchCandidate && <span>Prototype de travail — informations à confirmer</span>}
     <span>Association de la Ludothèque de Pâquis-Sécheron</span>
   </div>
 </footer>

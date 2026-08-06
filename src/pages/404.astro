@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+---
+
+<BaseLayout title="Page introuvable — Ludothèque Pâquis-Sécheron" description="Cette page n’existe pas ou n’est plus disponible." noindex>
+  <Header />
+  <main id="contenu" class="error-page">
+    <div class="shell">
+      <p class="error-page__code" aria-hidden="true">404</p>
+      <h1>Cette page est introuvable.</h1>
+      <p>Le lien est peut-être ancien ou incomplet. Revenez à l’accueil ou consultez les informations pratiques.</p>
+      <p><a class="button button--brand" href="/">Retour à l’accueil</a> <a href="/infos-pratiques">Infos pratiques</a></p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .error-page { min-height: 58vh; display: grid; place-items: center; padding-block: var(--space-9); text-align: center; }
+  .error-page__code { margin: 0; color: var(--color-highlight); font-family: var(--font-display); font-size: clamp(5rem, 20vw, 12rem); line-height: .8; }
+  h1 { margin-block: var(--space-5); color: var(--color-brand-dark); font-family: var(--font-display); font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 400; }
+  .error-page p:not(.error-page__code) { max-width: 58ch; margin-inline: auto; }
+  .error-page a + a { margin-left: var(--space-4); }
+</style>

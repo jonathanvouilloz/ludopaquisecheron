@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
+    "build:launch": "node scripts/validate-launch-env.mjs && astro check && astro build && node scripts/verify-launch.mjs",
+    "verify:launch": "node scripts/verify-launch.mjs",
     "check": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
