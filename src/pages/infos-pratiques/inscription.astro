@@ -4,22 +4,30 @@ import QuestionHero from '../../components/QuestionHero.astro'
 import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
 import PracticalNav from '../../components/PracticalNav.astro'
 import ButtonLink from '../../components/ButtonLink.astro'
+import { publicMembershipFormUrl } from '../../lib/ludohub/config.js'
+
+const membershipFormUrl = publicMembershipFormUrl()
 ---
 
 <PracticalLayout title="Comment s’inscrire à la ludothèque ?" activePath="/infos-pratiques/inscription" noindex>
-  <QuestionHero question="Comment inscrire ma famille ?" answer="L’inscription sert à emprunter des jeux. Comme les conditions archivées ne sont pas encore validées, contactez l’équipe ou demandez-les lors de votre première visite." icon="identification-card">
-    <ButtonLink href="/contact" variant="brand" icon="envelope-simple">Demander les modalités</ButtonLink>
+  <QuestionHero question="Comment inscrire ma famille ?" answer="L’inscription sert à emprunter des jeux. Vous pouvez préparer la demande en ligne, puis finaliser les éventuelles étapes restantes avec l’équipe." icon="identification-card">
+    {membershipFormUrl
+      ? <a class="button button--brand" href={membershipFormUrl} target="_blank" rel="noopener noreferrer"><span>Ouvrir le formulaire familial</span><i class="ph ph-arrow-square-out" aria-hidden="true"></i></a>
+      : <ButtonLink href="/contact" variant="brand" icon="envelope-simple">Contacter l’équipe</ButtonLink>}
   </QuestionHero>
   <div class="shell practical-content practical-content--reading">
     <ProvisionalNotice source="fallback" />
+    {!membershipFormUrl && <section class="status-panel" aria-labelledby="membership-unavailable-title"><h2 id="membership-unavailable-title">Formulaire temporairement indisponible</h2><p>Aucune adresse de formulaire valide n’est configurée. <a href="/contact">Contactez l’équipe</a> pour commencer l’inscription.</p></section>}
     <section class="answer-panel prose-panel">
       <h2>Ce que vous pouvez préparer</h2>
       <ul class="check-list">
         <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Les coordonnées de la personne responsable de l’inscription.</span></li>
         <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Le nom des enfants ou membres du foyer concernés.</span></li>
-        <li><i class="ph ph-question" aria-hidden="true"></i><span>Demandez à l’équipe les justificatifs, tarifs et moyens de paiement actuellement acceptés.</span></li>
+        <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Le paiement se fait sur place, par TWINT ou en espèces. Aucun paiement n’est demandé en ligne.</span></li>
+        <li><i class="ph ph-check-circle" aria-hidden="true"></i><span>Aucun compte en ligne n’est nécessaire pour remplir le formulaire.</span></li>
       </ul>
-      <p><strong>Aucun tarif ni document obligatoire n’est affiché ici tant que l’équipe ne les a pas confirmés.</strong></p>
+      <p>Le formulaire présente les consentements et les règles applicables avec leur version. Prenez-en connaissance avant de valider votre demande.</p>
+      <p><strong>Cette page ne reproduit pas leur texte légal et n’ajoute aucune condition.</strong></p>
     </section>
     <PracticalNav />
   </div>

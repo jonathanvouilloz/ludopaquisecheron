@@ -3,6 +3,7 @@ import { createLudoHubClient } from "./client.js";
 import {
   publicActivityRegistrationEndpoint,
   publicContactEndpoint,
+  publicMembershipFormUrl,
   readLudoHubConfig,
 } from "./config.js";
 import type { SitesPayload } from "./types.js";
@@ -373,5 +374,32 @@ describe("configuration contact public", () => {
     expect(publicActivityRegistrationEndpoint("été/2026", config)).toBe(
       "https://ludohub.example/api/public/registrations/v1/tenant%20test/activities/%C3%A9t%C3%A9%2F2026",
     );
+  });
+
+  it("dérive le formulaire d'adhésion depuis la racine LudoHub et encode le tenant", () => {
+    const rootConfig = readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: "https://ludohub.example",
+      LUDOHUB_PUBLIC_LUDO_SLUG: "famille/été",
+    });
+    expect(publicMembershipFormUrl(rootConfig)).toBe(
+      "https://ludohub.example/formulaires/famille%2F%C3%A9t%C3%A9/adhesion",
+    );
+
+    const nestedConfig = readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: "https://example.test/ludohub/api/public/v1/",
+    });
+    expect(publicMembershipFormUrl(nestedConfig)).toBe(
+      "https://example.test/ludohub/formulaires/paquis-secheron/adhesion",
+    );
+  });
+
+  it("n'invente aucune URL si la configuration est absente ou invalide", () => {
+    expect(publicMembershipFormUrl(readLudoHubConfig({}))).toBeNull();
+    expect(publicMembershipFormUrl(readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: "javascript:alert(1)",
+    }))).toBeNull();
+    expect(publicMembershipFormUrl(readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: "https://user:secret@ludohub.example",
+    }))).toBeNull();
   });
 });

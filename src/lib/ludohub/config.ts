@@ -73,3 +73,13 @@ export function publicActivityRegistrationEndpoint(
   url.pathname = `${url.pathname.replace(/\/api\/public\/v1$/, "/api/public/registrations/v1")}/${encodeURIComponent(config.tenantSlug)}/activities/${encodeURIComponent(activitySlug)}`;
   return url.toString();
 }
+
+export function publicMembershipFormUrl(
+  config = readLudoHubConfig(),
+): string | null {
+  if (config.issue !== null || !config.apiBase) return null;
+  const url = new URL(config.apiBase);
+  const ludoHubPath = url.pathname.replace(/\/api\/public\/v1$/, "");
+  url.pathname = `${ludoHubPath}/formulaires/${encodeURIComponent(config.tenantSlug)}/adhesion`;
+  return url.toString();
+}

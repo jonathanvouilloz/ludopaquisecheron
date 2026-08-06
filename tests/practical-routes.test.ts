@@ -13,7 +13,7 @@ import {
 } from '../src/data/practical'
 import { primaryNavigation } from '../src/data/site'
 import { createLudoHubClient } from '../src/lib/ludohub/client'
-import { publicContactEndpoint, readLudoHubConfig } from '../src/lib/ludohub/config'
+import { publicContactEndpoint, publicMembershipFormUrl, readLudoHubConfig } from '../src/lib/ludohub/config'
 
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8')
 const envelope = (data: unknown) => new Response(JSON.stringify({ version: 1, data }), { status: 200, headers: { 'content-type': 'application/json' } })
@@ -116,6 +116,29 @@ describe('shell multipage et parcours pratiques', () => {
     for (const page of provisionalPages) {
       expect(page).toMatch(/<PracticalLayout[^>]+\snoindex>/)
     }
+  })
+
+  it('propose uniquement la source LudoHub valide pour l’adhésion familiale', async () => {
+    const page = await read('../src/pages/infos-pratiques/inscription.astro')
+    expect(page).toContain('publicMembershipFormUrl()')
+    expect(page).toMatch(/membershipFormUrl\s*\?\s*<a/)
+    expect(page).toContain('target="_blank"')
+    expect(page).toContain('rel="noopener noreferrer"')
+    expect(page).toContain('Formulaire temporairement indisponible')
+    expect(page).toContain('href="/contact"')
+    expect(page).toContain('par TWINT ou en espèces')
+    expect(page).toContain('Aucun paiement n’est demandé en ligne')
+    expect(page).toContain('Aucun compte en ligne n’est nécessaire')
+    expect(page).toContain('avec leur version')
+    expect(page).not.toContain('<iframe')
+    expect(page).not.toMatch(/href=\{membershipFormUrl \?\? ['"]{2}\}/)
+
+    expect(publicMembershipFormUrl(readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: 'https://ludohub.example',
+    }))).toBe('https://ludohub.example/formulaires/paquis-secheron/adhesion')
+    expect(publicMembershipFormUrl(readLudoHubConfig({
+      LUDOHUB_PUBLIC_API_BASE: 'not-a-url',
+    }))).toBeNull()
   })
 
   it('utilise exclusivement les sites live et ignore les slugs inconnus', async () => {
