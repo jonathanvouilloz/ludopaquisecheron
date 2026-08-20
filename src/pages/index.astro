@@ -138,6 +138,7 @@ const homeLocations = home.places.data.map((place) => ({
           <div class="editorial-grid">
             {home.news.items.map((item) => (
               <article class="editorial-card">
+                {item.image && <img class="editorial-card__image" src={item.image.url} alt={item.image.alt} loading="lazy" />}
                 <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-newspaper-clipping"></i></div>
                 <h3><a href={item.detailAvailable ? `/actualites/${item.slug}` : '/actualites'}>{item.title}</a></h3>
                 <p>{item.summary}</p>
@@ -158,6 +159,7 @@ const homeLocations = home.places.data.map((place) => ({
           <div class="editorial-grid">
             {home.featuredActivities.map((item) => (
               <article class="editorial-card">
+                {item.image && <img class="editorial-card__image" src={item.image.url} alt={item.image.alt} loading="lazy" />}
                 <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-calendar-dots"></i></div>
                 <h3><a href={item.detailAvailable ? `/activites/${item.slug}` : '/activites'}>{item.title}</a></h3>
                 <p>{item.summary}</p>
@@ -172,3 +174,7 @@ const homeLocations = home.places.data.map((place) => ({
   <WaveDivider tone="dark" flip />
   <Footer />
 </BaseLayout>
+
+<style>
+  .editorial-card__image { display: block; width: 100%; aspect-ratio: 16 / 9; margin-bottom: var(--space-4); border-radius: var(--radius-lg); object-fit: cover; }
+</style>

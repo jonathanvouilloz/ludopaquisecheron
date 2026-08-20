@@ -129,6 +129,7 @@ describe('préparation déterministe du lancement', () => {
     await writeFile(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`)
     const options = {
       dist,
+      serverOutput: join(root, 'absent-server-output'),
       origin,
       manifest: fileURLToPath(new URL('../src/data/legacy-routes.json', import.meta.url)),
       vercel: fileURLToPath(new URL('../vercel.json', import.meta.url)),
@@ -140,5 +141,22 @@ describe('préparation déterministe du lancement', () => {
     await expect(verifyLaunch(options)).resolves.toContain('/: JSON-LD requis sur une page indexable.')
     await writeFile(join(dist, 'index.html'), html('/').replace('"Organization"', '"Person"'))
     await expect(verifyLaunch(options)).resolves.toContain('/: type JSON-LD absent ou non autorisé.')
+  })
+
+  it('accepte un build Astro SSR lorsque la fonction de rendu Vercel est présente', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'ludo-server-launch-'))
+    const dist = join(root, 'dist')
+    const serverOutput = join(root, '.vercel', 'output')
+    const origin = 'https://site.ludo.test'
+    await mkdir(join(serverOutput, 'functions', '_render.func'), { recursive: true })
+    await writeFile(join(serverOutput, 'functions', '_render.func', '.vc-config.json'), '{}')
+
+    await expect(verifyLaunch({
+      dist,
+      serverOutput,
+      origin,
+      manifest: fileURLToPath(new URL('../src/data/legacy-routes.json', import.meta.url)),
+      vercel: fileURLToPath(new URL('../vercel.json', import.meta.url)),
+    })).resolves.toEqual([])
   })
 })

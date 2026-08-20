@@ -1,6 +1,6 @@
 # Connexion à l’API publique LudoHub
 
-Le client typé se trouve dans `src/lib/ludohub`. Il est conçu pour les frontmatters Astro, les fonctions `getStaticPaths` et les lectures côté serveur/build. Il ne fait jamais échouer volontairement un build à cause d’une API absente.
+Le client typé se trouve dans `src/lib/ludohub`. Il est conçu pour les frontmatters Astro et les lectures côté serveur. Le site public est rendu à la demande sur Vercel : les listes et fiches publiées sont donc relues depuis LudoHub sans attendre un nouveau build. Le client ne fait jamais échouer volontairement un build à cause d’une API absente.
 
 ## Configuration
 

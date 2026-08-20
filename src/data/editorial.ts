@@ -22,6 +22,7 @@ export type NewsView = {
   title: string;
   question: string;
   summary: string;
+  image: { url: string; alt: string } | null;
   body: string[];
   dateLabel: string;
   location: string;
@@ -89,6 +90,7 @@ const demoNews: NewsView[] = [
     question: "Qu’est-ce qui change sur le site ?",
     summary:
       "Un exemple de publication pour tester une information courte, datée et facile à partager.",
+    image: null,
     body: [
       "Cette page montre la forme d’une future actualité. Son contenu n’annonce aucun changement réel.",
       "Après validation, l’équipe publiera ici les fermetures, nouvelles et rendez-vous utiles aux familles.",
@@ -104,6 +106,7 @@ const demoNews: NewsView[] = [
     question: "Quels jeux l’équipe pourrait-elle mettre en avant ?",
     summary:
       "Un second exemple pour vérifier l’affichage d’une actualité liée aux collections.",
+    image: null,
     body: [
       "Les titres présentés ici sont provisoires et ne sont pas des recommandations publiées.",
     ],
@@ -120,6 +123,7 @@ const demoActivities: ActivityView[] = [
     question: "Envie de découvrir un jeu ensemble ?",
     summary:
       "Une activité fictive utilisée pour tester une fiche avec public, horaire et lieu.",
+    image: null,
     body: [
       "Cette activité n’est pas programmée. Elle illustre une future animation validée.",
     ],
@@ -141,6 +145,7 @@ const demoArchivedActivities: ActivityView[] = [
     question: "À quoi ressemblera l’historique des activités ?",
     summary:
       "Un exemple explicitement fictif pour rendre l’état archive testable.",
+    image: null,
     body: ["Cette fiche ne correspond pas à une activité passée réelle."],
     dateLabel: "Exemple sans date réelle",
     location: "Les deux lieux",
@@ -336,6 +341,7 @@ export async function loadNews(
       title: item.title,
       question: item.title,
       summary: item.summary,
+      image: item.image,
       body: [],
       dateLabel: dateLabel(item.publishedAt),
       location: result.data.site || "Les deux lieux",
@@ -368,6 +374,30 @@ export async function loadNewsRoutes(
     }),
   );
   return { ...list, items };
+}
+
+export async function loadNewsDetail(
+  slug: string,
+  client: LudoHubClient = ludohub,
+): Promise<(EditorialSource & { item: NewsView }) | null> {
+  const result = await client.newsDetail(slug);
+  if (result.source !== "live") return null;
+  const item = result.data.news;
+  return {
+    ...liveSource(),
+    item: {
+      slug: item.slug,
+      title: item.title,
+      question: item.title,
+      summary: item.summary,
+      image: item.image,
+      body: markdownParagraphs(item.bodyMarkdown),
+      dateLabel: dateLabel(item.publishedAt),
+      location: locationLabel(item.sites),
+      status: "live",
+      detailAvailable: true,
+    },
+  };
 }
 
 function activityFallback(items: ActivityView[]): ActivitiesPayload {
@@ -415,6 +445,7 @@ export async function loadActivities(
       title: item.title,
       question: item.title,
       summary: item.summary,
+      image: item.image,
       body: [],
       dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
       location: item.location || result.data.site || "Les deux lieux",
@@ -462,6 +493,35 @@ export async function loadActivityRoutes(
     }),
   );
   return { ...liveSource(), items };
+}
+
+export async function loadActivityDetail(
+  slug: string,
+  client: LudoHubClient = ludohub,
+): Promise<(EditorialSource & { item: ActivityView }) | null> {
+  const result = await client.activityDetail(slug);
+  if (result.source !== "live") return null;
+  const item = result.data.activity;
+  return {
+    ...liveSource(),
+    item: {
+      slug: item.slug,
+      title: item.title,
+      question: item.title,
+      summary: item.summary,
+      image: item.image,
+      body: markdownParagraphs(item.bodyMarkdown),
+      dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
+      location: item.location || result.data.site || "Les deux lieux",
+      audience: "Tout public",
+      schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
+      status: "live",
+      archived: item.lifecycle === "archived",
+      featuredRank: item.featuredRank,
+      registration: item.registration,
+      detailAvailable: true,
+    },
+  };
 }
 
 const topFallback: TopThreesPayload = {

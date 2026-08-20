@@ -8,7 +8,7 @@ Ce document sépare les garde-fous déjà automatisés des validations qui appar
 - Les redirections sont permanentes (308), en un seul saut et vers une page existante. Les routes Vercel avec `dest` conservent les paramètres de requête ; aucun paramètre n’est ajouté ou transformé.
 - `agenda-modele`, `copie-de-agenda` et `radioludo-2-0` sont réécrits vers une fonction minimale qui répond 410, `no-store` et `noindex`. RadioLudo reste retiré tant que les droits des enregistrements et les autorisations des personnes ne sont pas établis.
 - Les pages 404 et 500 sont génériques et n’exposent aucun détail technique. Leurs statuts réellement servis doivent être confirmés sur l’hébergement.
-- Le build local reste désindexé. Le build de lancement exige une origine HTTPS explicite et refuse les contenus de démonstration, de repli ou désindexés hors liste prévue.
+- Le build local reste désindexé. Le build de lancement exige une origine HTTPS explicite et vérifie le paquet SSR Vercel, les routes legacy et les réponses 410. Les contenus publics sont relus à la requête ; une publication LudoHub n’exige donc pas un nouveau build.
 - `vercel.json` impose `npm run build:launch` : une Preview ou une production ne peut pas sélectionner le build local permissif par défaut.
 - `PUBLIC_LAUNCH_FIXTURE_MODE=live` permet de tester la mécanique avec des origines `.test` uniquement. La fixture est vide et ne constitue jamais une validation éditoriale.
 - Le sitemap n’intègre que les rubriques dont la source LudoHub est `live`. Le fonctionnement et l’inscription restent hors index tant que leurs contenus métier ne sont pas validés.

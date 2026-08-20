@@ -4,13 +4,23 @@ interface Props {
   summary: string
   href: string
   meta: string[]
+  image?: { url: string; alt: string } | null
   linkLabel?: string
 }
-const { title, summary, href, meta, linkLabel = 'Lire la suite' } = Astro.props
+const { title, summary, href, meta, image = null, linkLabel = 'Lire la suite' } = Astro.props
 ---
 <article class="content-card">
-  <div class="content-card__meta">{meta.map((item) => <span>{item}</span>)}</div>
-  <h2>{title}</h2>
-  <p>{summary}</p>
-  <a class="content-card__link" href={href}>{linkLabel}<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+  {image && <img class="content-card__image" src={image.url} alt={image.alt} loading="lazy" />}
+  <div class="content-card__body">
+    <div class="content-card__meta">{meta.map((item) => <span>{item}</span>)}</div>
+    <h2>{title}</h2>
+    <p>{summary}</p>
+    <a class="content-card__link" href={href}>{linkLabel}<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+  </div>
 </article>
+
+<style>
+  .content-card { overflow: hidden; }
+  .content-card__image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .content-card__body { padding: var(--space-5); }
+</style>

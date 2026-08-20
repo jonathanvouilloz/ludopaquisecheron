@@ -2,8 +2,6 @@ import type { APIRoute } from 'astro'
 import { loadIndexableRoutes } from '../data/sitemap'
 import { readSiteOrigin } from '../lib/site-origin'
 
-export const prerender = true
-
 const escapeXml = (value: string) => value.replace(/[<>&'\"]/g, (character) => ({
   '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;',
 })[character]!)

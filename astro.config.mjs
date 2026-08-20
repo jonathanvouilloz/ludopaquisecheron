@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config'
+import vercel from '@astrojs/vercel'
 
 const rawOrigin = process.env.PUBLIC_SITE_ORIGIN?.trim()
 let site
@@ -12,5 +13,6 @@ if (rawOrigin) {
 
 export default defineConfig({
   site,
-  output: 'static',
+  output: 'server',
+  adapter: vercel(),
 })

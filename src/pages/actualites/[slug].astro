@@ -1,23 +1,24 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
-import { loadNewsRoutes, type EditorialSource, type NewsView } from '../../data/editorial'
+import { loadNewsDetail } from '../../data/editorial'
 
-export async function getStaticPaths() {
-  const content = await loadNewsRoutes()
-  const source: EditorialSource = { mode: content.mode, notice: content.notice, noindex: content.noindex, reason: content.reason }
-  return content.items.map((item) => ({ params: { slug: item.slug }, props: { item, source } }))
-}
-const { item, source } = Astro.props as { item: NewsView; source: EditorialSource }
+const slug = Astro.params.slug
+const content = slug ? await loadNewsDetail(slug) : null
+if (!content) return Astro.redirect('/404')
+const { item, ...source } = content
 ---
 <EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/actualites" sourceNotice={source.notice} noindex={source.noindex}>
-  <span slot="kicker">Actualité · {source.mode === 'live' ? 'publication' : 'exemple'}</span>
+  <span slot="kicker">Actualité · publication</span>
   <article class="editorial-section detail-layout">
     <div class="prose">
+      {item.image && <img class="editorial-image" src={item.image.url} alt={item.image.alt} loading="eager" />}
       {item.body.map((paragraph) => <p>{paragraph}</p>)}
-      {!item.detailAvailable && <div class="status-panel"><h2>Détail temporairement indisponible</h2><p>La publication existe, mais son contenu détaillé n’a pas pu être chargé. <a href="/contact">Contactez la ludothèque</a> si nécessaire.</p></div>}
-      {source.mode === 'demo' && <div class="status-panel"><h2>Information provisoire</h2><p>Cette publication est un exemple et ne correspond pas à une annonce réelle.</p></div>}
       <a class="share-link" href={Astro.url.pathname} aria-label={`Lien permanent vers ${item.title}`}><i class="ph ph-link" aria-hidden="true"></i>Lien permanent vers cette actualité</a>
     </div>
-    <aside class="detail-aside" aria-label="Repères de la publication"><dl><div><dt>Date</dt><dd>{item.dateLabel}</dd></div><div><dt>Lieu</dt><dd>{item.location}</dd></div><div><dt>Statut</dt><dd>{source.mode === 'live' ? 'Publié' : 'Exemple non publié'}</dd></div></dl></aside>
+    <aside class="detail-aside" aria-label="Repères de la publication"><dl><div><dt>Date</dt><dd>{item.dateLabel}</dd></div><div><dt>Lieu</dt><dd>{item.location}</dd></div><div><dt>Statut</dt><dd>Publié</dd></div></dl></aside>
   </article>
 </EditorialLayout>
+
+<style>
+  .editorial-image { width: 100%; max-height: 32rem; margin-bottom: var(--space-5); border-radius: var(--radius-lg); object-fit: cover; }
+</style>

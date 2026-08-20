@@ -38,7 +38,7 @@ async function existsAsOutput(dist, pathname) {
   return false
 }
 
-export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.env.PUBLIC_SITE_ORIGIN, manifest = 'src/data/legacy-routes.json', vercel = 'vercel.json' } = {}) {
+export async function verifyLaunch({ dist = 'dist', serverOutput = '.vercel/output', origin: rawOrigin = process.env.PUBLIC_SITE_ORIGIN, manifest = 'src/data/legacy-routes.json', vercel = 'vercel.json' } = {}) {
   const errors = []
   let origin
   try {
@@ -47,6 +47,26 @@ export async function verifyLaunch({ dist = 'dist', origin: rawOrigin = process.
   } catch { return ['PUBLIC_SITE_ORIGIN doit être une origine HTTPS valide sans chemin.'] }
 
   const absoluteDist = resolve(dist)
+  let serverBuild = false
+  try {
+    await access(resolve(serverOutput, 'functions', '_render.func', '.vc-config.json'))
+    serverBuild = true
+  } catch { /* Build statique historique : les vérifications HTML ci-dessous restent applicables. */ }
+  if (serverBuild) {
+    const legacy = JSON.parse(await readFile(resolve(manifest), 'utf8'))
+    const config = JSON.parse(await readFile(resolve(vercel), 'utf8'))
+    if (config.buildCommand !== 'npm run build:launch') errors.push('vercel.json: le build hébergé doit obligatoirement utiliser build:launch.')
+    if (legacy.length !== 28 || new Set(legacy.map(({ source }) => source)).size !== 28) errors.push('Manifeste legacy: 28 routes uniques requises.')
+    if ('routes' in config) errors.push('vercel.json: routes ne doit pas être combiné aux propriétés de routage haut niveau.')
+    const goneRewrites = config.rewrites ?? []
+    for (const item of legacy.filter((item) => item.action === 'gone')) {
+      const configured = goneRewrites.find((route) => route.source === item.source)
+      if (!configured || configured.destination !== '/api/gone' || item.handler !== '/api/gone' || item.status !== 410) errors.push(`${item.source}: réécriture vers la fonction 410 absente ou incohérente.`)
+    }
+    if (goneRewrites.length !== 3) errors.push('vercel.json: exactement trois réécritures 410 sont requises.')
+    try { await access(resolve('api/gone.ts')) } catch { errors.push('La fonction api/gone.ts est absente.') }
+    return [...new Set(errors)]
+  }
   const files = await filesBelow(absoluteDist)
   const htmlFiles = files.filter((file) => file.endsWith('.html'))
   const pages = new Map()
