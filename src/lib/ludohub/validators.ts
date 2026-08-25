@@ -116,6 +116,50 @@ const parseNullableImage = (value: unknown): PublicImage | null | undefined => {
   if (value === null) return null;
   return parseImage(value) ?? undefined;
 };
+
+const parseSupportImage = (value: unknown) => {
+  if (value === null) return null;
+  const source = record(value);
+  const image = parseImage(value);
+  return source &&
+    image &&
+    nullableText(source.caption) &&
+    nullableText(source.credit)
+    ? { ...image, caption: source.caption, credit: source.credit }
+    : undefined;
+};
+
+const parsePdfAttachment = (value: unknown) => {
+  const source = record(value);
+  const id = nonEmpty(source?.id);
+  const title = nonEmpty(source?.title);
+  const fileName = nonEmpty(source?.fileName);
+  const viewUrl = httpUrl(source?.viewUrl);
+  const downloadUrl = httpUrl(source?.downloadUrl);
+  const sizeBytes = integer(source?.sizeBytes);
+  return source &&
+    id &&
+    title &&
+    fileName &&
+    viewUrl &&
+    downloadUrl &&
+    sizeBytes &&
+    sizeBytes > 0
+    ? { id, title, fileName, viewUrl, downloadUrl, sizeBytes }
+    : null;
+};
+
+const parseDetailAssets = (source: RecordValue | null) => {
+  const supportImage = parseSupportImage(source?.supportImage ?? null);
+  const attachments = parseArray(
+    source?.attachments ?? [],
+    parsePdfAttachment,
+    5,
+  );
+  return supportImage !== undefined && attachments
+    ? { supportImage, attachments }
+    : null;
+};
 const parseContext = (value: RecordValue) => {
   const ludo = parseLudo(value.ludo);
   if (!ludo || !nullableText(value.site)) return null;
@@ -250,8 +294,9 @@ const parseNewsItem = (value: unknown) => {
   const base = parseNewsSummary(value);
   const bodyMarkdown = text(source?.bodyMarkdown);
   const sites = parseArray(source?.sites, parseSiteRef, 200);
-  return source && base && bodyMarkdown !== null && sites
-    ? { ...base, bodyMarkdown, sites }
+  const assets = parseDetailAssets(source);
+  return source && base && bodyMarkdown !== null && sites && assets
+    ? { ...base, bodyMarkdown, sites, ...assets }
     : null;
 };
 export const newsPayload: Parser<NewsPayload> = (value) => {
@@ -483,6 +528,7 @@ const parseActivityItem = (value: unknown) => {
   const base = parseActivityBase(value);
   const bodyMarkdown = text(source?.bodyMarkdown);
   const schedule = parseSchedule(source?.schedule, true);
+  const assets = parseDetailAssets(source);
   const registrationSource = record(source?.registration);
   const capacity = registrationSource
     ? registrationSource.capacity === null
@@ -515,8 +561,13 @@ const parseActivityItem = (value: unknown) => {
           fullMessage: registrationSource.fullMessage,
         }
       : null;
-  return source && base && bodyMarkdown !== null && schedule && registration
-    ? { ...base, bodyMarkdown, schedule, registration }
+  return source &&
+    base &&
+    bodyMarkdown !== null &&
+    schedule &&
+    registration &&
+    assets
+    ? { ...base, bodyMarkdown, schedule, registration, ...assets }
     : null;
 };
 const parseActivityContext = (source: RecordValue) => {
@@ -538,9 +589,9 @@ export const activityDetailPayload: Parser<ActivityDetailPayload> = (value) => {
   return source && context && activity ? { ...context, activity } : null;
 };
 
-export const activityRegistrationReceipt: Parser<ActivityRegistrationReceipt> = (
-  value,
-) => {
+export const activityRegistrationReceipt: Parser<
+  ActivityRegistrationReceipt
+> = (value) => {
   const source = record(value);
   const receiptId = nonEmpty(source?.receiptId);
   const status = oneOf(source?.status, ["received", "waitlisted"] as const);
@@ -558,8 +609,7 @@ export const activityRegistrationReceipt: Parser<ActivityRegistrationReceipt> = 
 
 export const ACTIVITY_WAITLIST_MESSAGE =
   "Nous vous contacterons si une place se libère.";
-export const ACTIVITY_RECEIVED_MESSAGE =
-  "Votre inscription a bien été reçue.";
+export const ACTIVITY_RECEIVED_MESSAGE = "Votre inscription a bien été reçue.";
 
 const parseTopThreeBase = (value: unknown) => {
   const source = record(value);
@@ -568,7 +618,12 @@ const parseTopThreeBase = (value: unknown) => {
   const theme = nonEmpty(source?.theme);
   const isHomepage = source?.isHomepage;
   const publishedAt = timestamp(source?.publishedAt);
-  return source && id && slug && theme && typeof isHomepage === "boolean" && publishedAt
+  return source &&
+    id &&
+    slug &&
+    theme &&
+    typeof isHomepage === "boolean" &&
+    publishedAt
     ? { id, slug, theme, isHomepage, publishedAt }
     : null;
 };

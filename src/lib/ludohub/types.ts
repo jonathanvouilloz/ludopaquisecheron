@@ -33,6 +33,18 @@ export type LudoHubResult<T> =
 export type Ludo = { slug: string; name: string };
 export type PublicSiteRef = { id: string; slug: string; name: string };
 export type PublicImage = { url: string; alt: string };
+export type PublicSupportImage = PublicImage & {
+  caption: string | null;
+  credit: string | null;
+};
+export type PublicPdfAttachment = {
+  id: string;
+  title: string;
+  fileName: string;
+  viewUrl: string;
+  downloadUrl: string;
+  sizeBytes: number;
+};
 
 export type OpeningInterval = {
   dayOfWeek: number;
@@ -78,6 +90,8 @@ export type NewsSummary = {
 export type NewsItem = NewsSummary & {
   bodyMarkdown: string;
   sites: PublicSiteRef[];
+  supportImage: PublicSupportImage | null;
+  attachments: PublicPdfAttachment[];
 };
 export type NewsPayload = {
   ludo: Ludo;
@@ -113,6 +127,8 @@ export type ActivitySummary = {
 };
 export type ActivityItem = Omit<ActivitySummary, "schedule"> & {
   bodyMarkdown: string;
+  supportImage: PublicSupportImage | null;
+  attachments: PublicPdfAttachment[];
   schedule: ActivitySchedule;
   registration: ActivityRegistration;
 };

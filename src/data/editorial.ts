@@ -6,8 +6,11 @@ import type {
   GalleryPayload,
   NewsPayload,
   ProfilesPayload,
+  PublicPdfAttachment,
+  PublicSupportImage,
   TopThreesPayload,
 } from "../lib/ludohub";
+import { markdownBlocks } from "../lib/editorial-markdown";
 
 export type EditorialSource = {
   mode: "live" | "demo";
@@ -23,6 +26,8 @@ export type NewsView = {
   question: string;
   summary: string;
   image: { url: string; alt: string } | null;
+  supportImage: PublicSupportImage | null;
+  attachments: PublicPdfAttachment[];
   body: string[];
   dateLabel: string;
   location: string;
@@ -91,10 +96,11 @@ const demoNews: NewsView[] = [
     summary:
       "Un exemple de publication pour tester une information courte, datée et facile à partager.",
     image: null,
-    body: [
-      "Cette page montre la forme d’une future actualité. Son contenu n’annonce aucun changement réel.",
-      "Après validation, l’équipe publiera ici les fermetures, nouvelles et rendez-vous utiles aux familles.",
-    ],
+    supportImage: null,
+    attachments: [],
+    body: markdownBlocks(
+      "Cette page montre la forme d’une future actualité. Son contenu n’annonce aucun changement réel.\n\nAprès validation, l’équipe publiera ici les fermetures, nouvelles et rendez-vous utiles aux familles.",
+    ),
     dateLabel: "Date à confirmer",
     location: "Les deux lieux",
     status: "demo",
@@ -107,9 +113,11 @@ const demoNews: NewsView[] = [
     summary:
       "Un second exemple pour vérifier l’affichage d’une actualité liée aux collections.",
     image: null,
-    body: [
+    supportImage: null,
+    attachments: [],
+    body: markdownBlocks(
       "Les titres présentés ici sont provisoires et ne sont pas des recommandations publiées.",
-    ],
+    ),
     dateLabel: "Date à confirmer",
     location: "Pâquis",
     status: "demo",
@@ -124,9 +132,11 @@ const demoActivities: ActivityView[] = [
     summary:
       "Une activité fictive utilisée pour tester une fiche avec public, horaire et lieu.",
     image: null,
-    body: [
+    supportImage: null,
+    attachments: [],
+    body: markdownBlocks(
       "Cette activité n’est pas programmée. Elle illustre une future animation validée.",
-    ],
+    ),
     dateLabel: "Date à confirmer",
     location: "Sécheron",
     audience: "Familles — âge à confirmer",
@@ -146,7 +156,9 @@ const demoArchivedActivities: ActivityView[] = [
     summary:
       "Un exemple explicitement fictif pour rendre l’état archive testable.",
     image: null,
-    body: ["Cette fiche ne correspond pas à une activité passée réelle."],
+    supportImage: null,
+    attachments: [],
+    body: markdownBlocks("Cette fiche ne correspond pas à une activité passée réelle."),
     dateLabel: "Exemple sans date réelle",
     location: "Les deux lieux",
     audience: "Public non défini",
@@ -223,11 +235,9 @@ const demoDocuments: DocumentView[] = [
     title: "Notre mission",
     summary: "Formulation institutionnelle à valider.",
     year: null,
-    body: [
-      "Rendre le jeu accessible dans les quartiers des Pâquis et de Sécheron.",
-      "Créer un espace d’accueil, de découverte et de rencontre entre générations.",
-      "Conseiller les familles sans transformer le site en catalogue exhaustif.",
-    ],
+    body: markdownBlocks(
+      "Rendre le jeu accessible dans les quartiers des Pâquis et de Sécheron.\n\nCréer un espace d’accueil, de découverte et de rencontre entre générations.\n\nConseiller les familles sans transformer le site en catalogue exhaustif.",
+    ),
     pdf: null,
     detailAvailable: true,
   },
@@ -284,17 +294,7 @@ const liveSource = (): EditorialSource => ({
 });
 
 export function markdownParagraphs(markdown: string | null): string[] {
-  if (!markdown) return [];
-  return markdown
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((block) =>
-      block
-        .replace(/^#{1,6}\s+/gm, "")
-        .replace(/^[-*+]\s+/gm, "")
-        .trim(),
-    )
-    .filter(Boolean);
+  return markdownBlocks(markdown);
 }
 function dateLabel(value: string): string {
   return new Intl.DateTimeFormat("fr-CH", {
@@ -342,6 +342,8 @@ export async function loadNews(
       question: item.title,
       summary: item.summary,
       image: item.image,
+      supportImage: null,
+      attachments: [],
       body: [],
       dateLabel: dateLabel(item.publishedAt),
       location: result.data.site || "Les deux lieux",
@@ -366,6 +368,8 @@ export async function loadNewsRoutes(
         title: item.title,
         question: item.title,
         summary: item.summary,
+        supportImage: item.supportImage,
+        attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
         dateLabel: dateLabel(item.publishedAt),
         location: locationLabel(item.sites),
@@ -391,6 +395,8 @@ export async function loadNewsDetail(
       question: item.title,
       summary: item.summary,
       image: item.image,
+      supportImage: item.supportImage,
+      attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
       dateLabel: dateLabel(item.publishedAt),
       location: locationLabel(item.sites),
@@ -446,6 +452,8 @@ export async function loadActivities(
       question: item.title,
       summary: item.summary,
       image: item.image,
+      supportImage: null,
+      attachments: [],
       body: [],
       dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
       location: item.location || result.data.site || "Les deux lieux",
@@ -482,6 +490,8 @@ export async function loadActivityRoutes(
         title: item.title,
         question: item.title,
         summary: item.summary,
+        supportImage: item.supportImage,
+        attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
         location: item.location || result.data.site || "Les deux lieux",
         schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
@@ -510,6 +520,8 @@ export async function loadActivityDetail(
       question: item.title,
       summary: item.summary,
       image: item.image,
+      supportImage: item.supportImage,
+      attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
       dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
       location: item.location || result.data.site || "Les deux lieux",
