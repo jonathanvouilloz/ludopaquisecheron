@@ -324,7 +324,11 @@ describe("tops trois", () => {
       theme: "Coop",
       isHomepage: true,
       publishedAt,
-      games: [{ name: "A" }, { name: "B" }, { name: "C" }],
+      games: [
+        { name: "A", image: null },
+        { name: "B", image: null },
+        { name: "C", image: null },
+      ],
       internalFlag: "privé",
     };
     const parsedList = topThreesPayload({ ...context, topThrees: [summary] });
@@ -334,7 +338,11 @@ describe("tops trois", () => {
       theme: "Coop",
       isHomepage: true,
       publishedAt,
-      games: [{ name: "A" }, { name: "B" }, { name: "C" }],
+      games: [
+        { name: "A", image: null },
+        { name: "B", image: null },
+        { name: "C", image: null },
+      ],
     });
     expect(topThreesPayload({ ...context, topThrees: [{ ...summary, isHomepage: undefined }] })).toBeNull();
     expect(topThreesPayload({ ...context, topThrees: [{ ...summary, isHomepage: "true" }] })).toBeNull();

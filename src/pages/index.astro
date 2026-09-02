@@ -18,6 +18,7 @@ const homeGames = (home.selectedTopThree?.games ?? []).map((game, index) => ({
   age: `Choix n°${index + 1}`,
   description: game.reason,
   accent: (['yellow', 'periwinkle', 'rose'] as const)[index] ?? 'blue',
+  image: game.image,
 }))
 const homeLocations = home.places.data.map((place) => ({
   ...place,

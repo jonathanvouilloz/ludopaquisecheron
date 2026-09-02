@@ -58,7 +58,12 @@ export type TopThreeView = {
   theme: string;
   isHomepage: boolean;
   dateLabel: string;
-  games: Array<{ rank: number; name: string; reason: string }>;
+  games: Array<{
+    rank: number;
+    name: string;
+    reason: string;
+    image: { url: string; alt: string } | null;
+  }>;
 };
 export type GalleryView = {
   id: string;
@@ -181,16 +186,19 @@ const demoTopThree: TopThreeView[] = [
         rank: 1,
         name: "Jeu à sélectionner",
         reason: "L’équipe ajoutera ici son conseil.",
+        image: null,
       },
       {
         rank: 2,
         name: "Deuxième choix à venir",
         reason: "Ce rang teste la hiérarchie.",
+        image: null,
       },
       {
         rank: 3,
         name: "Troisième choix à venir",
         reason: "Aucun titre n’est recommandé.",
+        image: null,
       },
     ],
   },
@@ -544,7 +552,7 @@ const topFallback: TopThreesPayload = {
     slug: item.slug,
     theme: item.theme,
     isHomepage: item.isHomepage,
-    games: item.games.map(({ name }) => ({ name })),
+    games: item.games.map(({ name, image }) => ({ name, image })),
     publishedAt: DEMO_DATE,
   })),
 };
@@ -570,6 +578,7 @@ export async function loadTopThrees(
           rank: index + 1,
           name: game.name,
           reason: game.description || "Conseil de l’équipe",
+          image: game.image,
         })),
       };
     }),

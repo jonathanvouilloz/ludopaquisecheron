@@ -153,11 +153,15 @@ export type TopThreeSummary = {
   slug: string;
   theme: string;
   isHomepage: boolean;
-  games: Array<{ name: string }>;
+  games: Array<{ name: string; image: PublicImage | null }>;
   publishedAt: string;
 };
 export type TopThreeItem = Omit<TopThreeSummary, "games"> & {
-  games: Array<{ name: string; description: string | null }>;
+  games: Array<{
+    name: string;
+    description: string | null;
+    image: PublicImage | null;
+  }>;
   sites: PublicSiteRef[];
 };
 export type TopThreesPayload = {

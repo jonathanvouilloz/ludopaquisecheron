@@ -630,13 +630,15 @@ const parseTopThreeBase = (value: unknown) => {
 const parseGameSummary = (value: unknown) => {
   const source = record(value);
   const name = nonEmpty(source?.name);
-  return source && name ? { name } : null;
+  const image = source?.image === undefined ? null : parseNullableImage(source.image);
+  return source && name && image !== undefined ? { name, image } : null;
 };
 const parseGameDetail = (value: unknown) => {
   const source = record(value);
   const name = nonEmpty(source?.name);
-  return source && name && nullableText(source.description)
-    ? { name, description: source.description }
+  const image = source?.image === undefined ? null : parseNullableImage(source.image);
+  return source && name && nullableText(source.description) && image !== undefined
+    ? { name, description: source.description, image }
     : null;
 };
 const parseTopThreeSummary = (value: unknown) => {

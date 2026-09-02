@@ -33,6 +33,7 @@ export type FeaturedGame = {
   age: string
   description: string
   accent: AgeGroup['accent']
+  image?: { url: string; alt: string } | null
 }
 
 export const navigation: NavigationItem[] = [
