@@ -46,6 +46,7 @@ describe('contrat du prototype visuel', () => {
   it('propose les thèmes persistants Pâquis et Sécheron', async () => {
     const layout = await read('../src/layouts/BaseLayout.astro')
     const header = await read('../src/components/Header.astro')
+    const page = await read('../src/pages/index.astro')
     const tokens = await read('../src/styles/tokens.css')
     const css = await read('../src/styles/global.css')
     expect(header).toContain('data-ludo-switch')
@@ -63,7 +64,12 @@ describe('contrat du prototype visuel', () => {
     expect(css).toMatch(/\.button--brand\s*\{[^}]*background:\s*var\(--color-brand-dark\)/s)
     expect(css).toMatch(/\.button--outline\s*\{[^}]*border-color:\s*var\(--color-brand\)[^}]*color:\s*var\(--color-brand-dark\)/s)
     expect(css).toMatch(/\.game-card h3\s*\{[^}]*color:\s*var\(--color-brand-dark\)/s)
-    expect(css).toMatch(/\.manifesto-mark\s*\{[^}]*color:\s*var\(--color-brand-dark\)/s)
+    expect(tokens).toContain('--color-paquis: #4a57c8')
+    expect(tokens).toContain('--color-secheron: #69b34c')
+    expect(css).toMatch(/\.location-card--paquis\s*\{[^}]*--location-color:\s*var\(--color-paquis\)/s)
+    expect(css).toMatch(/\.location-card--secheron\s*\{[^}]*--location-color:\s*var\(--color-secheron\)/s)
+    expect(page).toContain('association-playing-together.png')
+    expect(css).toMatch(/\.manifesto-art\s*\{[^}]*justify-self:\s*center/s)
   })
 
   it('utilise une navigation flottante qui révèle seulement l’icône active', async () => {

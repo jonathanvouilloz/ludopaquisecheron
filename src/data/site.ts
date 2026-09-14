@@ -15,7 +15,6 @@ export type Location = {
     day: string
     hours: string
   }>
-  color: 'rose' | 'yellow'
 }
 
 export type AgeGroup = {
@@ -76,7 +75,6 @@ export const locations: Location[] = [
       { day: 'Jeudi', hours: '9h30–11h30 · 16h30–18h30' },
       { day: 'Samedi', hours: '9h–12h' },
     ],
-    color: 'rose',
   },
   {
     key: 'secheron',
@@ -90,7 +88,6 @@ export const locations: Location[] = [
       { day: 'Mercredi', hours: '9h30–11h30 · 14h30–17h30' },
       { day: 'Samedi', hours: '9h–10h30 · prêts et retours' },
     ],
-    color: 'yellow',
   },
 ]
 

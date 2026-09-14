@@ -9,6 +9,12 @@
   --color-accent-soft: #f0d8d2;
   --color-secondary: #4a57c8;
   --color-highlight: #f4d43e;
+  --color-paquis: #4a57c8;
+  --color-paquis-dark: #313a92;
+  --color-paquis-soft: #dbddf4;
+  --color-secheron: #69b34c;
+  --color-secheron-dark: #245c35;
+  --color-secheron-soft: #edf7e8;
   --color-surface: #fffefb;
   --color-surface-soft: #fffefb;
   --color-ink: #22233e;
@@ -21,9 +27,9 @@
   --color-age-label: var(--color-highlight);
   --color-shadow-rgb: 49 58 146;
 
-  --font-display: 'Bubblegum Sans', 'Fredoka', sans-serif;
-  --font-ui: 'Fredoka', 'Open Sans', sans-serif;
-  --font-body: 'Open Sans', sans-serif;
+  --font-display: 'Nunito', sans-serif;
+  --font-ui: 'Nunito', sans-serif;
+  --font-body: 'Nunito', sans-serif;
 
   --text-display-xl: clamp(3.5rem, 8vw, 6.75rem);
   --text-display-lg: clamp(2.8rem, 6vw, 5rem);

@@ -186,7 +186,7 @@ p {
 .wordmark strong {
   font-family: var(--font-display);
   font-size: 1.9rem;
-  font-weight: 400;
+  font-weight: 800;
 }
 
 .wordmark small {
@@ -442,7 +442,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-xl);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 0.94;
   letter-spacing: -0.02em;
 }
@@ -694,7 +694,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -812,7 +812,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -967,8 +967,19 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   background: var(--location-color);
 }
 
-.location-card--rose { --location-color: var(--color-accent); }
-.location-card--yellow { --location-color: var(--color-highlight); }
+.location-card--paquis {
+  --location-color: var(--color-paquis);
+  --location-ink: var(--color-paquis-dark);
+  --location-soft: var(--color-paquis-soft);
+  --location-on-color: var(--color-surface);
+}
+
+.location-card--secheron {
+  --location-color: var(--color-secheron);
+  --location-ink: var(--color-secheron-dark);
+  --location-soft: var(--color-secheron-soft);
+  --location-on-color: var(--color-secheron-dark);
+}
 
 .location-card__top {
   display: grid;
@@ -986,7 +997,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   height: 54px;
   border-radius: 50%;
   background: var(--location-color);
-  color: var(--color-brand-dark);
+  color: var(--location-on-color);
   font-size: 1.8rem;
 }
 
@@ -996,7 +1007,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .location-card h3 {
   margin-bottom: var(--space-2);
-  color: var(--color-brand-dark);
+  color: var(--location-ink);
   font-family: var(--font-ui);
   font-size: 1.65rem;
   line-height: 1.1;
@@ -1036,7 +1047,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .location-card__facts dt i {
-  color: var(--color-brand-dark);
+  color: var(--location-ink);
   font-size: 1rem;
 }
 
@@ -1050,9 +1061,9 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   flex: 1;
   margin-top: 0;
   padding: var(--space-4) var(--space-5) var(--space-5);
-  border-left: 6px solid var(--location-color);
+  border: 2px solid var(--location-soft);
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-brand-soft) 64%, var(--color-surface));
+  background: var(--location-soft);
 }
 
 .location-card__schedule h4 {
@@ -1060,7 +1071,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   align-items: center;
   gap: var(--space-2);
   margin: 0 0 var(--space-3);
-  color: var(--color-brand-dark);
+  color: var(--location-ink);
   font-family: var(--font-ui);
   font-size: 1rem;
 }
@@ -1082,7 +1093,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   grid-template-columns: 96px minmax(0, 1fr);
   gap: var(--space-3);
   padding-block: 0.36rem;
-  border-top: 1px solid color-mix(in srgb, var(--color-brand) 16%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--location-color) 24%, transparent);
   font-size: 0.88rem;
   line-height: 1.4;
 }
@@ -1098,36 +1109,22 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .manifesto-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(300px, 1.2fr);
-  gap: clamp(3rem, 8vw, 8rem);
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 1.1fr);
+  gap: clamp(var(--space-6), 5vw, var(--space-10));
   align-items: center;
 }
 
-.manifesto-mark {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: min(100%, 380px);
-  aspect-ratio: 1;
-  border: 10px solid color-mix(in srgb, var(--color-surface) 30%, transparent);
-  border-radius: 47% 53% 38% 62% / 55% 44% 56% 45%;
-  background: var(--color-accent);
-  color: var(--color-brand-dark);
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 10vw, 8rem);
-  transform: rotate(-4deg);
+.manifesto-art {
+  width: min(100%, 36rem);
+  margin: 0;
+  justify-self: center;
 }
 
-.manifesto-mark::before,
-.manifesto-mark::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  background: var(--color-highlight);
+.manifesto-art img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
-
-.manifesto-mark::before { width: 54px; height: 54px; top: 14%; right: 8%; }
-.manifesto-mark::after { width: 28px; height: 28px; bottom: 17%; left: 12%; }
 
 .manifesto-copy .eyebrow,
 .manifesto-copy h2,
@@ -1139,7 +1136,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin-bottom: var(--space-5);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -1175,55 +1172,8 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .editorial-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr 0.9fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   gap: var(--space-5);
-}
-
-.editorial-card {
-  display: flex;
-  flex-direction: column;
-  min-height: 320px;
-  padding: var(--space-6);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-
-.editorial-card:first-child {
-  background: var(--color-highlight);
-  border-color: var(--color-highlight);
-}
-
-.editorial-card__shape {
-  display: grid;
-  place-items: center;
-  width: 70px;
-  height: 70px;
-  margin-bottom: auto;
-  border-radius: 46% 54% 55% 45%;
-  background: var(--color-accent);
-  color: var(--color-surface);
-  font-size: 2rem;
-  transform: rotate(8deg);
-}
-
-.editorial-card:nth-child(2) .editorial-card__shape { background: var(--color-brand-pale); color: var(--color-brand-dark); border-radius: 50%; }
-.editorial-card:nth-child(3) .editorial-card__shape { background: var(--color-accent); border-radius: 15% 55% 15% 55%; }
-
-.editorial-card h3 {
-  margin-block: var(--space-6) var(--space-3);
-  color: var(--color-brand-dark);
-  font-family: var(--font-ui);
-  font-size: 1.35rem;
-}
-
-.editorial-card p {
-  margin-bottom: 0;
-  color: var(--color-ink-muted);
-}
-
-.editorial-card:first-child p {
-  color: var(--color-ink);
 }
 
 .site-footer {
@@ -1241,6 +1191,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .site-footer__brand {
   margin-bottom: 0;
   font-family: var(--font-display);
+  font-weight: 800;
   font-size: 3.5rem;
   line-height: 1;
 }
@@ -1293,7 +1244,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin-bottom: var(--space-5);
   font-family: var(--font-display);
   font-size: var(--text-display-xl);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 0.96;
 }
 
@@ -1322,7 +1273,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: clamp(3rem, 7vw, 6.8rem);
-  font-weight: 400;
+  font-weight: 800;
   line-height: 0.96;
   letter-spacing: -0.025em;
 }
@@ -1759,7 +1710,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 400;
+  font-weight: 800;
 }
 
 .swatch-grid {
@@ -1809,6 +1760,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin: 0;
   color: var(--color-brand-dark);
   font-family: var(--font-display);
+  font-weight: 800;
   font-size: clamp(3rem, 8vw, 6rem);
   line-height: 0.95;
 }
@@ -2068,7 +2020,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
     grid-template-columns: 1fr;
   }
 
-  .manifesto-mark {
+  .manifesto-art {
     max-width: 300px;
     margin-inline: auto;
   }

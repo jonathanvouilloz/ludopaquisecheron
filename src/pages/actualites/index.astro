@@ -9,6 +9,6 @@ const content = await loadNews()
   <span slot="kicker">Actualités</span>
   <section class="editorial-section" aria-labelledby="actualites-publiees">
     <div class="editorial-section__heading"><h2 id="actualites-publiees">À lire</h2><p>Chaque actualité possède une adresse stable pour être partagée facilement.</p></div>
-    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/actualites/${item.slug}`} meta={[item.dateLabel, item.location, content.mode === 'live' ? 'Publié' : 'Exemple']} image={item.image} />)}</div> : <div class="status-panel"><h3>Aucune actualité publiée</h3><p>Les prochaines informations apparaîtront ici. Pour une question urgente, <a href="/contact">contactez la ludothèque</a>.</p></div>}
+    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/actualites/${item.slug}`} meta={['Actualité', item.dateLabel, item.location]} image={item.image} linkLabel="Lire l’actualité" />)}</div> : <div class="status-panel"><h3>Aucune actualité publiée</h3><p>Les prochaines informations apparaîtront ici. Pour une question urgente, <a href="/contact">contactez la ludothèque</a>.</p></div>}
   </section>
 </EditorialLayout>

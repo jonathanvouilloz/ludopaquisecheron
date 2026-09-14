@@ -10,17 +10,18 @@ import LocationCard from '../components/LocationCard.astro'
 import { ageGroups, featuredGames, locations } from '../data/site'
 
 const swatches = [
-  { name: 'Bleu Ludo', value: '#4A57C8', token: '--color-brand' },
+  { name: 'Bleu Pâquis / Ludo', value: '#4A57C8', token: '--color-brand · --color-paquis' },
   { name: 'Bleu moyen', value: '#6E79D3', token: '--color-brand-mid' },
   { name: 'Pervenche', value: '#929ADE', token: '--color-brand-muted' },
   { name: 'Bleu clair', value: '#B7BCE9', token: '--color-brand-pale' },
   { name: 'Brume bleue', value: '#DBDDF4', token: '--color-brand-soft' },
   { name: 'Rose terre', value: '#BE5B45', token: '--color-accent' },
   { name: 'Jaune jeu', value: '#F4D43E', token: '--color-highlight' },
-  { name: 'Vert Sécheron', value: '#69B34C', token: '--theme-secheron-primary' },
-  { name: 'Vert forêt', value: '#245C35', token: '--theme-secheron-dark' },
-  { name: 'Violet Sécheron', value: '#3532B6', token: '--theme-secheron-secondary' },
-  { name: 'Corail Sécheron', value: '#FF6B4A', token: '--theme-secheron-accent' },
+  { name: 'Bleu Pâquis sombre', value: '#313A92', token: '--color-paquis-dark' },
+  { name: 'Vert Sécheron', value: '#69B34C', token: '--color-secheron' },
+  { name: 'Vert forêt', value: '#245C35', token: '--color-secheron-dark' },
+  { name: 'Violet Sécheron', value: '#3532B6', token: '--color-secondary (thème Sécheron)' },
+  { name: 'Corail Sécheron', value: '#FF6B4A', token: '--color-accent (thème Sécheron)' },
   { name: 'Encre', value: '#22233E', token: '--color-ink' },
 ]
 ---
@@ -56,9 +57,9 @@ const swatches = [
       <div class="shell">
         <h2>Typographie</h2>
         <div class="type-specimen">
-          <div><p class="eyebrow">Bubblegum Sans · Display</p><p class="display">Mille façons de jouer.</p></div>
-          <div><p class="eyebrow">Fredoka · Interface</p><p class="ui">Jeux par âge · Voir les horaires · Aux Pâquis</p></div>
-          <div><p class="eyebrow">Open Sans · Lecture</p><p>La ludothèque accueille les enfants, les familles, les adultes, les seniors et les institutions. Le texte reste simple, généreux et facile à parcourir.</p></div>
+          <div><p class="eyebrow">Nunito · Titres</p><p class="display">Mille façons de jouer.</p></div>
+          <div><p class="eyebrow">Nunito · Interface</p><p class="ui">Jeux par âge · Voir les horaires · Aux Pâquis</p></div>
+          <div><p class="eyebrow">Nunito · Lecture</p><p>La ludothèque accueille les enfants, les familles, les adultes, les seniors et les institutions. Le texte reste simple, généreux et facile à parcourir.</p></div>
         </div>
       </div>
     </section>

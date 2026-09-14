@@ -8,14 +8,13 @@ interface Props {
     transit: string
     phone: string | null
     schedule: Array<{ day: string; hours: string }>
-    color: 'rose' | 'yellow'
   }
 }
 
 const { location } = Astro.props
 ---
 
-<article class:list={['location-card', `location-card--${location.color}`]}>
+<article class:list={['location-card', `location-card--${location.key}`]}>
   <header class="location-card__top">
     <span class="location-card__pin" aria-hidden="true"><i class="ph ph-map-pin"></i></span>
     <div class="location-card__heading">

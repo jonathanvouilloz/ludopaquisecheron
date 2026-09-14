@@ -8,6 +8,7 @@ import SectionHeading from '../components/SectionHeading.astro'
 import AgeCard from '../components/AgeCard.astro'
 import GameCard from '../components/GameCard.astro'
 import LocationCard from '../components/LocationCard.astro'
+import ContentCard from '../components/editorial/ContentCard.astro'
 import { ageGroups } from '../data/site'
 import { loadHomepageData } from '../data/home'
 
@@ -23,7 +24,6 @@ const homeGames = (home.selectedTopThree?.games ?? []).map((game, index) => ({
 const homeLocations = home.places.data.map((place) => ({
   ...place,
   summary: place.introduction,
-  color: place.key === 'paquis' ? ('rose' as const) : ('yellow' as const),
 }))
 ---
 
@@ -113,7 +113,16 @@ const homeLocations = home.places.data.map((place) => ({
 
     <section class="section section--brand" id="association">
       <div class="shell manifesto-grid">
-        <div class="manifesto-mark" aria-hidden="true">Joue !</div>
+        <figure class="manifesto-art">
+          <img
+            src="/images/association-playing-together.png"
+            alt="Une animatrice et des enfants jouent ensemble autour d’une table."
+            width="1536"
+            height="1024"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
         <div class="manifesto-copy">
           <h2>Un lieu pour se rencontrer et grandir ensemble.</h2>
           <p>L’équipe conseille, explique les règles, accompagne les parties et prépare des espaces de jeu pour tous les âges. L’association crée un cadre ouvert où enfants, familles et institutions trouvent leur place.</p>
@@ -138,12 +147,14 @@ const homeLocations = home.places.data.map((place) => ({
         {home.news.items.length > 0 ? (
           <div class="editorial-grid">
             {home.news.items.map((item) => (
-              <article class="editorial-card">
-                {item.image && <img class="editorial-card__image" src={item.image.url} alt={item.image.alt} loading="lazy" />}
-                <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-newspaper-clipping"></i></div>
-                <h3><a href={item.detailAvailable ? `/actualites/${item.slug}` : '/actualites'}>{item.title}</a></h3>
-                <p>{item.summary}</p>
-              </article>
+              <ContentCard
+                title={item.title}
+                summary={item.summary}
+                href={`/actualites/${item.slug}`}
+                meta={['Actualité', item.dateLabel, item.location]}
+                image={item.image}
+                linkLabel="Lire l’actualité"
+              />
             ))}
           </div>
         ) : <p class="empty-state">Aucune actualité publiée pour le moment.</p>}
@@ -159,12 +170,14 @@ const homeLocations = home.places.data.map((place) => ({
         {home.featuredActivities.length > 0 ? (
           <div class="editorial-grid">
             {home.featuredActivities.map((item) => (
-              <article class="editorial-card">
-                {item.image && <img class="editorial-card__image" src={item.image.url} alt={item.image.alt} loading="lazy" />}
-                <div class="editorial-card__shape" aria-hidden="true"><i class="ph ph-calendar-dots"></i></div>
-                <h3><a href={item.detailAvailable ? `/activites/${item.slug}` : '/activites'}>{item.title}</a></h3>
-                <p>{item.summary}</p>
-              </article>
+              <ContentCard
+                title={item.title}
+                summary={item.summary}
+                href={`/activites/${item.slug}`}
+                meta={['Activité', item.schedule, item.location]}
+                image={item.image}
+                linkLabel="Voir l’activité"
+              />
             ))}
           </div>
         ) : <p class="empty-state">Aucune activité n’est mise en avant pour le moment.</p>}
@@ -175,7 +188,3 @@ const homeLocations = home.places.data.map((place) => ({
   <WaveDivider tone="dark" flip />
   <Footer />
 </BaseLayout>
-
-<style>
-  .editorial-card__image { display: block; width: 100%; aspect-ratio: 16 / 9; margin-bottom: var(--space-4); border-radius: var(--radius-lg); object-fit: cover; }
-</style>

@@ -9,6 +9,9 @@ colors:
   primary-muted: "#929ADE"
   primary-pale: "#B7BCE9"
   primary-soft: "#DBDDF4"
+  paquis: "#4A57C8"
+  paquis-dark: "#313A92"
+  paquis-soft: "#DBDDF4"
   accent: "#BE5B45"
   accent-soft: "#F0D8D2"
   highlight: "#F4D43E"
@@ -21,53 +24,54 @@ colors:
   danger: "#A83232"
   secheron-primary: "#69B34C"
   secheron-dark: "#245C35"
+  secheron-soft: "#EDF7E8"
   secheron-secondary: "#3532B6"
   secheron-accent: "#FF6B4A"
 typography:
   display-xl:
-    fontFamily: "Bubblegum Sans, Fredoka, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 4.75rem
-    fontWeight: 400
+    fontWeight: 800
     lineHeight: 0.96
     letterSpacing: "-0.02em"
   display-lg:
-    fontFamily: "Bubblegum Sans, Fredoka, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 3.5rem
-    fontWeight: 400
+    fontWeight: 800
     lineHeight: 1
     letterSpacing: "-0.01em"
   heading-lg:
-    fontFamily: "Fredoka, Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 2rem
-    fontWeight: 600
+    fontWeight: 800
     lineHeight: 1.15
     letterSpacing: "-0.01em"
   heading-md:
-    fontFamily: "Fredoka, Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 1.375rem
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.005em"
   body-lg:
-    fontFamily: "Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 1.125rem
     fontWeight: 400
     lineHeight: 1.65
     letterSpacing: "0em"
   body-md:
-    fontFamily: "Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 1rem
     fontWeight: 400
     lineHeight: 1.65
     letterSpacing: "0em"
   ui:
-    fontFamily: "Fredoka, Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 1rem
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 1
     letterSpacing: "0em"
   label:
-    fontFamily: "Open Sans, sans-serif"
+    fontFamily: "Nunito, sans-serif"
     fontSize: 0.75rem
     fontWeight: 700
     lineHeight: 1.2
@@ -159,13 +163,12 @@ Sur le vert, le texte utilise une encre sombre `#162412` plutôt que du blanc. L
 - **Surface — `#FFFEFB` :** même surface chaude sur toutes les sections claires afin d’éviter la cassure gris/blanc.
 - **Danger — `#A83232` :** fermeture ou erreur uniquement.
 
-Les couleurs secondaires ne sont jamais distribuées au hasard. Elles servent à différencier les catégories de découverte et ne concurrencent jamais le bleu comme couleur d’action.
+Les couleurs secondaires ne sont jamais distribuées au hasard. Elles servent à différencier les catégories de découverte et ne concurrencent jamais le bleu comme couleur d’action. Les cartes de lieux sont une exception volontaire : **Pâquis** y conserve toujours son bleu et **Sécheron** toujours son vert, quel que soit le thème actif.
 
 ## Typography
 
-- **Bubblegum Sans** porte seulement les grands messages et titres de section. Elle donne de la personnalité sans contaminer les informations pratiques.
-- **Fredoka** est la voix de l’interface : navigation, boutons, titres de cartes et filtres.
-- **Open Sans** garde les horaires, explications et textes longs lisibles.
+- **Nunito** est l’unique famille du site : ronde, accueillante et très lisible pour les visiteurs comme pour les informations pratiques.
+- Les grands titres utilisent Nunito 800 ; les titres d’interface Nunito 700 ; les textes et horaires Nunito 400 à 600.
 
 Le display reste en casse phrase. Les capitales sont réservées aux petits labels. Le corps ne descend jamais sous 16 px.
 
