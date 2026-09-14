@@ -444,7 +444,30 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-size: var(--text-display-xl);
   font-weight: 800;
   line-height: 0.94;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-display);
+}
+
+.hero--welcome {
+  text-align: center;
+}
+
+.hero--welcome .hero__grid {
+  display: block;
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.hero--welcome h1 {
+  max-width: 20ch;
+  margin-inline: auto;
+}
+
+.hero--welcome .hero__lead {
+  margin-inline: auto;
+}
+
+.hero--welcome .hero__actions {
+  justify-content: center;
 }
 
 .hero h1 .highlight {
@@ -476,76 +499,6 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
-}
-
-.hero-art {
-  position: relative;
-  min-height: 500px;
-}
-
-.hero-art__photo {
-  position: absolute;
-  inset: 2rem 1rem 2rem 3rem;
-  overflow: hidden;
-  border: 12px solid var(--color-surface);
-  border-radius: var(--radius-organic);
-  background: var(--color-brand-soft);
-  box-shadow: 0 14px 0 color-mix(in srgb, var(--color-brand) 22%, transparent);
-  transform: rotate(2deg);
-}
-
-.hero-art__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.03) rotate(-2deg);
-}
-
-.hero-art__shape {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-display);
-  color: var(--color-ink);
-}
-
-.hero-art__shape--rose {
-  top: 0;
-  right: 0;
-  width: 125px;
-  height: 125px;
-  border-radius: 48% 52% 57% 43%;
-  background: var(--color-accent);
-  font-size: 3rem;
-  transform: rotate(10deg);
-}
-
-.hero-art__shape--yellow {
-  right: 1rem;
-  bottom: 0;
-  width: 105px;
-  height: 105px;
-  border-radius: 50%;
-  background: var(--color-highlight);
-  font-size: 2.4rem;
-  transform: rotate(-8deg);
-}
-
-.hero-art__dots {
-  position: absolute;
-  bottom: 1rem;
-  left: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 12px);
-  gap: 11px;
-  transform: rotate(-10deg);
-}
-
-.hero-art__dots i {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--color-brand-mid);
 }
 
 .wave-divider {
@@ -695,6 +648,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
   font-weight: 800;
+  letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
 
@@ -737,13 +691,6 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--color-on-brand) 11%, transparent);
   color: var(--color-on-brand);
-  text-decoration: none;
-  transition: transform var(--transition-tactile), background var(--transition-tactile);
-}
-
-.age-card:hover {
-  background: color-mix(in srgb, var(--color-on-brand) 17%, transparent);
-  transform: translateY(-5px) rotate(-0.5deg);
 }
 
 .age-card__symbol {
@@ -781,15 +728,6 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   line-height: 1.5;
 }
 
-.age-card em {
-  margin-top: var(--space-5);
-  color: var(--color-on-brand);
-  font-family: var(--font-ui);
-  font-size: 0.88rem;
-  font-style: normal;
-  font-weight: 700;
-}
-
 .accent-yellow { --accent-color: var(--color-highlight); }
 .accent-rose { --accent-color: var(--color-accent); }
 .accent-periwinkle { --accent-color: var(--color-brand-pale); }
@@ -813,6 +751,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
   font-weight: 800;
+  letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
 
@@ -1137,6 +1076,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
   font-weight: 800;
+  letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
 
@@ -1174,6 +1114,12 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   gap: var(--space-5);
+}
+
+.home-news {
+  display: grid;
+  max-width: 46rem;
+  gap: var(--space-4);
 }
 
 .site-footer {
@@ -1245,6 +1191,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-family: var(--font-display);
   font-size: var(--text-display-xl);
   font-weight: 800;
+  letter-spacing: var(--tracking-display);
   line-height: 0.96;
 }
 
@@ -1275,7 +1222,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-size: clamp(3rem, 7vw, 6.8rem);
   font-weight: 800;
   line-height: 0.96;
-  letter-spacing: -0.025em;
+  letter-spacing: var(--tracking-display);
 }
 
 .question-hero p {
@@ -1711,6 +1658,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
   font-weight: 800;
+  letter-spacing: var(--tracking-heading);
 }
 
 .swatch-grid {
@@ -1761,6 +1709,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-weight: 800;
+  letter-spacing: var(--tracking-display);
   font-size: clamp(3rem, 8vw, 6rem);
   line-height: 0.95;
 }
@@ -1980,26 +1929,6 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
   .hero h1 .highlight {
     white-space: normal;
-  }
-
-  .hero-art {
-    min-height: 390px;
-  }
-
-  .hero-art__photo {
-    inset: 1.5rem 1.25rem 1.5rem 1rem;
-  }
-
-  .hero-art__shape--rose {
-    width: 90px;
-    height: 90px;
-    font-size: 2rem;
-  }
-
-  .hero-art__shape--yellow {
-    width: 80px;
-    height: 80px;
-    font-size: 1.8rem;
   }
 
   .games-showcase__intro {

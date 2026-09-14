@@ -30,8 +30,11 @@ describe('contrat du prototype visuel', () => {
     const page = await read('../src/pages/index.astro')
     expect(page).toContain('WaveDivider')
     expect(page).toContain('tone="cutout"')
-    expect(page).toContain('Deux lieux, mille façons de jouer')
+    expect(page).toContain('Bienvenue à la Ludothèque Pâquis-Sécheron')
     expect(page).toContain('homeLocations.map')
+    expect(page).toContain('latestNews')
+    expect(page).toContain('layout="row"')
+    expect(page).not.toContain('hero-art')
     expect(page).not.toContain('eyebrow=')
     expect(page).not.toContain('class="eyebrow"')
   })
@@ -84,6 +87,9 @@ describe('contrat du prototype visuel', () => {
   })
 
   it('clarifie les cartes de jeux et les horaires des lieux', async () => {
+    const ageCard = await read('../src/components/AgeCard.astro')
+    const association = await read('../src/pages/association/index.astro')
+    const contentCard = await read('../src/components/editorial/ContentCard.astro')
     const gameCard = await read('../src/components/GameCard.astro')
     const locationCard = await read('../src/components/LocationCard.astro')
     const css = await read('../src/styles/global.css')
@@ -96,6 +102,12 @@ describe('contrat du prototype visuel', () => {
     expect(locationCard).toContain('class="location-card__schedule"')
     expect(locationCard).toContain('{slot.day}')
     expect(locationCard).toContain('{slot.hours}')
+    expect(ageCard).toContain('<article')
+    expect(ageCard).not.toContain('href=')
+    expect(contentCard).toContain("layout?: 'card' | 'row'")
+    expect(contentCard).toContain('border-radius: var(--radius-md)')
+    expect(association).toContain('<ContentCard')
+    expect(association).not.toContain('Chaque page répond')
   })
 
   it('fait rouler un petit personnage sur une vague sans imposer son animation', async () => {

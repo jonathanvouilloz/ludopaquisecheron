@@ -25,10 +25,11 @@ const homeLocations = home.places.data.map((place) => ({
   ...place,
   summary: place.introduction,
 }))
+const latestNews = home.news.items.slice(0, 3)
 ---
 
 <BaseLayout
-  title="Ludothèque Pâquis-Sécheron — Deux lieux, mille façons de jouer"
+  title="Ludothèque Pâquis-Sécheron — Bienvenue"
   description="Accédez aux informations publiées des ludothèques des Pâquis et de Sécheron, à leurs activités et aux conseils de l’équipe."
   noindex={home.noindex}
 >
@@ -39,24 +40,15 @@ const homeLocations = home.places.data.map((place) => ({
   <Header />
 
   <main id="contenu">
-    <section class="hero">
+    <section class="hero hero--welcome">
       <div class="shell hero__grid">
-        <div>
-          <h1>Deux lieux,<br /><span class="highlight">mille façons</span><br />de jouer.</h1>
+        <div class="hero__content">
+          <h1>Bienvenue à la Ludothèque Pâquis-Sécheron</h1>
           <p class="hero__lead">Aux Pâquis et à Sécheron, venez jouer sur place, découvrir de nouveaux jeux et partager un moment avec d’autres familles.</p>
           <div class="hero__actions">
             <ButtonLink href="/infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
             <ButtonLink href="/top-3" variant="outline">Choisir un jeu</ButtonLink>
           </div>
-        </div>
-
-        <div class="hero-art" aria-label="Entrée de la ludothèque des Pâquis">
-          <div class="hero-art__photo">
-            <img src="/images/exterieur-paquis.png" alt="Entrée de la ludothèque des Pâquis" width="354" height="354" />
-          </div>
-          <span class="hero-art__shape hero-art__shape--rose" aria-hidden="true"><i class="ph ph-star-four"></i></span>
-          <span class="hero-art__shape hero-art__shape--yellow" aria-hidden="true">●</span>
-          <span class="hero-art__dots" aria-hidden="true">{Array.from({ length: 12 }, () => <i></i>)}</span>
         </div>
       </div>
     </section>
@@ -144,9 +136,9 @@ const homeLocations = home.places.data.map((place) => ({
           title="Les dernières nouvelles"
           description="Fermetures, rendez-vous et nouvelles publiées par la ludothèque."
         />
-        {home.news.items.length > 0 ? (
-          <div class="editorial-grid">
-            {home.news.items.map((item) => (
+        {latestNews.length > 0 ? (
+          <div class="home-news">
+            {latestNews.map((item) => (
               <ContentCard
                 title={item.title}
                 summary={item.summary}
@@ -154,6 +146,7 @@ const homeLocations = home.places.data.map((place) => ({
                 meta={['Actualité', item.dateLabel, item.location]}
                 image={item.image}
                 linkLabel="Lire l’actualité"
+                layout="row"
               />
             ))}
           </div>

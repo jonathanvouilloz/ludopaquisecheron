@@ -30,6 +30,8 @@
   --font-display: 'Nunito', sans-serif;
   --font-ui: 'Nunito', sans-serif;
   --font-body: 'Nunito', sans-serif;
+  --tracking-display: -0.025em;
+  --tracking-heading: -0.012em;
 
   --text-display-xl: clamp(3.5rem, 8vw, 6.75rem);
   --text-display-lg: clamp(2.8rem, 6vw, 5rem);

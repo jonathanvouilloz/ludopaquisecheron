@@ -33,25 +33,25 @@ typography:
     fontSize: 4.75rem
     fontWeight: 800
     lineHeight: 0.96
-    letterSpacing: "-0.02em"
+    letterSpacing: "-0.025em"
   display-lg:
     fontFamily: "Nunito, sans-serif"
     fontSize: 3.5rem
     fontWeight: 800
     lineHeight: 1
-    letterSpacing: "-0.01em"
+    letterSpacing: "-0.012em"
   heading-lg:
     fontFamily: "Nunito, sans-serif"
     fontSize: 2rem
     fontWeight: 800
     lineHeight: 1.15
-    letterSpacing: "-0.01em"
+    letterSpacing: "-0.012em"
   heading-md:
     fontFamily: "Nunito, sans-serif"
     fontSize: 1.375rem
     fontWeight: 700
     lineHeight: 1.2
-    letterSpacing: "-0.005em"
+    letterSpacing: "-0.008em"
   body-lg:
     fontFamily: "Nunito, sans-serif"
     fontSize: 1.125rem
@@ -176,10 +176,12 @@ Le display reste en casse phrase. Les capitales sont réservées aux petits labe
 
 - largeur de lecture : 720 px ;
 - largeur de contenu : 1120 px ;
-- hero asymétrique : texte à gauche, image ou forme organique à droite ;
+- hero d’accueil centré : message de bienvenue, explication courte et deux actions utiles ;
 - sections bleues en aplat strict `#4A57C8` et sections claires transparentes au-dessus du motif fixe ;
 - grille âge : 4 colonnes desktop, 2 tablette, 1 mobile ;
 - cartes lieu : deux colonnes desktop, une colonne mobile ;
+- dernières nouvelles : maximum trois cartes compactes empilées, avec une couverture à gauche sur desktop ;
+- cartes par âge : repères éditoriaux non cliquables tant que les sélections par âge ne sont pas publiées ;
 - rythme vertical généreux : 72 à 112 px selon la section ;
 - aucune section ne répète exactement la composition de la précédente.
 
