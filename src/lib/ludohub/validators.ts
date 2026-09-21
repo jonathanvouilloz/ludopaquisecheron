@@ -160,6 +160,15 @@ const parseDetailAssets = (source: RecordValue | null) => {
     ? { supportImage, attachments }
     : null;
 };
+const parseActivityAssets = (source: RecordValue | null) => {
+  const assets = parseDetailAssets(source);
+  const supportImages = parseArray(
+    source?.supportImages ?? [],
+    (value) => parseSupportImage(value) ?? null,
+    5,
+  );
+  return assets && supportImages ? { ...assets, supportImages } : null;
+};
 const parseContext = (value: RecordValue) => {
   const ludo = parseLudo(value.ludo);
   if (!ludo || !nullableText(value.site)) return null;
@@ -528,7 +537,7 @@ const parseActivityItem = (value: unknown) => {
   const base = parseActivityBase(value);
   const bodyMarkdown = text(source?.bodyMarkdown);
   const schedule = parseSchedule(source?.schedule, true);
-  const assets = parseDetailAssets(source);
+  const assets = parseActivityAssets(source);
   const registrationSource = record(source?.registration);
   const capacity = registrationSource
     ? registrationSource.capacity === null

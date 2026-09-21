@@ -35,6 +35,7 @@ export type NewsView = {
   detailAvailable: boolean;
 };
 export type ActivityView = NewsView & {
+  supportImages?: PublicSupportImage[];
   audience: string;
   schedule: string;
   archived: boolean;
@@ -499,6 +500,7 @@ export async function loadActivityRoutes(
         question: item.title,
         summary: item.summary,
         supportImage: item.supportImage,
+        supportImages: item.supportImages,
         attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
         location: item.location || result.data.site || "Les deux lieux",
@@ -529,6 +531,7 @@ export async function loadActivityDetail(
       summary: item.summary,
       image: item.image,
       supportImage: item.supportImage,
+      supportImages: item.supportImages,
       attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
       dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),

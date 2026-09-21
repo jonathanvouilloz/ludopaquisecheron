@@ -128,6 +128,7 @@ export type ActivitySummary = {
 export type ActivityItem = Omit<ActivitySummary, "schedule"> & {
   bodyMarkdown: string;
   supportImage: PublicSupportImage | null;
+  supportImages: PublicSupportImage[];
   attachments: PublicPdfAttachment[];
   schedule: ActivitySchedule;
   registration: ActivityRegistration;

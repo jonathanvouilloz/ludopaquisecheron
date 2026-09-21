@@ -4,11 +4,12 @@ import type { PublicPdfAttachment, PublicSupportImage } from '../../lib/ludohub'
 type Props = {
   body: string[]
   supportImage: PublicSupportImage | null
+  supportImages?: PublicSupportImage[]
   attachments: PublicPdfAttachment[]
 }
 
-const { body, supportImage, attachments } = Astro.props
-const [firstBlock, ...remainingBlocks] = body
+const { body, supportImage, supportImages, attachments } = Astro.props
+const images = supportImages?.length ? supportImages : supportImage ? [supportImage] : []
 const formatSize = (sizeBytes: number) => {
   const megabytes = sizeBytes / (1024 * 1024)
   return megabytes >= 1
@@ -17,21 +18,19 @@ const formatSize = (sizeBytes: number) => {
 }
 ---
 
-{firstBlock && <div class="editorial-rich-block" set:html={firstBlock} />}
+{body.map((block) => <div class="editorial-rich-block" set:html={block} />)}
 
-{supportImage && (
+{images.map((image) => (
   <figure class="support-figure">
-    <img src={supportImage.url} alt={supportImage.alt} loading="lazy" decoding="async" />
-    {(supportImage.caption || supportImage.credit) && (
+    <img src={image.url} alt={image.alt} loading="lazy" decoding="async" />
+    {(image.caption || image.credit) && (
       <figcaption>
-        {supportImage.caption && <span>{supportImage.caption}</span>}
-        {supportImage.credit && <small>Photo : {supportImage.credit}</small>}
+        {image.caption && <span>{image.caption}</span>}
+        {image.credit && <small>Photo : {image.credit}</small>}
       </figcaption>
     )}
   </figure>
-)}
-
-{remainingBlocks.map((block) => <div class="editorial-rich-block" set:html={block} />)}
+))}
 
 {attachments.length > 0 && (
   <section class="attachments" aria-labelledby="attachments-title">

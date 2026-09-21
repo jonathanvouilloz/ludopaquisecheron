@@ -145,6 +145,7 @@ const latestNews = home.news.items.slice(0, 3)
                 href={`/actualites/${item.slug}`}
                 meta={['Actualité', item.dateLabel, item.location]}
                 image={item.image}
+                imagePlaceholder
                 linkLabel="Lire l’actualité"
                 layout="row"
               />
@@ -169,6 +170,7 @@ const latestNews = home.news.items.slice(0, 3)
                 href={`/activites/${item.slug}`}
                 meta={['Activité', item.schedule, item.location]}
                 image={item.image}
+                imagePlaceholder
                 linkLabel="Voir l’activité"
               />
             ))}

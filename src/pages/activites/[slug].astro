@@ -19,7 +19,7 @@ const registrationEndpoint = registrationAvailable
   <article class="editorial-section detail-layout">
     <div class="prose">
       {item.image && <img class="editorial-image" src={item.image.url} alt={item.image.alt} loading="eager" />}
-      <EditorialBody body={item.body} supportImage={item.supportImage} attachments={item.attachments} />
+      <EditorialBody body={item.body} supportImage={item.supportImage} supportImages={item.supportImages} attachments={item.attachments} />
       <a class="share-link" href={Astro.url.pathname}><i class="ph ph-link" aria-hidden="true"></i>Lien permanent vers cette activité</a>
     </div>
     <aside class="detail-aside" aria-label="Informations sur l’activité"><dl><div><dt>Quand</dt><dd>{item.schedule}</dd></div><div><dt>Où</dt><dd>{item.location}</dd></div><div><dt>Pour qui</dt><dd>{item.audience}</dd></div></dl></aside>

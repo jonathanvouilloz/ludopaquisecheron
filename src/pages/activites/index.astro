@@ -9,7 +9,7 @@ const content = await loadActivities(false)
   <span slot="kicker">Activités</span>
   <section class="editorial-section" aria-labelledby="activites-a-venir">
     <div class="editorial-section__heading"><h2 id="activites-a-venir">À venir</h2><p>Consultez la fiche détaillée avant de vous déplacer.</p></div>
-    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/activites/${item.slug}`} meta={['Activité', item.schedule, item.location]} image={item.image} linkLabel="Voir l’activité" />)}</div> : <div class="status-panel"><h3>Aucune activité annoncée</h3><p>Revenez prochainement ou <a href="/contact">contactez l’équipe</a> pour connaître le programme.</p></div>}
+    {content.items.length ? <div class="content-grid">{content.items.map((item) => <ContentCard title={item.title} summary={item.summary} href={`/activites/${item.slug}`} meta={['Activité', item.schedule, item.location]} image={item.image} imagePlaceholder linkLabel="Voir l’activité" />)}</div> : <div class="status-panel"><h3>Aucune activité annoncée</h3><p>Revenez prochainement ou <a href="/contact">contactez l’équipe</a> pour connaître le programme.</p></div>}
   </section>
   <section class="editorial-section"><div class="editorial-section__heading"><h2>Déjà terminé ?</h2><p>Les activités passées restent consultables sans être confondues avec les rendez-vous à venir.</p></div><a class="share-link" href="/activites/archives"><i class="ph ph-archive" aria-hidden="true"></i>Consulter les archives</a></section>
 </EditorialLayout>
