@@ -197,6 +197,8 @@ const parseOpeningInterval = (value: unknown) => {
 const parseLudoSite = (value: unknown) => {
   const source = record(value);
   const ref = parseSiteRef(value);
+  const directionsUrl =
+    source?.directionsUrl === undefined ? null : httpUrl(source.directionsUrl);
   const latitude = source ? finite(source.latitude) : null;
   const longitude = source ? finite(source.longitude) : null;
   const sortOrder = source ? integer(source.sortOrder) : null;
@@ -214,6 +216,9 @@ const parseLudoSite = (value: unknown) => {
     !nullableText(source.phone) ||
     !nullableEmail(source.email) ||
     !nullableText(source.accessInfo) ||
+    (directionsUrl === null &&
+      source.directionsUrl !== null &&
+      source.directionsUrl !== undefined) ||
     !nullableFinite(source.latitude) ||
     !nullableFinite(source.longitude) ||
     typeof source.isPrimary !== "boolean" ||
@@ -242,6 +247,7 @@ const parseLudoSite = (value: unknown) => {
     phone: source.phone,
     email: source.email,
     accessInfo: source.accessInfo,
+    directionsUrl,
     latitude: source.latitude,
     longitude: source.longitude,
     isPrimary: source.isPrimary,

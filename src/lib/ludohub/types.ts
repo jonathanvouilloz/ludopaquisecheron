@@ -58,6 +58,7 @@ export type LudoSite = PublicSiteRef & {
   phone: string | null;
   email: string | null;
   accessInfo: string | null;
+  directionsUrl: string | null;
   latitude: number | null;
   longitude: number | null;
   isPrimary: boolean;

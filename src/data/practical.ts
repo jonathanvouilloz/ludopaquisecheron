@@ -82,7 +82,7 @@ export const fallbackSitesPayload: SitesPayload = {
       id: 'legacy-paquis', slug: 'paquis', name: practicalPlaces.paquis.name,
       address: 'Rue de Berne 50', postalCode: '1201', city: 'Genève',
       phone: practicalPlaces.paquis.phone, email: practicalPlaces.paquis.email,
-      accessInfo: practicalPlaces.paquis.transit, latitude: null, longitude: null,
+      accessInfo: practicalPlaces.paquis.transit, directionsUrl: practicalPlaces.paquis.directionsUrl, latitude: null, longitude: null,
       isPrimary: true, sortOrder: 0,
       openingIntervals: [
         { dayOfWeek: 1, opensAt: '09:30', closesAt: '11:30' },
@@ -98,7 +98,7 @@ export const fallbackSitesPayload: SitesPayload = {
       id: 'legacy-secheron', slug: 'secheron', name: practicalPlaces.secheron.name,
       address: 'Rue Anne Torcapel 2', postalCode: '1202', city: 'Genève',
       phone: practicalPlaces.secheron.phone, email: practicalPlaces.secheron.email,
-      accessInfo: practicalPlaces.secheron.transit, latitude: null, longitude: null,
+      accessInfo: practicalPlaces.secheron.transit, directionsUrl: practicalPlaces.secheron.directionsUrl, latitude: null, longitude: null,
       isPrimary: false, sortOrder: 1,
       openingIntervals: [
         { dayOfWeek: 2, opensAt: '16:00', closesAt: '18:30' },
@@ -176,7 +176,9 @@ function mapSite(site: LudoSite, source: Exclude<PracticalSource, 'empty'>): Pra
     introduction: 'Retrouvez ici l’adresse, les horaires et les coordonnées actuellement publiés.',
     address: address || 'Adresse non publiée',
     transit: site.accessInfo ?? 'Accès non publié',
-    directionsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`,
+    directionsUrl:
+      site.directionsUrl ??
+      `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`,
     phone: site.phone,
     email: site.email,
     schedule: formatOpeningIntervals(site.openingIntervals),

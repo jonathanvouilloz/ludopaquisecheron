@@ -21,6 +21,7 @@ const sites: SitesPayload = {
       phone: null,
       email: null,
       accessInfo: null,
+      directionsUrl: null,
       latitude: null,
       longitude: null,
       isPrimary: true,
