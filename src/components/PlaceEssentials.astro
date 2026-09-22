@@ -16,7 +16,8 @@ const { place } = Astro.props
     <h2 id={`venir-${place.key}`}><i class="ph ph-map-pin" aria-hidden="true"></i> Venir sur place</h2>
     <dl class="contact-facts">
       <div><dt>Adresse</dt><dd>{place.address}</dd></div>
-      <div><dt>Transports</dt><dd>{place.transit}</dd></div>
+      <div><dt>Accès</dt><dd>{place.transit}</dd></div>
+      <div><dt>Itinéraire</dt><dd><a href={place.directionsUrl} target="_blank" rel="noopener noreferrer">Ouvrir dans Google Maps</a></dd></div>
       <div><dt>Téléphone</dt><dd>{place.phone ? <a href={`tel:${place.phone.replaceAll(' ', '')}`}>{place.phone}</a> : 'Non publié'}</dd></div>
     </dl>
   </section>

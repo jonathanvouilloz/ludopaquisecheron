@@ -14,6 +14,7 @@ export type PracticalPlace = {
   introduction: string
   address: string
   transit: string
+  directionsUrl: string
   phone: string | null
   email: string | null
   schedule: Array<{ day: string; hours: string }>
@@ -36,6 +37,7 @@ export const practicalPlaces: Record<PlaceKey, PracticalPlace> = {
     introduction: 'Retrouvez ici l’adresse, les horaires et ce qu’il faut savoir avant de venir jouer ou emprunter un jeu.',
     address: 'Rue de Berne 50, 1201 Genève',
     transit: 'Bus 1 et 25 · arrêt Navigation',
+    directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Rue%20de%20Berne%2050%2C%201201%20Gen%C3%A8ve',
     phone: '+41 22 731 20 09',
     email: 'lu.paquissecheron@fase.ch',
     schedule: [
@@ -55,6 +57,7 @@ export const practicalPlaces: Record<PlaceKey, PracticalPlace> = {
     introduction: 'Retrouvez ici l’adresse, les horaires et ce qu’il faut savoir avant de venir jouer ou rendre un jeu.',
     address: 'Rue Anne Torcapel 2, 1202 Genève',
     transit: 'Tram 15 · arrêts Butini ou Maison de la Paix',
+    directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Rue%20Anne%20Torcapel%202%2C%201202%20Gen%C3%A8ve',
     phone: '+41 22 731 94 65',
     email: 'lu.paquissecheron@fase.ch',
     schedule: [
@@ -161,6 +164,10 @@ function mapSite(site: LudoSite, source: Exclude<PracticalSource, 'empty'>): Pra
   const knownKey = site.slug
   const locality = [site.postalCode, site.city].filter(Boolean).join(' ')
   const address = [site.address, locality].filter(Boolean).join(', ')
+  const destination =
+    site.latitude !== null && site.longitude !== null
+      ? `${site.latitude},${site.longitude}`
+      : address || site.name
   return {
     key: knownKey,
     name: site.name,
@@ -169,6 +176,7 @@ function mapSite(site: LudoSite, source: Exclude<PracticalSource, 'empty'>): Pra
     introduction: 'Retrouvez ici l’adresse, les horaires et les coordonnées actuellement publiés.',
     address: address || 'Adresse non publiée',
     transit: site.accessInfo ?? 'Accès non publié',
+    directionsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`,
     phone: site.phone,
     email: site.email,
     schedule: formatOpeningIntervals(site.openingIntervals),

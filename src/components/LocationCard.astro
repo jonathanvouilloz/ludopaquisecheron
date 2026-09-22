@@ -6,6 +6,7 @@ interface Props {
     summary: string
     address: string
     transit: string
+    directionsUrl?: string
     phone: string | null
     schedule: Array<{ day: string; hours: string }>
   }
@@ -24,7 +25,8 @@ const { location } = Astro.props
   </header>
   <dl class="location-card__facts">
     <div><dt><i class="ph ph-map-pin" aria-hidden="true"></i>Adresse</dt><dd>{location.address}</dd></div>
-    <div><dt><i class="ph ph-train-regional" aria-hidden="true"></i>Transports</dt><dd>{location.transit}</dd></div>
+    <div><dt><i class="ph ph-signpost" aria-hidden="true"></i>Accès</dt><dd>{location.transit}</dd></div>
+    {location.directionsUrl && <div><dt><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Itinéraire</dt><dd><a href={location.directionsUrl} target="_blank" rel="noopener noreferrer">Ouvrir dans Google Maps</a></dd></div>}
     <div>
       <dt><i class="ph ph-phone" aria-hidden="true"></i>Téléphone</dt>
       <dd>{location.phone ? <a href={`tel:${location.phone.replaceAll(' ', '')}`}>{location.phone}</a> : 'Non publié'}</dd>
