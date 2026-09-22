@@ -8,13 +8,11 @@ const content = slug ? await loadNewsDetail(slug) : null
 if (!content) return Astro.redirect('/404')
 const { item, ...source } = content
 ---
-<EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/actualites" sourceNotice={source.notice} noindex={source.noindex}>
-  <span slot="kicker">Actualité · publication</span>
+<EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/actualites" sourceNotice={source.notice} noindex={source.noindex} hideKicker>
   <article class="editorial-section detail-layout">
     <div class="prose">
       {item.image && <img class="editorial-image" src={item.image.url} alt={item.image.alt} loading="eager" />}
       <EditorialBody body={item.body} supportImage={item.supportImage} attachments={item.attachments} />
-      <a class="share-link" href={Astro.url.pathname} aria-label={`Lien permanent vers ${item.title}`}><i class="ph ph-link" aria-hidden="true"></i>Lien permanent vers cette actualité</a>
     </div>
     <aside class="detail-aside" aria-label="Repères de la publication"><dl><div><dt>Date</dt><dd>{item.dateLabel}</dd></div><div><dt>Lieu</dt><dd>{item.location}</dd></div><div><dt>Statut</dt><dd>Publié</dd></div></dl></aside>
   </article>

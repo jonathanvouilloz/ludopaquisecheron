@@ -12,9 +12,10 @@ interface Props {
   activePath?: string
   sourceNotice?: string | null
   noindex?: boolean
+  hideKicker?: boolean
 }
 
-const { title, description, question, intro, activePath = Astro.url.pathname, sourceNotice = null, noindex = false } = Astro.props
+const { title, description, question, intro, activePath = Astro.url.pathname, sourceNotice = null, noindex = false, hideKicker = false } = Astro.props
 ---
 
 <BaseLayout title={`${title} — Ludothèque Pâquis-Sécheron`} description={description} {noindex}>
@@ -33,7 +34,7 @@ const { title, description, question, intro, activePath = Astro.url.pathname, so
     <header class="editorial-hero">
       <div class="shell editorial-hero__grid">
         <div>
-          <p class="editorial-kicker"><slot name="kicker">À la ludothèque</slot></p>
+          {!hideKicker && <p class="editorial-kicker"><slot name="kicker">À la ludothèque</slot></p>}
           <h1>{question}</h1>
           <p class="editorial-hero__intro">{intro}</p>
         </div>
