@@ -1,9 +1,12 @@
 ---
 import EditorialLayout from '../../components/editorial/EditorialLayout.astro'
-import { loadProfiles } from '../../data/editorial'
+import { loadDocuments, loadProfiles } from '../../data/editorial'
 const content = await loadProfiles('committee')
+const documents = await loadDocuments()
+const reports = documents.items.filter((item) => item.kind === 'annual_report')
 ---
 <EditorialLayout title="Le comité" description="Le comité de l’association de la ludothèque." question="Qui porte l’association ?" intro="Découvrez les personnes engagées dans la gouvernance de l’association." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Association · comité</span>
   <section class="editorial-section" aria-labelledby="comite"><div class="editorial-section__heading"><h2 id="comite">Composition du comité</h2><p>Les noms et rôles publiés ont été validés par l’association.</p></div>{content.items.length ? <div class="content-grid">{content.items.map((person) => <article class="content-card"><div class="content-card__meta"><span>{person.role}</span></div><h2>{person.name}</h2>{person.bio && <p>{person.bio}</p>}</article>)}</div> : <div class="status-panel"><h3>Aucun profil publié</h3><p>Pour joindre l’association, utilisez la page <a href="/contact">Contact</a>.</p></div>}</section>
+  <section class="editorial-section" aria-labelledby="rapports"><div class="editorial-section__heading"><h2 id="rapports">Rapports d’activité</h2><p>Les rapports d’activité publiés par l’association sont disponibles ici.</p></div>{reports.length ? <div class="content-grid">{reports.map((report) => <article class="content-card"><div class="content-card__meta"><span>Rapport d’activité</span>{report.year && <span>{report.year}</span>}</div><h3>{report.title}</h3>{report.summary && <p>{report.summary}</p>}{report.pdf ? <a class="content-card__link" href={report.pdf.url} target="_blank" rel="noopener noreferrer"><i class="ph ph-file-pdf" aria-hidden="true"></i>Ouvrir {report.pdf.fileName}</a> : <span class="content-card__link" aria-disabled="true"><i class="ph ph-file" aria-hidden="true"></i>Document bientôt disponible</span>}</article>)}</div> : <div class="status-panel"><h3>Aucun rapport publié</h3><p>Les prochains rapports d’activité apparaîtront ici.</p></div>}</section>
 </EditorialLayout>
