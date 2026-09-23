@@ -2,7 +2,7 @@
 
 ## Projet
 
-Nouveau site public de la Ludothèque Pâquis-Sécheron. Cette base remplace visuellement l’ancien essai sans le modifier ni le supprimer.
+Nouveau site public de la Ludothèque Pâquis-Sécheron. L’ancien essai Astro + Sanity a été retiré le 23 septembre 2026, une fois le domaine basculé.
 
 ## Phase actuelle
 
@@ -11,7 +11,7 @@ La phase 1 « direction artistique et prototype statique » est clôturée et v�
 La phase 2 est cadrée fonctionnellement dans `docs/PHASE-2-SPEC.md` et ordonnée dans
 `docs/PHASE-2-PLAN.md`. Son premier prérequis s'exécute dans LudoHub : modèle multi-lieux puis
 horaires. Tant que l'API publique n'est pas livrée, les données de démonstration restent dans
-`src/data/site.ts` et les contenus de `../website/docs/legacy-content/` restent
+`src/data/site.ts` et les contenus de `docs/legacy-content/` restent
 `provisional` / `needs_review`.
 
 ## Sources de vérité

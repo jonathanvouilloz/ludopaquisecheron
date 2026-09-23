@@ -93,7 +93,7 @@ En cas de divergence visuelle, `DESIGN.md` définit l’intention et `src/styles
 
 Tous les horaires, coordonnées, jeux et textes issus de l’ancien site restent **provisoires / à vérifier**. Leur présence dans le prototype ne constitue ni une validation par l’équipe ni une autorisation de publication.
 
-Les sources archivées restent dans `../website/docs/legacy-content/`. L’ancien projet `../website/` ne doit pas être supprimé ou modifié dans le cadre de ce nouveau socle.
+Les sources archivées sont dans `docs/legacy-content/`. L’ancien projet Astro + Sanity a été retiré après la bascule du domaine.
 
 ## Hors périmètre de la phase 1
 

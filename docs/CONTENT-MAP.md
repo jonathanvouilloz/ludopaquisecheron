@@ -4,7 +4,7 @@
 
 ## Contenus déjà disponibles
 
-Le dossier `../website/docs/legacy-content/` contient bien :
+Le dossier `docs/legacy-content/` contient bien :
 
 - la présentation des deux lieux ;
 - des horaires et coordonnées archivés ;

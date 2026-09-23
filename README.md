@@ -37,4 +37,4 @@ pnpm preview
 
 ## Sources
 
-Les textes archivés se trouvent dans `../website/docs/legacy-content/`. Ils ne doivent pas être recopiés sans tri : horaires, membres, comité, tarifs et coordonnées peuvent être obsolètes.
+Les textes archivés se trouvent dans `docs/legacy-content/`. Ils ne doivent pas être recopiés sans tri : horaires, membres, comité, tarifs et coordonnées peuvent être obsolètes.

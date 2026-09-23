@@ -291,7 +291,7 @@ LudoHub adaptée à l'extension.
 
 ## 9. Migration et lancement
 
-- reprendre les contenus utiles et archives de `../website/docs/legacy-content/` ;
+- reprendre les contenus utiles et archives de `docs/legacy-content/` ;
 - vérifier les informations sensibles avant publication ;
 - importer les anciennes activités et publications en les marquant comme archives si nécessaire ;
 - conserver les anciennes URL via des redirections vers les nouvelles pages pertinentes ;

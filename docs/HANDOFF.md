@@ -21,7 +21,7 @@ publique minimale.
 
 ## Attention
 
-- ne pas modifier ou supprimer `../../website` : source legacy ;
+- l’archive de l’ancien site est dans `docs/legacy-content/` ;
 - conserver la landing et le styleguide comme référence visuelle ;
 - aucun contenu legacy n'est publié sans validation ;
 - le site reste en français, sans analytics ni catalogue complet de jeux.
