@@ -11,6 +11,5 @@ const { group } = Astro.props
 <article class:list={['age-card', `accent-${group.accent}`]}>
   <span class="age-card__symbol" aria-hidden="true"><i class={`ph ph-${group.icon}`}></i></span>
   <span class="age-card__range">{group.range}</span>
-  <strong>{group.title}</strong>
   <span>{group.description}</span>
 </article>

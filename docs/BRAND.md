@@ -2,6 +2,12 @@
 
 > Statut : fondation de travail. Les informations factuelles héritées de l’ancien site restent à confirmer.
 
+## Expression visuelle
+
+L’identité est pastel, claire et locale. Le pattern géométrique déjà présent sur le site reste le signe graphique principal. Il apparaît sur un fond gris très clair `#f5f7f7`, derrière des cartes blanches. Le bleu `#5e7dd9` identifie Pâquis, le vert `#38941a` identifie Sécheron et le rose `#d95e7d` apporte un accent ponctuel. Leurs variantes claires servent aux fonds et aux badges.
+
+Questrial donne aux titres un dessin simple et léger, avec un espacement légèrement resserré. Inter porte les textes et l’interface. La marque reste joyeuse par ses couleurs et son pattern, sans agrandir ni épaissir inutilement les titres.
+
 ## Rôle
 
 La Ludothèque Pâquis-Sécheron est un lieu de jeu, de rencontre et de transmission implanté dans deux quartiers de Genève. Elle accueille les enfants, les familles, les adultes, les seniors et les institutions.

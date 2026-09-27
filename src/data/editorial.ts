@@ -62,6 +62,7 @@ export type TopThreeView = {
   games: Array<{
     rank: number;
     name: string;
+    category: string | null;
     reason: string;
     image: { url: string; alt: string } | null;
   }>;
@@ -164,7 +165,9 @@ const demoArchivedActivities: ActivityView[] = [
     image: null,
     supportImage: null,
     attachments: [],
-    body: markdownBlocks("Cette fiche ne correspond pas à une activité passée réelle."),
+    body: markdownBlocks(
+      "Cette fiche ne correspond pas à une activité passée réelle.",
+    ),
     dateLabel: "Exemple sans date réelle",
     location: "Les deux lieux",
     audience: "Public non défini",
@@ -186,18 +189,21 @@ const demoTopThree: TopThreeView[] = [
       {
         rank: 1,
         name: "Jeu à sélectionner",
+        category: "Jeu d'expression",
         reason: "L’équipe ajoutera ici son conseil.",
         image: null,
       },
       {
         rank: 2,
         name: "Deuxième choix à venir",
+        category: "Jeu de questions",
         reason: "Ce rang teste la hiérarchie.",
         image: null,
       },
       {
         rank: 3,
         name: "Troisième choix à venir",
+        category: null,
         reason: "Aucun titre n’est recommandé.",
         image: null,
       },
@@ -430,16 +436,15 @@ function activityFallback(items: ActivityView[]): ActivitiesPayload {
       lifecycle: item.archived ? "archived" : "active",
       featuredRank: null,
       publishedAt: DEMO_DATE,
-      schedule: { type: "permanent", recurrenceRule: null, dates: [] },
+      rhythm: "permanent",
+      schedule: null,
     })),
   };
 }
-function scheduleLabel(
-  dates: Array<{ startsAt: string }>,
-  type: string,
-): string {
+function rhythmLabel(type: "one_off" | "recurring" | "permanent"): string {
   if (type === "permanent") return "Accessible en permanence";
-  return dates.length ? dateLabel(dates[0].startsAt) : "Date à confirmer";
+  if (type === "recurring") return "Activité récurrente";
+  return "Date indiquée dans la description";
 }
 export async function loadActivities(
   archived = false,
@@ -464,10 +469,10 @@ export async function loadActivities(
       supportImage: null,
       attachments: [],
       body: [],
-      dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
+      dateLabel: rhythmLabel(item.rhythm),
       location: item.location || result.data.site || "Les deux lieux",
       audience: "Tout public",
-      schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
+      schedule: rhythmLabel(item.rhythm),
       status: "live",
       archived: item.lifecycle === "archived",
       featuredRank: item.featuredRank,
@@ -504,8 +509,8 @@ export async function loadActivityRoutes(
         attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
         location: item.location || result.data.site || "Les deux lieux",
-        schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
-        dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
+        schedule: rhythmLabel(item.rhythm),
+        dateLabel: rhythmLabel(item.rhythm),
         archived: item.lifecycle === "archived",
         registration: item.registration,
         detailAvailable: true,
@@ -534,10 +539,10 @@ export async function loadActivityDetail(
       supportImages: item.supportImages,
       attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
-      dateLabel: scheduleLabel(item.schedule.dates, item.schedule.type),
+      dateLabel: rhythmLabel(item.rhythm),
       location: item.location || result.data.site || "Les deux lieux",
       audience: "Tout public",
-      schedule: scheduleLabel(item.schedule.dates, item.schedule.type),
+      schedule: rhythmLabel(item.rhythm),
       status: "live",
       archived: item.lifecycle === "archived",
       featuredRank: item.featuredRank,
@@ -555,7 +560,11 @@ const topFallback: TopThreesPayload = {
     slug: item.slug,
     theme: item.theme,
     isHomepage: item.isHomepage,
-    games: item.games.map(({ name, image }) => ({ name, image })),
+    games: item.games.map(({ name, category, image }) => ({
+      name,
+      category,
+      image,
+    })),
     publishedAt: DEMO_DATE,
   })),
 };
@@ -580,6 +589,7 @@ export async function loadTopThrees(
         games: games.map((game, index) => ({
           rank: index + 1,
           name: game.name,
+          category: game.category,
           reason: game.description || "Conseil de l’équipe",
           image: game.image,
         })),
@@ -625,8 +635,7 @@ function profilesFallback(
       section,
       displayName: item.name,
       roleTitle: item.role,
-      bioMarkdown: item.bio,
-      sortOrder: index,
+      bioText: item.bio,
       photo: null,
     })),
   };
@@ -648,7 +657,7 @@ export async function loadProfiles(
       id: item.id,
       name: item.displayName,
       role: item.roleTitle || (section === "team" ? "Équipe" : "Comité"),
-      bio: item.bioMarkdown || "",
+      bio: item.bioText || "",
       photo: item.photo,
     })),
   };

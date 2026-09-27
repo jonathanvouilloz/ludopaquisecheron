@@ -30,6 +30,7 @@ export type FeaturedGame = {
   name: string
   ageGroup: AgeGroup['key']
   age: string
+  category?: string | null
   description: string
   accent: AgeGroup['accent']
   image?: { url: string; alt: string } | null
@@ -127,8 +128,8 @@ export const ageGroups: AgeGroup[] = [
 ]
 
 export const featuredGames: FeaturedGame[] = [
-  { name: 'Little Mémo', ageGroup: 'tout-petits', age: 'Dès 2 ans', description: 'Un premier jeu pour observer et exercer sa mémoire.', accent: 'yellow' },
-  { name: 'Mémo Meuh', ageGroup: 'tout-petits', age: '3–6 ans', description: 'Reconnaître les animaux par leurs cris et retrouver la bonne image.', accent: 'periwinkle' },
+  { name: 'Little Mémo', ageGroup: 'tout-petits', age: 'Dès 2 ans', category: 'Jeu de mémoire', description: 'Un premier jeu pour observer et exercer sa mémoire.', accent: 'yellow' },
+  { name: 'Mémo Meuh', ageGroup: 'tout-petits', age: '3–6 ans', category: 'Jeu d’écoute', description: 'Reconnaître les animaux par leurs cris et retrouver la bonne image.', accent: 'periwinkle' },
   { name: 'Little Panic Island', ageGroup: 'explorateurs', age: 'Dès 4 ans', description: 'Un memory coopératif rythmé par un sablier et des actions loufoques.', accent: 'rose' },
   { name: 'Méchanlou', ageGroup: 'explorateurs', age: 'Dès 5 ans', description: 'Ruser autour du Petit Chaperon rouge sans se faire surprendre par le loup.', accent: 'blue' },
   { name: 'Blokus', ageGroup: 'curieux', age: 'Dès 7 ans', description: 'Concentration et stratégie dans un jeu aux règles très accessibles.', accent: 'periwinkle' },

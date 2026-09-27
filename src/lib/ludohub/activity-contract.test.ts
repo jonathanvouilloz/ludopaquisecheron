@@ -204,7 +204,7 @@ describe("contrat précis des calendriers d'activité", () => {
         exceptions: [],
       }),
     );
-    expect(withCount?.activity.schedule.recurrenceRule).toBe(
+    expect(withCount?.activity.schedule?.recurrenceRule).toBe(
       "FREQ=WEEKLY;INTERVAL=365;BYDAY=MO,WE;COUNT=366",
     );
     expect(

@@ -8,7 +8,7 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--color-surface);
+  background: var(--color-page);
   color: var(--color-ink);
   font-family: var(--font-body);
   font-size: 16px;
@@ -21,7 +21,7 @@ body {
   margin: 0;
   min-width: 320px;
   overflow-x: hidden;
-  background-color: var(--color-surface);
+  background-color: var(--color-page);
   background-image: url('/patterns/toy-field.svg');
   background-repeat: repeat;
   background-size: 480px 480px;
@@ -75,7 +75,7 @@ summary {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-highlight);
+  outline: 3px solid var(--color-brand-dark);
   outline-offset: 4px;
 }
 
@@ -142,11 +142,12 @@ p {
   top: 12px;
   width: min(calc(100% - 1.5rem), 76rem);
   margin: 12px auto 0;
-  border: 1px solid color-mix(in srgb, var(--color-on-brand) 18%, transparent);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-brand);
-  color: var(--color-on-brand);
-  box-shadow: 0 8px 0 rgb(var(--color-shadow-rgb) / 9%);
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
   transition: transform var(--transition-gentle), box-shadow var(--transition-gentle), background var(--transition-gentle);
   will-change: transform;
 }
@@ -156,7 +157,7 @@ p {
 }
 
 .site-header--scrolled {
-  box-shadow: 0 12px 28px rgb(34 35 62 / 16%);
+  box-shadow: 0 12px 32px rgb(var(--color-shadow-rgb) / 11%);
 }
 
 .site-header__inner {
@@ -174,7 +175,7 @@ p {
   align-items: center;
   gap: var(--space-3);
   min-height: 44px;
-  color: var(--color-on-brand);
+  color: var(--color-ink);
   text-decoration: none;
 }
 
@@ -186,16 +187,16 @@ p {
 .wordmark strong {
   font-family: var(--font-display);
   font-size: 1.9rem;
-  font-weight: 800;
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
 }
 
 .wordmark small {
   margin-top: 0.18rem;
   font-family: var(--font-ui);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .wordmark__mark {
@@ -203,7 +204,7 @@ p {
   display: block;
   width: 43px;
   height: 43px;
-  border: 3px solid var(--color-on-brand);
+  border: 2px solid var(--color-brand);
   border-radius: 46% 54% 42% 58%;
   transform: rotate(-7deg);
 }
@@ -250,7 +251,7 @@ p {
   min-height: 44px;
   padding-inline: 0.72rem;
   border-radius: var(--radius-pill);
-  color: color-mix(in srgb, var(--color-on-brand) 90%, transparent);
+  color: var(--color-ink-muted);
   font-family: var(--font-ui);
   font-size: 0.84rem;
   font-weight: 600;
@@ -259,15 +260,14 @@ p {
 }
 
 .desktop-nav a:hover {
-  background: color-mix(in srgb, var(--color-on-brand) 12%, transparent);
-  color: var(--color-on-brand);
-  transform: translateY(-1px);
+  background: var(--color-brand-soft);
+  color: var(--color-brand-dark);
 }
 
 .desktop-nav a[aria-current='page'] {
-  background: var(--color-surface);
+  background: var(--color-brand-soft);
   color: var(--color-brand-dark);
-  box-shadow: var(--shadow-control);
+  box-shadow: none;
 }
 
 .desktop-nav i {
@@ -287,9 +287,9 @@ p {
   width: 174px;
   min-height: 44px;
   padding: 3px;
-  border: 1px solid color-mix(in srgb, var(--color-on-brand) 28%, transparent);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--color-on-brand) 10%, transparent);
+  background: var(--color-surface-soft);
 }
 
 .ludo-switch::before {
@@ -302,7 +302,7 @@ p {
   width: calc(50% - 3px);
   border-radius: var(--radius-pill);
   background: var(--color-surface);
-  box-shadow: var(--shadow-control);
+  box-shadow: 0 2px 8px rgb(var(--color-shadow-rgb) / 8%);
   transition: transform var(--transition-gentle);
 }
 
@@ -320,7 +320,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   padding: 0.35rem 0.55rem;
   border: 0;
   background: transparent;
-  color: var(--color-on-brand);
+  color: var(--color-ink-muted);
   font-family: var(--font-ui);
   font-size: 0.78rem;
   font-weight: 700;
@@ -353,12 +353,12 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   gap: var(--space-2);
   min-height: 48px;
   padding: 0.78rem 1.3rem;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   font-family: var(--font-ui);
   font-size: 0.95rem;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   text-align: center;
   text-decoration: none;
@@ -367,8 +367,8 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 rgb(var(--color-shadow-rgb) / 13%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
 }
 
 .button i {
@@ -377,17 +377,17 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .button:hover i {
-  transform: translateX(3px) rotate(-5deg);
+  transform: translateX(2px);
 }
 
 .button--accent {
-  background: var(--color-highlight);
+  background: var(--color-accent-soft);
   color: var(--color-ink);
 }
 
 .button--accent:hover {
-  background: var(--color-surface);
-  color: var(--color-brand-dark);
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
 .button--brand {
@@ -414,7 +414,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .hero {
   position: relative;
-  padding: clamp(4.5rem, 9vw, 8.5rem) 0 clamp(4rem, 7vw, 7rem);
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(3.5rem, 7vw, 5.5rem);
   background: transparent;
 }
 
@@ -442,8 +442,8 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-xl);
-  font-weight: 800;
-  line-height: 0.94;
+  font-weight: 400;
+  line-height: 1.02;
   letter-spacing: var(--tracking-display);
 }
 
@@ -453,8 +453,13 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .hero--welcome .hero__grid {
   display: block;
-  max-width: 56rem;
+  max-width: 64rem;
   margin-inline: auto;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .hero--welcome h1 {
@@ -481,7 +486,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   position: absolute;
   z-index: -1;
   inset: auto -0.08em 0.04em -0.08em;
-  height: 0.22em;
+  height: 0.16em;
   border-radius: var(--radius-pill);
   background: var(--color-highlight);
   transform: rotate(-1deg);
@@ -505,9 +510,9 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   position: relative;
   z-index: 2;
   width: 100%;
-  height: clamp(64px, 8vw, 120px);
+  height: clamp(34px, 4vw, 58px);
   margin-top: -1px;
-  color: var(--color-brand);
+  color: var(--color-brand-soft);
   line-height: 0;
   overflow: hidden;
 }
@@ -530,11 +535,11 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .wave-divider--dark {
-  color: var(--color-brand-dark);
+  color: var(--color-surface);
 }
 
 .wave-divider--cutout {
-  color: var(--color-brand);
+  color: var(--color-brand-soft);
 }
 
 .wave-divider--flip > svg {
@@ -600,12 +605,12 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .section {
   position: relative;
-  padding-block: clamp(4.5rem, 8vw, 7rem);
+  padding-block: clamp(4rem, 7vw, 6rem);
 }
 
 .section--brand {
-  background: var(--color-brand);
-  color: var(--color-on-brand);
+  background: var(--color-brand-soft);
+  color: var(--color-ink);
 }
 
 .section--soft {
@@ -647,7 +652,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
@@ -662,11 +667,11 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .section-heading--inverse h2,
 .section-heading--inverse .eyebrow,
 .section-heading--inverse .section-heading__copy {
-  color: var(--color-on-brand);
+  color: var(--color-ink);
 }
 
 .section-heading--inverse .section-heading__copy {
-  color: var(--color-on-brand-muted);
+  color: var(--color-ink-muted);
 }
 
 .section-heading--center {
@@ -684,13 +689,14 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 285px;
+  min-height: 260px;
   padding: var(--space-6);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--color-on-brand) 24%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 18%, var(--color-border));
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--color-on-brand) 11%, transparent);
-  color: var(--color-on-brand);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-card);
 }
 
 .age-card__symbol {
@@ -703,7 +709,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   background: var(--accent-color);
   color: var(--color-ink);
   font-size: 1.8rem;
-  transform: rotate(-5deg);
+  transform: rotate(-3deg);
 }
 
 .age-card__range {
@@ -716,22 +722,24 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .age-card strong {
   margin-top: var(--space-1);
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
   font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
   line-height: 1.15;
 }
 
 .age-card > span:not(.age-card__symbol, .age-card__range) {
   margin-top: var(--space-3);
-  color: var(--color-on-brand-muted);
+  color: var(--color-ink-muted);
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-.accent-yellow { --accent-color: var(--color-highlight); }
-.accent-rose { --accent-color: var(--color-accent); }
+.accent-yellow { --accent-color: var(--color-accent-soft); }
+.accent-rose { --accent-color: var(--color-accent-soft); }
 .accent-periwinkle { --accent-color: var(--color-brand-pale); }
-.accent-blue { --accent-color: var(--color-brand-mid); }
+.accent-blue { --accent-color: var(--color-secheron-soft); }
 
 .games-showcase {
   display: grid;
@@ -750,7 +758,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
@@ -770,7 +778,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   grid-template-columns: 180px 1fr;
   min-height: 180px;
   overflow: hidden;
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
@@ -780,8 +788,8 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .game-card:hover {
   border-color: var(--color-brand);
-  box-shadow: 8px 8px 0 color-mix(in srgb, var(--color-brand) 15%, transparent);
-  transform: translateX(-5px) rotate(-0.15deg);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
 }
 
 .game-card__visual {
@@ -798,7 +806,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .game-card:hover .game-card__visual {
-  transform: scale(1.025) rotate(-1deg);
+  transform: scale(1.015);
 }
 
 .game-card__visual > span:not(.game-card__rank) {
@@ -839,7 +847,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-ui);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .game-card__body {
@@ -852,12 +860,15 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .game-card h3 {
   margin-bottom: var(--space-3);
   color: var(--color-brand-dark);
-  font-family: var(--font-ui);
-  font-size: 1.75rem;
-  line-height: 1.05;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.1;
 }
 
-.game-card__age {
+.game-card__age,
+.game-card__category {
   align-self: flex-start;
   margin-bottom: var(--space-3);
   padding: 0.25rem 0.6rem;
@@ -866,10 +877,15 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-ui);
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.4;
-  text-transform: uppercase;
+}
+
+.game-card__category {
+  margin-bottom: var(--space-2);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-dark);
 }
 
 .game-card p:last-child {
@@ -889,7 +905,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   display: flex;
   flex-direction: column;
   padding: clamp(1.5rem, 3vw, 2.5rem);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
@@ -947,8 +963,10 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .location-card h3 {
   margin-bottom: var(--space-2);
   color: var(--location-ink);
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
   font-size: 1.65rem;
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
   line-height: 1.1;
 }
 
@@ -1000,7 +1018,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   flex: 1;
   margin-top: 0;
   padding: var(--space-4) var(--space-5) var(--space-5);
-  border: 2px solid var(--location-soft);
+  border: 1px solid var(--location-soft);
   border-radius: var(--radius-sm);
   background: var(--location-soft);
 }
@@ -1068,20 +1086,20 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .manifesto-copy .eyebrow,
 .manifesto-copy h2,
 .manifesto-copy p {
-  color: var(--color-on-brand);
+  color: var(--color-ink);
 }
 
 .manifesto-copy h2 {
   margin-bottom: var(--space-5);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
 
 .manifesto-copy > p:not(.eyebrow) {
-  color: var(--color-on-brand-muted);
+  color: var(--color-ink-muted);
   font-size: var(--text-body-lg);
 }
 
@@ -1096,7 +1114,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   display: flex;
   gap: var(--space-3);
   align-items: center;
-  color: var(--color-on-brand);
+  color: var(--color-ink);
   font-family: var(--font-ui);
   font-weight: 600;
 }
@@ -1124,8 +1142,8 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
 .site-footer {
   padding-block: var(--space-8) var(--space-5);
-  background: var(--color-brand-dark);
-  color: var(--color-surface);
+  background: var(--color-surface);
+  color: var(--color-ink);
 }
 
 .site-footer__grid {
@@ -1137,20 +1155,22 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .site-footer__brand {
   margin-bottom: 0;
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 3.5rem;
+  color: var(--color-brand-dark);
+  font-weight: 400;
+  font-size: 2.7rem;
+  letter-spacing: var(--tracking-heading);
   line-height: 1;
 }
 
 .site-footer__note {
   max-width: 340px;
   margin-top: var(--space-4);
-  color: color-mix(in srgb, var(--color-surface) 74%, transparent);
+  color: var(--color-ink-muted);
 }
 
 .site-footer h2 {
   margin-bottom: var(--space-4);
-  color: var(--color-highlight);
+  color: var(--color-brand-dark);
   font-family: var(--font-ui);
   font-size: 1rem;
 }
@@ -1163,7 +1183,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .site-footer a {
-  color: var(--color-surface);
+  color: var(--color-ink);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.25em;
 }
@@ -1180,15 +1200,15 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   gap: var(--space-4);
   margin-top: var(--space-8);
   padding-top: var(--space-4);
-  border-top: 1px solid color-mix(in srgb, var(--color-surface) 20%, transparent);
-  color: color-mix(in srgb, var(--color-surface) 66%, transparent);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-ink-muted);
   font-size: 0.78rem;
 }
 
 .styleguide-hero {
   padding-block: var(--space-8);
-  background: var(--color-brand);
-  color: var(--color-surface);
+  background: var(--color-brand-soft);
+  color: var(--color-ink);
 }
 
 .styleguide-hero h1 {
@@ -1196,21 +1216,22 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin-bottom: var(--space-5);
   font-family: var(--font-display);
   font-size: var(--text-display-xl);
-  font-weight: 800;
+  color: var(--color-brand-dark);
+  font-weight: 400;
   letter-spacing: var(--tracking-display);
   line-height: 0.96;
 }
 
 .styleguide-hero p {
   max-width: 680px;
-  color: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  color: var(--color-ink-muted);
   font-size: var(--text-body-lg);
 }
 
 /* Pages pratiques : une question forte, puis des réponses courtes et vérifiables. */
 .question-hero {
   position: relative;
-  padding-block: clamp(4rem, 8vw, 7rem) clamp(3.5rem, 7vw, 6rem);
+  padding-block: clamp(3.5rem, 7vw, 5.5rem) clamp(3rem, 6vw, 5rem);
 }
 
 .question-hero__grid {
@@ -1218,6 +1239,11 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   grid-template-columns: minmax(0, 1fr) minmax(180px, 0.32fr);
   align-items: center;
   gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .question-hero h1 {
@@ -1225,9 +1251,9 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin-bottom: var(--space-5);
   color: var(--color-brand-dark);
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7vw, 6.8rem);
-  font-weight: 800;
-  line-height: 0.96;
+  font-size: var(--text-display-xl);
+  font-weight: 400;
+  line-height: 1.04;
   letter-spacing: var(--tracking-display);
 }
 
@@ -1255,13 +1281,13 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   width: clamp(150px, 18vw, 230px);
   aspect-ratio: 1;
   justify-self: end;
-  border: clamp(8px, 1vw, 13px) solid var(--color-surface);
-  border-radius: var(--radius-organic);
-  background: var(--color-highlight);
+  border: 8px solid var(--color-surface);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
   color: var(--color-brand-dark);
-  box-shadow: 0 14px 0 color-mix(in srgb, var(--color-brand) 22%, transparent);
+  box-shadow: var(--shadow-card);
   font-size: clamp(4.5rem, 9vw, 8rem);
-  transform: rotate(4deg);
+  transform: rotate(2deg);
 }
 
 .practical-content {
@@ -1277,7 +1303,9 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .practical-content h2 {
   margin-bottom: var(--space-4);
   color: var(--color-brand-dark);
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
   font-size: clamp(1.55rem, 3vw, 2.25rem);
   line-height: 1.15;
 }
@@ -1287,7 +1315,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-  border: 2px solid var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
   border-radius: var(--radius-md);
   background: var(--color-accent-soft);
   color: var(--color-ink);
@@ -1321,7 +1349,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .contact-direct,
 .contact-form-panel {
   padding: clamp(1.5rem, 4vw, 2.5rem);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
@@ -1422,7 +1450,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   gap: var(--space-4);
   min-height: 88px;
   padding: var(--space-5);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   text-decoration: none;
@@ -1438,7 +1466,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 .practical-nav a:hover {
   border-color: var(--color-brand);
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .place-choice a > i:first-child,
@@ -1526,7 +1554,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 }
 
 .faq-list details {
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
@@ -1621,7 +1649,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   width: 100%;
   min-height: 48px;
   padding: 0.75rem var(--space-4);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   color: var(--color-ink);
@@ -1663,7 +1691,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   color: var(--color-brand-dark);
   font-family: var(--font-display);
   font-size: var(--text-display-lg);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: var(--tracking-heading);
 }
 
@@ -1714,9 +1742,9 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   margin: 0;
   color: var(--color-brand-dark);
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: var(--tracking-display);
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: var(--text-display-xl);
   line-height: 0.95;
 }
 
@@ -1766,7 +1794,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
     gap: 5px;
     width: 48px;
     height: 48px;
-    border: 2px solid color-mix(in srgb, var(--color-on-brand) 45%, transparent);
+    border: 1px solid var(--color-border);
     border-radius: 50%;
     cursor: pointer;
     list-style: none;
@@ -1777,7 +1805,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   }
 
   .mobile-menu summary i {
-    color: var(--color-on-brand);
+    color: var(--color-brand-dark);
     font-size: 1.55rem;
   }
 
@@ -1866,7 +1894,7 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   }
 
   .question-hero h1 {
-    font-size: clamp(2.8rem, 15vw, 4.8rem);
+    font-size: clamp(2.5rem, 11vw, 3.35rem);
   }
 
   .place-essentials,
@@ -1921,6 +1949,14 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
 
   .hero {
     padding-top: var(--space-8);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.25rem, 11vw, 2.9rem);
+  }
+
+  .hero--welcome .hero__grid {
+    padding: var(--space-7) var(--space-5);
   }
 
   .hero__grid,

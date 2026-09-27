@@ -17,6 +17,7 @@ const homeGames = (home.selectedTopThree?.games ?? []).map((game, index) => ({
   name: game.name,
   ageGroup: 'grands',
   age: `Choix n°${index + 1}`,
+  category: game.category,
   description: game.reason,
   accent: (['yellow', 'periwinkle', 'rose'] as const)[index] ?? 'blue',
   image: game.image,
@@ -170,6 +171,7 @@ const latestNews = home.news.items.slice(0, 3)
                 href={`/activites/${item.slug}`}
                 meta={['Activité', item.schedule, item.location]}
                 image={item.image}
+                imageFit="contain"
                 imagePlaceholder
                 linkLabel="Voir l’activité"
               />

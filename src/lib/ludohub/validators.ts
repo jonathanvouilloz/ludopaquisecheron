@@ -535,14 +535,28 @@ const parseActivityBase = (value: unknown) => {
 const parseActivitySummary = (value: unknown) => {
   const source = record(value);
   const base = parseActivityBase(value);
-  const schedule = parseSchedule(source?.schedule, false);
-  return source && base && schedule ? { ...base, schedule } : null;
+  const schedule =
+    source?.schedule === undefined
+      ? null
+      : parseSchedule(source.schedule, false);
+  const rhythm =
+    oneOf(source?.rhythm, ["one_off", "recurring", "permanent"] as const) ??
+    schedule?.type;
+  return source && base && rhythm && (source.schedule === undefined || schedule)
+    ? { ...base, rhythm, schedule }
+    : null;
 };
 const parseActivityItem = (value: unknown) => {
   const source = record(value);
   const base = parseActivityBase(value);
   const bodyMarkdown = text(source?.bodyMarkdown);
-  const schedule = parseSchedule(source?.schedule, true);
+  const schedule =
+    source?.schedule === undefined
+      ? null
+      : parseSchedule(source.schedule, true);
+  const rhythm =
+    oneOf(source?.rhythm, ["one_off", "recurring", "permanent"] as const) ??
+    schedule?.type;
   const assets = parseActivityAssets(source);
   const registrationSource = record(source?.registration);
   const capacity = registrationSource
@@ -579,10 +593,11 @@ const parseActivityItem = (value: unknown) => {
   return source &&
     base &&
     bodyMarkdown !== null &&
-    schedule &&
+    rhythm &&
+    (source.schedule === undefined || schedule) &&
     registration &&
     assets
-    ? { ...base, bodyMarkdown, schedule, registration, ...assets }
+    ? { ...base, bodyMarkdown, rhythm, schedule, registration, ...assets }
     : null;
 };
 const parseActivityContext = (source: RecordValue) => {
@@ -645,15 +660,25 @@ const parseTopThreeBase = (value: unknown) => {
 const parseGameSummary = (value: unknown) => {
   const source = record(value);
   const name = nonEmpty(source?.name);
-  const image = source?.image === undefined ? null : parseNullableImage(source.image);
-  return source && name && image !== undefined ? { name, image } : null;
+  const image =
+    source?.image === undefined ? null : parseNullableImage(source.image);
+  const category = source?.category === undefined ? null : source.category;
+  return source && name && nullableText(category) && image !== undefined
+    ? { name, category, image }
+    : null;
 };
 const parseGameDetail = (value: unknown) => {
   const source = record(value);
   const name = nonEmpty(source?.name);
-  const image = source?.image === undefined ? null : parseNullableImage(source.image);
-  return source && name && nullableText(source.description) && image !== undefined
-    ? { name, description: source.description, image }
+  const image =
+    source?.image === undefined ? null : parseNullableImage(source.image);
+  const category = source?.category === undefined ? null : source.category;
+  return source &&
+    name &&
+    nullableText(category) &&
+    nullableText(source.description) &&
+    image !== undefined
+    ? { name, category, description: source.description, image }
     : null;
 };
 const parseTopThreeSummary = (value: unknown) => {
@@ -803,23 +828,20 @@ const parseProfile = (value: unknown) => {
   const id = nonEmpty(source?.id);
   const section = oneOf(source?.section, ["team", "committee"] as const);
   const displayName = nonEmpty(source?.displayName);
-  const sortOrder = integer(source?.sortOrder);
   const photo = parseNullableImage(source?.photo);
   return source &&
     id &&
     section &&
     displayName &&
     nullableText(source.roleTitle) &&
-    nullableText(source.bioMarkdown) &&
-    sortOrder !== null &&
+    nullableText(source.bioText) &&
     photo !== undefined
     ? {
         id,
         section,
         displayName,
         roleTitle: source.roleTitle,
-        bioMarkdown: source.bioMarkdown,
-        sortOrder,
+        bioText: source.bioText,
         photo,
       }
     : null;

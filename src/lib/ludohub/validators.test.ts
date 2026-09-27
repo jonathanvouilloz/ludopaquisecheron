@@ -327,9 +327,9 @@ describe("tops trois", () => {
       isHomepage: true,
       publishedAt,
       games: [
-        { name: "A", image: null },
-        { name: "B", image: null },
-        { name: "C", image: null },
+        { name: "A", category: "Jeu d'expression", image: null },
+        { name: "B", category: null, image: null },
+        { name: "C", category: null, image: null },
       ],
       internalFlag: "privé",
     };
@@ -341,9 +341,9 @@ describe("tops trois", () => {
       isHomepage: true,
       publishedAt,
       games: [
-        { name: "A", image: null },
-        { name: "B", image: null },
-        { name: "C", image: null },
+        { name: "A", category: "Jeu d'expression", image: null },
+        { name: "B", category: null, image: null },
+        { name: "C", category: null, image: null },
       ],
     });
     expect(topThreesPayload({ ...context, topThrees: [{ ...summary, isHomepage: undefined }] })).toBeNull();

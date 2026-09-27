@@ -30,14 +30,15 @@ horaires. Tant que l'API publique n'est pas livrée, les données de démonstrat
 
 ## Règles visuelles
 
-- La DA est inspirée de SoundCarrot, mais ancrée dans la palette officielle : bleu `#4A57C8`, rose terre `#BE5B45`, échelle pervenche et jaune ludique.
-- Deux thèmes sont disponibles sans modifier le contenu : Pâquis (bleu/rose/jaune) et Sécheron (`#69B34C` / `#245C35` / `#FF6B4A`, avec `#3532B6` en accent complémentaire ponctuel).
-- La navigation est une capsule sticky flottante : elle se masque au scroll descendant, revient au scroll montant et n’affiche une icône que sur la destination active.
-- Les sections claires n’ont aucun fond : elles laissent apparaître le motif géométrique fixe. Les vagues ne marquent que les vrais changements d’intensité.
+- La DA est pastel : bleu Pâquis `#5E7DD9` / `#D7DFF6`, vert Sécheron `#38941A` / `#E4F7DD`, rose `#D95E7D` / `#F7C5DD`, encre `#333333`, fond `#F5F7F7` et cartes blanches.
+- Les titres utilisent Questrial avec un espacement resserré ; le corps et l’interface utilisent Inter.
+- Deux thèmes sont disponibles sans modifier le contenu : Pâquis bleu et Sécheron vert. Les variantes sombres des deux lieux portent les textes colorés et les boutons afin de garantir le contraste.
+- La navigation est un panneau blanc sticky flottant : elle se masque au scroll descendant, revient au scroll montant et n’affiche une icône que sur la destination active.
+- Les patterns géométriques fixes actuels sont conservés. Les héros et contenus majeurs utilisent des panneaux blancs ; les vagues sont basses et ne marquent que les vrais changements d’intensité.
 - Phosphor Icons est le système iconographique d’interface. Les illustrations historiques fournies restent des sources à évaluer, pas des icônes de navigation.
 - Les titres de section n’ont pas de petit surtitre/eyebrow : titre puis sous-texte uniquement.
 - Ne jamais copier ses assets, son logo ou son code.
-- Pas de gradients, glassmorphism, blobs de l’ancien essai ou cartes SaaS génériques.
+- Pas de gradients, glassmorphism ou décor ajouté en concurrence avec le pattern.
 - Toute valeur visuelle réutilisée doit venir de `tokens.css`.
 - Les animations restent tactiles, brèves et désactivées avec `prefers-reduced-motion`.
 - Les interactions à la souris utilisent le curseur-main fourni par `public/cursors/play-hand.svg` avec fallback natif.

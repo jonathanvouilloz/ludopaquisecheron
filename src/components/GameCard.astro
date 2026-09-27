@@ -16,6 +16,7 @@ const { game, rank } = Astro.props
     {!game.image && <><i></i><i></i><i></i></>}
   </div>
   <div class="game-card__body">
+    {game.category && <p class="game-card__category">{game.category}</p>}
     <h3>{game.name}</h3>
     <p class="game-card__age">{game.age}</p>
     <p>{game.description}</p>

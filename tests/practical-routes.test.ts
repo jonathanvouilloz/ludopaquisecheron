@@ -129,7 +129,7 @@ describe('shell multipage et parcours pratiques', () => {
     expect(page).toContain('par TWINT ou en espèces')
     expect(page).toContain('Aucun paiement n’est demandé en ligne')
     expect(page).toContain('Aucun compte en ligne n’est nécessaire')
-    expect(page).toContain('avec leur version')
+    expect(page).toContain('présentés directement dans le formulaire')
     expect(page).not.toContain('<iframe')
     expect(page).not.toMatch(/href=\{membershipFormUrl \?\? ['"]{2}\}/)
 

@@ -4,15 +4,15 @@ import { loadGallery } from '../data/editorial'
 
 const content = await loadGallery()
 ---
-<EditorialLayout title="Galerie" description="Découvrez les espaces et les activités de la ludothèque en images." question="À quoi ressemblent les lieux ?" intro="Des photos locales et légendées permettent de préparer une première visite." sourceNotice={content.notice} noindex={content.noindex}>
+<EditorialLayout title="Galerie" description="Découvrez les espaces et les activités de la ludothèque en images." question="À quoi ressemblent les lieux ?" intro="Quelques photos pour découvrir les lieux et les activités proposées au fil de l’année." sourceNotice={content.notice} noindex={content.noindex}>
   <span slot="kicker">Galerie</span>
-  <section class="editorial-section" aria-labelledby="images"><div class="editorial-section__heading"><h2 id="images">La ludothèque en images</h2><p>Chaque photo est choisie, décrite et vérifiée avant sa mise en ligne.</p></div>
+  <section class="editorial-section" aria-labelledby="images"><div class="editorial-section__heading"><h2 id="images">La ludothèque en images</h2></div>
     {content.items.length ? <div class="gallery-grid">{content.items.map((item, index) => <figure class:list={["gallery-item", { "gallery-placeholder": item.demo }]}>{item.imageUrl ? <img src={item.imageUrl} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} /> : <div role="img" aria-label={item.alt}><i class="ph ph-image" aria-hidden="true"></i><span>Image {index + 1} à publier</span></div>}<figcaption>{item.caption}</figcaption></figure>)}</div> : <div class="status-panel"><h3>Aucune image publiée</h3><p>La galerie sera complétée prochainement. <a href="/paquis">Découvrez déjà les lieux</a>.</p></div>}
   </section>
 </EditorialLayout>
 <style>
   .gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
-  .gallery-item { margin: 0; border: 2px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden; }
+  .gallery-item { margin: 0; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden; box-shadow: var(--shadow-card); }
   .gallery-item img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
   .gallery-placeholder > div { display: grid; aspect-ratio: 4 / 3; place-items: center; align-content: center; gap: var(--space-3); background: var(--color-brand-soft); color: var(--color-brand-dark); }
   .gallery-placeholder i { font-size: 3rem; }

@@ -101,8 +101,9 @@ export type NewsPayload = {
 };
 export type NewsDetailPayload = Omit<NewsPayload, "news"> & { news: NewsItem };
 
+export type ActivityRhythm = "one_off" | "recurring" | "permanent";
 export type ActivitySchedule = {
-  type: "one_off" | "recurring" | "permanent";
+  type: ActivityRhythm;
   recurrenceRule: string | null;
   dates: Array<{ startsAt: string; endsAt: string | null }>;
   exceptions: Array<{ excludedAt: string; reason: string | null }>;
@@ -124,14 +125,15 @@ export type ActivitySummary = {
   lifecycle: "active" | "archived";
   featuredRank: number | null;
   publishedAt: string;
-  schedule: ActivitySchedulePreview;
+  rhythm: ActivityRhythm;
+  schedule: ActivitySchedulePreview | null;
 };
-export type ActivityItem = Omit<ActivitySummary, "schedule"> & {
+export type ActivityItem = ActivitySummary & {
   bodyMarkdown: string;
   supportImage: PublicSupportImage | null;
   supportImages: PublicSupportImage[];
   attachments: PublicPdfAttachment[];
-  schedule: ActivitySchedule;
+  schedule: ActivitySchedule | null;
   registration: ActivityRegistration;
 };
 export type ActivitiesPayload = {
@@ -155,12 +157,17 @@ export type TopThreeSummary = {
   slug: string;
   theme: string;
   isHomepage: boolean;
-  games: Array<{ name: string; image: PublicImage | null }>;
+  games: Array<{
+    name: string;
+    category: string | null;
+    image: PublicImage | null;
+  }>;
   publishedAt: string;
 };
 export type TopThreeItem = Omit<TopThreeSummary, "games"> & {
   games: Array<{
     name: string;
+    category: string | null;
     description: string | null;
     image: PublicImage | null;
   }>;
@@ -226,8 +233,7 @@ export type Profile = {
   section: "team" | "committee";
   displayName: string;
   roleTitle: string | null;
-  bioMarkdown: string | null;
-  sortOrder: number;
+  bioText: string | null;
   photo: PublicImage | null;
 };
 export type ProfilesPayload = {
