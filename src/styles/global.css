@@ -1152,14 +1152,18 @@ html[data-ludo-theme='secheron'] .ludo-switch::before {
   gap: var(--space-6);
 }
 
-.site-footer__brand {
-  margin-bottom: 0;
-  font-family: var(--font-display);
-  color: var(--color-brand-dark);
-  font-weight: 400;
-  font-size: 2.7rem;
-  letter-spacing: var(--tracking-heading);
-  line-height: 1;
+.site-footer__logo-link {
+  display: inline-flex;
+  width: min(100%, 12rem);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.site-footer__logo {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .site-footer__note {
