@@ -22,7 +22,6 @@ const placeStructuredData = source === 'live' && place ? {
   title={`${place?.name ?? `Ludothèque de ${label}`} — Horaires et accès`}
   description={`Horaires, adresse et accès de la ludothèque de ${label}.`}
   activePath={`/${placeKey}`}
-  forcedTheme={placeKey}
   noindex={source === 'fallback'}
   structuredData={placeStructuredData}
 >

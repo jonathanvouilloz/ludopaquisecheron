@@ -12,7 +12,7 @@ const contactEndpoint = publicContactEndpoint()
 <PracticalLayout title="Contact — Ludothèque Pâquis-Sécheron" description="Coordonnées publiées des deux lieux et formulaire pour adresser une demande à l’équipe." activePath="/contact" noindex={placesResult.source === 'fallback'}>
   <QuestionHero question="Comment joindre l’équipe ?" answer="Pour une réponse immédiate sur une ouverture, appelez directement la ludothèque. Pour une demande moins urgente, utilisez l’adresse e-mail commune." icon="envelope-simple" />
   <div class="shell practical-content contact-layout">
-    <section class="contact-direct" aria-labelledby="contact-direct-title">
+    <section id="contact-direct" class="contact-direct" aria-labelledby="contact-direct-title">
       <h2 id="contact-direct-title">Les contacts qui fonctionnent</h2>
       <ProvisionalNotice source={placesResult.source} reason={placesResult.reason} />
       {[...new Set(placesResult.data.map((place) => place.email).filter((email): email is string => Boolean(email)))].map((email) => (
@@ -25,107 +25,44 @@ const contactEndpoint = publicContactEndpoint()
     </section>
 
     <section class="contact-form-panel" aria-labelledby="contact-form-title">
-      <div class="form-status" data-contact-status role="status" aria-live="polite"><i class="ph ph-info" aria-hidden="true"></i><span>{contactEndpoint ? 'Le formulaire est prêt.' : 'Le formulaire est indisponible sur cette version du site. Utilisez l’e-mail ou le téléphone.'}</span></div>
+      <div class="form-status" data-contact-status role="status" aria-live="polite"><i class="ph ph-info" aria-hidden="true"></i><span>{contactEndpoint ? 'Complétez les champs ci-dessous avant d’envoyer votre message.' : 'Le formulaire est indisponible sur cette version du site. Utilisez l’e-mail ou le téléphone.'}</span></div>
       <h2 id="contact-form-title">Envoyer un message</h2>
-      <form data-contact-form data-contact-endpoint={contactEndpoint ?? undefined} aria-describedby="form-fallback">
-        <div class="field"><label for="contact-name">Votre nom</label><input id="contact-name" name="name" autocomplete="name" required /></div>
-        <div class="field"><label for="contact-email">Votre e-mail</label><input id="contact-email" name="email" type="email" autocomplete="email" required /></div>
-        <div class="field"><label for="contact-phone">Votre téléphone <span>(facultatif)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" /></div>
-        <div class="field"><label for="contact-recipient">Destinataire</label><select id="contact-recipient" name="recipient"><option value="general">Équipe générale</option><option value="paquis">Pâquis</option><option value="secheron">Sécheron</option></select></div>
-        <div class="field field--wide"><label for="contact-subject">Sujet</label><input id="contact-subject" name="subject" required /></div>
-        <div class="field field--wide"><label for="contact-message">Votre question</label><textarea id="contact-message" name="message" rows="6" required></textarea></div>
+      <form data-contact-form data-contact-endpoint={contactEndpoint ?? undefined} aria-describedby="form-fallback" novalidate>
+        <fieldset class="contact-controls">
+        <legend class="sr-only">Votre message à la ludothèque</legend>
+        <div class="field"><label for="contact-name">Votre nom</label><input id="contact-name" name="name" autocomplete="name" required maxlength="160" placeholder="Camille Martin" data-validate aria-describedby="contact-name-hint contact-name-error" /><small id="contact-name-hint">Votre prénom et nom, 160 caractères maximum.</small><small class="field-error" id="contact-name-error"></small></div>
+        <div class="field"><label for="contact-email">Votre e-mail</label><input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="320" placeholder="prenom@exemple.ch" data-validate aria-describedby="contact-email-hint contact-email-error" /><small id="contact-email-hint">Une adresse complète pour recevoir notre réponse.</small><small class="field-error" id="contact-email-error"></small></div>
+        <div class="field"><label for="contact-phone">Votre téléphone <span>(facultatif)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" maxlength="50" placeholder="+41 79 000 00 00" data-validate aria-describedby="contact-phone-hint contact-phone-error" /><small id="contact-phone-hint">Laissez vide ou indiquez votre numéro, avec l’indicatif du pays si utile. 50 caractères maximum.</small><small class="field-error" id="contact-phone-error"></small></div>
+        <div class="field"><label for="contact-recipient">Destinataire</label><select id="contact-recipient" name="recipient" data-validate aria-describedby="contact-recipient-hint contact-recipient-error"><option value="general">Équipe générale</option><option value="paquis">Pâquis</option><option value="secheron">Sécheron</option></select><small id="contact-recipient-hint">Choisissez un lieu ou l’équipe générale.</small><small class="field-error" id="contact-recipient-error"></small></div>
+        <div class="field field--wide"><label for="contact-subject">Sujet</label><input id="contact-subject" name="subject" required maxlength="200" placeholder="Question sur le prêt de jeux" data-validate aria-describedby="contact-subject-hint contact-subject-error" /><small id="contact-subject-hint">Le sujet de votre demande, 200 caractères maximum.</small><small class="field-error" id="contact-subject-error"></small></div>
+        <div class="field field--wide"><label for="contact-message">Votre question</label><textarea id="contact-message" name="message" rows="6" required maxlength="5000" placeholder="Bonjour, je souhaiterais savoir…" data-validate aria-describedby="contact-message-hint contact-message-error"></textarea><small id="contact-message-hint">Décrivez votre demande, 5 000 caractères maximum.</small><small class="field-error" id="contact-message-error"></small></div>
         <div class="contact-honeypot" aria-hidden="true"><label for="contact-website">Site internet</label><input id="contact-website" name="website" tabindex="-1" autocomplete="off" /></div>
-        <button class="button button--brand" type="submit" disabled={!contactEndpoint}><span>{contactEndpoint ? 'Envoyer mon message' : 'Envoi indisponible'}</span><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></button>
+        </fieldset>
+        <div id="contact-requirements" class="contact-requirements" data-contact-requirements><p>Renseignez votre nom, votre e-mail, le sujet et votre question pour activer l’envoi.</p></div>
+        <button class="button button--brand" type="submit" disabled aria-describedby="contact-requirements"><span>{contactEndpoint ? 'Envoyer mon message' : 'Envoi indisponible'}</span><i class="ph ph-paper-plane-tilt" aria-hidden="true"></i></button>
+        <button class="button button--ghost" type="button" data-contact-another hidden>Écrire un autre message</button>
       </form>
+      <noscript><p>Activez JavaScript pour envoyer ce formulaire, ou utilisez directement les coordonnées e-mail et téléphone ci-contre.</p></noscript>
       <p id="form-fallback" class="form-fallback">L’e-mail et le téléphone restent disponibles dans la colonne « Les contacts qui fonctionnent », même si l’envoi du formulaire échoue.</p>
     </section>
   </div>
 </PracticalLayout>
 
 <script>
-  import type { ContactRecipient, PublicContactSubmission } from '../lib/ludohub/types.js'
-
-  const form = document.querySelector<HTMLFormElement>('[data-contact-form]')
-  const status = document.querySelector<HTMLElement>('[data-contact-status]')
-  const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]')
-  let idempotencyKey: string | null = null
-
-  const setStatus = (message: string) => {
-    if (status) status.querySelector('span')!.textContent = message
-  }
-
-  form?.addEventListener('submit', async (event) => {
-    event.preventDefault()
-    const endpoint = form.dataset.contactEndpoint
-    if (!endpoint || !submitButton) {
-      setStatus('Le formulaire est indisponible. Utilisez l’e-mail ou le téléphone.')
-      return
-    }
-    if (!form.reportValidity()) return
-    if (!globalThis.crypto?.randomUUID) {
-      setStatus('Votre navigateur ne permet pas un envoi sécurisé. Utilisez l’e-mail ou le téléphone.')
-      return
-    }
-
-    const values = new FormData(form)
-    const phone = String(values.get('phone') ?? '').trim()
-    const payload: PublicContactSubmission = {
-      recipient: String(values.get('recipient')) as ContactRecipient,
-      name: String(values.get('name') ?? '').trim(),
-      email: String(values.get('email') ?? '').trim(),
-      ...(phone ? { phone } : {}),
-      subject: String(values.get('subject') ?? '').trim(),
-      message: String(values.get('message') ?? '').trim(),
-      website: String(values.get('website') ?? ''),
-    }
-    idempotencyKey ??= crypto.randomUUID()
-    submitButton.disabled = true
-    form.setAttribute('aria-busy', 'true')
-    setStatus('Envoi en cours…')
-
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'Idempotency-Key': idempotencyKey },
-        body: JSON.stringify(payload),
-      })
-      let receipt: unknown = null
-      if (response.status === 200 || response.status === 201) {
-        try {
-          receipt = await response.json()
-        } catch {
-          receipt = null
-        }
-      }
-      const validReceipt =
-        typeof receipt === 'object' &&
-        receipt !== null &&
-        !Array.isArray(receipt) &&
-        'accepted' in receipt &&
-        receipt.accepted === true &&
-        'receiptId' in receipt &&
-        typeof receipt.receiptId === 'string' &&
-        receipt.receiptId.trim().length > 0
-      if ((response.status === 200 || response.status === 201) && validReceipt) {
-        form.reset()
-        idempotencyKey = null
-        setStatus('Message envoyé. Merci, l’équipe vous répondra dès que possible.')
-      } else if (response.status === 400) {
-        setStatus('Certains champs sont invalides. Vérifiez votre message puis réessayez.')
-      } else if (response.status === 429) {
-        setStatus('Trop de tentatives ont été envoyées. Patientez avant de réessayer ou utilisez l’e-mail.')
-      } else {
-        setStatus('Le service d’envoi est indisponible. Utilisez l’e-mail ou le téléphone.')
-      }
-    } catch {
-      setStatus('Le service d’envoi est indisponible. Vérifiez votre connexion ou utilisez l’e-mail.')
-    } finally {
-      form.removeAttribute('aria-busy')
-      submitButton.disabled = false
-    }
-  })
+  import { initializeContactForm } from '../lib/contact-form.js'
+  initializeContactForm()
+  document.addEventListener('astro:page-load', initializeContactForm)
 </script>
 
 <style>
   .contact-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .contact-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0; margin: 0; border: 0; min-width: 0; grid-column: 1 / -1; }
+  .field small { font-size: .8rem; color: var(--color-ink-muted); }
+  .field .field-error { color: var(--color-danger); }
+  .field-error:empty { display: none; }
+  [aria-invalid='true'] { border-color: var(--color-danger); }
+  .contact-requirements { grid-column: 1 / -1; font-size: .85rem; }
+  .contact-requirements :global(ul) { padding-left: 1.25rem; margin: .5rem 0; }
+  [hidden] { display: none !important; }
+  @media (max-width: 640px) { .contact-controls { grid-template-columns: 1fr; } }
 </style>

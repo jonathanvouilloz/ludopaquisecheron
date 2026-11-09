@@ -59,7 +59,17 @@ Les couleurs vives ne portent pas de texte courant : leur contraste est insuffis
 
 ### Navigation
 
-Panneau blanc flottant et sticky. Le lien actif reçoit un fond pastel. Le sélecteur Pâquis/Sécheron reste accessible et conserve le choix dans `localStorage`. Le menu mobile utilise le même vocabulaire.
+Panneau blanc flottant et sticky. Le lien actif reçoit un fond pastel. Le logo officiel ouvre l’accueil ; le CTA « Contacter la ludothèque » ouvre les coordonnées directes. Le bleu Pâquis reste le thème permanent, y compris sur Sécheron et pour les visiteurs ayant mémorisé un ancien thème. Les repères verts des cartes Sécheron conservent leur rôle de lieu. Le menu mobile utilise le même vocabulaire, et le CTA devient une icône nommée sur petit écran.
+
+La navigation entre pages utilise le routeur Astro ; les interactions locales restent dans la page. Les scripts de navigation et de formulaire se réinitialisent à chaque changement de page. Le bouton des horaires de l’accueil descend directement à la section existante avec un décalage pour la navigation.
+
+### Images et galerie
+
+Les photos des lieux, de l’équipe et du comité gardent leur hauteur naturelle. La galerie utilise une maçonnerie par colonnes : trois sur ordinateur, deux sur tablette, une sur téléphone. Son ordre de lecture suit chaque colonne de haut en bas ; les légendes restent sur l’image en bas à gauche, avec une surface blanche légère et sans gradient.
+
+### Questions fréquentes et publications
+
+La FAQ s’ouvre au clavier sans navigation, une réponse à la fois. Les réponses préservent les sauts de ligne ; le chevron montre l’état ouvert. Les animations sont supprimées quand le mouvement réduit est demandé. Les actualités indiquent explicitement « Publié le… par… » pour distinguer la publication des dates d’événement.
 
 ### Boutons
 

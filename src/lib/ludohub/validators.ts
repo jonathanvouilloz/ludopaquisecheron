@@ -197,6 +197,7 @@ const parseOpeningInterval = (value: unknown) => {
 const parseLudoSite = (value: unknown) => {
   const source = record(value);
   const ref = parseSiteRef(value);
+  const photo = source?.photo === undefined ? null : parseNullableImage(source.photo);
   const directionsUrl =
     source?.directionsUrl === undefined ? null : httpUrl(source.directionsUrl);
   const latitude = source ? finite(source.latitude) : null;
@@ -216,6 +217,8 @@ const parseLudoSite = (value: unknown) => {
     !nullableText(source.phone) ||
     !nullableEmail(source.email) ||
     !nullableText(source.accessInfo) ||
+    (source.importantInfo !== undefined && !nullableText(source.importantInfo)) ||
+    photo === undefined ||
     (directionsUrl === null &&
       source.directionsUrl !== null &&
       source.directionsUrl !== undefined) ||
@@ -247,6 +250,8 @@ const parseLudoSite = (value: unknown) => {
     phone: source.phone,
     email: source.email,
     accessInfo: source.accessInfo,
+    ...(source.importantInfo === undefined ? {} : { importantInfo: source.importantInfo }),
+    ...(source.photo === undefined ? {} : { photo }),
     directionsUrl,
     latitude: source.latitude,
     longitude: source.longitude,
@@ -288,6 +293,7 @@ export const announcementsPayload: Parser<AnnouncementsPayload> = (value) => {
 
 const parseNewsSummary = (value: unknown) => {
   const source = record(value);
+  const authorName = source?.authorName ?? source?.authorDisplayName;
   const id = nonEmpty(source?.id);
   const slug = nonEmpty(source?.slug);
   const title = nonEmpty(source?.title);
@@ -300,8 +306,10 @@ const parseNewsSummary = (value: unknown) => {
     title &&
     summary !== null &&
     image !== undefined &&
+    (authorName === undefined || nullableText(authorName)) &&
     publishedAt
-    ? { id, slug, title, summary, image, publishedAt }
+    ? { id, slug, title, summary, image, publishedAt,
+        ...(authorName === undefined ? {} : { authorName }) }
     : null;
 };
 const parseNewsItem = (value: unknown) => {
@@ -498,6 +506,7 @@ function parseSchedule(
 }
 const parseActivityBase = (value: unknown) => {
   const source = record(value);
+  const sites = source?.sites === undefined ? undefined : parseArray(source.sites, parseSiteRef, 200);
   const id = nonEmpty(source?.id);
   const slug = nonEmpty(source?.slug);
   const title = nonEmpty(source?.title);
@@ -512,6 +521,7 @@ const parseActivityBase = (value: unknown) => {
     !title ||
     summary === null ||
     !nullableText(source.location) ||
+    sites === null ||
     image === undefined ||
     !lifecycle ||
     !nullableInteger(source.featuredRank) ||
@@ -526,6 +536,7 @@ const parseActivityBase = (value: unknown) => {
     title,
     summary,
     location: source.location,
+    ...(sites === undefined ? {} : { sites }),
     image,
     lifecycle,
     featuredRank: source.featuredRank,
@@ -713,22 +724,24 @@ const parseFaq = (value: unknown) => {
   const source = record(value);
   const id = nonEmpty(source?.id);
   const question = nonEmpty(source?.question);
-  const answerMarkdown = nonEmpty(source?.answerMarkdown);
-  const sortOrder = integer(source?.sortOrder);
+  const answerText = source?.answerText === undefined ? undefined : nonEmpty(source.answerText);
+  const answerMarkdown = answerText ?? nonEmpty(source?.answerMarkdown);
+  const sortOrder = source?.sortOrder === undefined ? 0 : integer(source.sortOrder);
   return source &&
     id &&
     question &&
     answerMarkdown &&
+    answerText !== null &&
     nullableText(source.category) &&
     sortOrder !== null
-    ? { id, question, answerMarkdown, category: source.category, sortOrder }
+    ? { id, question, answerMarkdown, ...(answerText === undefined ? {} : { answerText }), category: source.category, sortOrder }
     : null;
 };
 export const faqsPayload: Parser<FaqsPayload> = (value) => {
   const source = record(value);
   const context = source && parseContext(source);
   const faqs = parseArray(source?.faqs, parseFaq, 200);
-  return source && context && faqs ? { ...context, faqs } : null;
+  return source && context && faqs ? { ...context, faqs: faqs.map((faq, index) => ({ ...faq, sortOrder: record((source.faqs as unknown[])[index])?.sortOrder === undefined ? index : faq.sortOrder })) } : null;
 };
 
 const parsePdf = (value: unknown) => {

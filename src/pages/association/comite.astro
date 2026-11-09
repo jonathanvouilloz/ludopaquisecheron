@@ -11,5 +11,5 @@ const reports = documents.items.filter((item) => item.kind === 'annual_report')
   <section class="editorial-section" aria-labelledby="rapports"><div class="editorial-section__heading"><h2 id="rapports">Rapports d’activité</h2><p>Les rapports d’activité publiés par l’association sont disponibles ici.</p></div>{reports.length ? <div class="content-grid">{reports.map((report) => <article class="content-card"><div class="content-card__meta"><span>Rapport d’activité</span>{report.year && <span>{report.year}</span>}</div><h3>{report.title}</h3>{report.summary && <p>{report.summary}</p>}{report.pdf ? <a class="content-card__link" href={report.pdf.url} target="_blank" rel="noopener noreferrer"><i class="ph ph-file-pdf" aria-hidden="true"></i>Ouvrir {report.pdf.fileName}</a> : <span class="content-card__link" aria-disabled="true"><i class="ph ph-file" aria-hidden="true"></i>Document bientôt disponible</span>}</article>)}</div> : <div class="status-panel"><h3>Aucun rapport publié</h3><p>Les prochains rapports d’activité apparaîtront ici.</p></div>}</section>
 </EditorialLayout>
 <style>
-  .profile-photo { width: 100%; aspect-ratio: 4 / 3; margin-bottom: var(--space-5); border-radius: var(--radius-sm); object-fit: cover; }
+  .profile-photo { display: block; width: 100%; height: auto; margin-bottom: var(--space-5); border-radius: var(--radius-sm); }
 </style>

@@ -58,6 +58,8 @@ export type LudoSite = PublicSiteRef & {
   phone: string | null;
   email: string | null;
   accessInfo: string | null;
+  importantInfo?: string | null;
+  photo?: PublicImage | null;
   directionsUrl: string | null;
   latitude: number | null;
   longitude: number | null;
@@ -87,6 +89,7 @@ export type NewsSummary = {
   summary: string;
   image: PublicImage | null;
   publishedAt: string;
+  authorName?: string | null;
 };
 export type NewsItem = NewsSummary & {
   bodyMarkdown: string;
@@ -121,6 +124,7 @@ export type ActivitySummary = {
   title: string;
   summary: string;
   location: string | null;
+  sites?: PublicSiteRef[];
   image: PublicImage | null;
   lifecycle: "active" | "archived";
   featuredRank: number | null;
@@ -186,6 +190,8 @@ export type Faq = {
   id: string;
   question: string;
   answerMarkdown: string;
+  /** Texte simple publié par la version actuelle de LudoHub. */
+  answerText?: string;
   category: string | null;
   sortOrder: number;
 };

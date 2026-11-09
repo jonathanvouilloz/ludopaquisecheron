@@ -30,6 +30,7 @@ export type NewsView = {
   attachments: PublicPdfAttachment[];
   body: string[];
   dateLabel: string;
+  authorName?: string | null;
   location: string;
   status: "demo" | "live";
   detailAvailable: boolean;
@@ -324,6 +325,12 @@ function locationLabel(
   if (sites.length === 0) return fallback || "Les deux lieux";
   return sites.map((site) => site.name).join(" et ");
 }
+function activityLocationLabel(sites: Array<{ name: string }> | undefined, detail: string | null, filter: string | null): string {
+  const names = sites?.map((site) => site.name).join(" et ");
+  if (names && detail) return `${names} · ${detail}`;
+  if (sites && sites.length === 0) return detail || "Lieu non publié";
+  return names || detail || filter || "Les deux lieux";
+}
 function reasonOf(result: {
   source: string;
   reason?: string;
@@ -361,6 +368,7 @@ export async function loadNews(
       attachments: [],
       body: [],
       dateLabel: dateLabel(item.publishedAt),
+      authorName: item.authorName ?? null,
       location: result.data.site || "Les deux lieux",
       status: "live",
       detailAvailable: false,
@@ -387,6 +395,7 @@ export async function loadNewsRoutes(
         attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
         dateLabel: dateLabel(item.publishedAt),
+        authorName: item.authorName ?? null,
         location: locationLabel(item.sites),
         detailAvailable: true,
       };
@@ -414,6 +423,7 @@ export async function loadNewsDetail(
       attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
       dateLabel: dateLabel(item.publishedAt),
+      authorName: item.authorName ?? null,
       location: locationLabel(item.sites),
       status: "live",
       detailAvailable: true,
@@ -470,7 +480,7 @@ export async function loadActivities(
       attachments: [],
       body: [],
       dateLabel: rhythmLabel(item.rhythm),
-      location: item.location || result.data.site || "Les deux lieux",
+      location: activityLocationLabel(item.sites, item.location, result.data.site),
       audience: "Tout public",
       schedule: rhythmLabel(item.rhythm),
       status: "live",
@@ -508,7 +518,7 @@ export async function loadActivityRoutes(
         supportImages: item.supportImages,
         attachments: item.attachments,
         body: markdownParagraphs(item.bodyMarkdown),
-        location: item.location || result.data.site || "Les deux lieux",
+        location: activityLocationLabel(item.sites, item.location, result.data.site),
         schedule: rhythmLabel(item.rhythm),
         dateLabel: rhythmLabel(item.rhythm),
         archived: item.lifecycle === "archived",
@@ -540,7 +550,7 @@ export async function loadActivityDetail(
       attachments: item.attachments,
       body: markdownParagraphs(item.bodyMarkdown),
       dateLabel: rhythmLabel(item.rhythm),
-      location: item.location || result.data.site || "Les deux lieux",
+      location: activityLocationLabel(item.sites, item.location, result.data.site),
       audience: "Tout public",
       schedule: rhythmLabel(item.rhythm),
       status: "live",

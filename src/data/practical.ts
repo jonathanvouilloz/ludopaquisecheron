@@ -14,6 +14,8 @@ export type PracticalPlace = {
   introduction: string
   address: string
   transit: string
+  importantInfo?: string | null
+  photo?: { url: string; alt: string } | null
   directionsUrl: string
   phone: string | null
   email: string | null
@@ -176,6 +178,8 @@ function mapSite(site: LudoSite, source: Exclude<PracticalSource, 'empty'>): Pra
     introduction: 'Retrouvez ici l’adresse, les horaires et les coordonnées actuellement publiés.',
     address: address || 'Adresse non publiée',
     transit: site.accessInfo ?? 'Accès non publié',
+    importantInfo: site.importantInfo ?? null,
+    photo: site.photo ?? null,
     directionsUrl:
       site.directionsUrl ??
       `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`,
@@ -214,5 +218,6 @@ export const practicalLinks = [
   { href: '/infos-pratiques/fonctionnement', label: 'Comment ça marche ?', description: 'Jeu sur place, emprunts et retours.', icon: 'arrows-clockwise' },
   { href: '/infos-pratiques/inscription', label: 'Comment s’inscrire ?', description: 'Les étapes à prévoir avant un premier emprunt.', icon: 'identification-card' },
   { href: '/infos-pratiques/faq', label: 'Questions fréquentes', description: 'Les réponses rapides avant de venir.', icon: 'question' },
-  { href: '/infos-pratiques/annuaire', label: 'Qui contacter ?', description: 'Les coordonnées des deux lieux.', icon: 'address-book' },
+  { href: '/infos-pratiques/annuaire', label: 'Annuaire des ludothèques de la Ville de Genève', description: 'Les adresses et coordonnées des ludothèques du réseau genevois.', icon: 'address-book' },
+  { href: '/infos-pratiques/reglement', label: 'Règlement de la ludothèque', description: 'Le règlement publié et présenté lors de l’adhésion.', icon: 'book-open' },
 ] as const

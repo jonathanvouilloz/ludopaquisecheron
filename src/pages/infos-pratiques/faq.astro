@@ -9,13 +9,29 @@ const faqsResult = await loadPracticalFaqs()
 ---
 
 <PracticalLayout title="Questions fréquentes — Ludothèque Pâquis-Sécheron" description="Réponses publiées aux questions fréquentes avant de jouer sur place ou d’emprunter un jeu." activePath="/infos-pratiques/faq" noindex={faqsResult.source === 'fallback'}>
-  <QuestionHero question="Puis-je venir sans m’inscrire ?" answer="Oui pour découvrir les lieux et jouer sur place pendant les horaires d’ouverture. Une inscription est nécessaire pour emprunter." icon="question" />
+  <QuestionHero question="Comment préparer ma visite ?" answer="Retrouvez les réponses publiées par l’équipe pour jouer sur place, emprunter et préparer votre visite." icon="question" />
   <div class="shell practical-content practical-content--reading">
     <ProvisionalNotice source={faqsResult.source} reason={faqsResult.reason} />
     <section class="faq-list" aria-label="Questions fréquentes">
-      {faqsResult.data.map((faq, index) => <details open={index === 0}><summary>{faq.question}</summary><p>{faq.answerMarkdown}</p></details>)}
+      {faqsResult.data.map((faq) => <details name="questions-ludotheque"><summary><span>{faq.question}</span><i class="ph ph-caret-down" aria-hidden="true"></i></summary><p>{faq.answerText}</p></details>)}
       {faqsResult.source === 'empty' && <div class="status-panel"><h2>Aucune réponse publiée</h2><p>La FAQ LudoHub est vide pour le moment. Utilisez la page contact pour poser votre question.</p></div>}
     </section>
     <PracticalNav />
   </div>
 </PracticalLayout>
+
+<script>
+  const initializeFaq = () => {
+    const questions = document.querySelectorAll<HTMLDetailsElement>('.faq-list details')
+    questions.forEach((question) => {
+      if (question.dataset.initialized) return
+      question.dataset.initialized = 'true'
+      question.addEventListener('toggle', () => {
+        if (!question.open) return
+        questions.forEach((other) => { if (other !== question) other.open = false })
+      })
+    })
+  }
+  initializeFaq()
+  document.addEventListener('astro:page-load', initializeFaq)
+</script>

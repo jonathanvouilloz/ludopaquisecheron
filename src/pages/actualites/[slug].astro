@@ -9,15 +9,17 @@ if (!content) return Astro.redirect('/404')
 const { item, ...source } = content
 ---
 <EditorialLayout title={item.title} description={item.summary} question={item.question} intro={item.summary} activePath="/actualites" sourceNotice={source.notice} noindex={source.noindex} hideKicker>
-  <article class="editorial-section detail-layout">
+  <article class="editorial-section news-article">
+    <p class="publication-meta">Publié le {item.dateLabel} par {item.authorName || 'l’équipe de la ludothèque'}.</p>
     <div class="prose">
       {item.image && <img class="editorial-image" src={item.image.url} alt={item.image.alt} loading="eager" />}
       <EditorialBody body={item.body} supportImage={item.supportImage} attachments={item.attachments} />
     </div>
-    <aside class="detail-aside" aria-label="Repères de la publication"><dl><div><dt>Date</dt><dd>{item.dateLabel}</dd></div><div><dt>Lieu</dt><dd>{item.location}</dd></div><div><dt>Statut</dt><dd>Publié</dd></div></dl></aside>
   </article>
 </EditorialLayout>
 
 <style>
+  .news-article { max-width: var(--max-reading); margin-inline: auto; }
+  .publication-meta { margin-bottom: var(--space-5); color: var(--color-ink-muted); font-size: 0.9rem; }
   .editorial-image { width: 100%; max-height: 32rem; margin-bottom: var(--space-5); border-radius: var(--radius-lg); object-fit: cover; }
 </style>

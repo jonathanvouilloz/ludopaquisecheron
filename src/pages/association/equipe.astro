@@ -8,5 +8,5 @@ const content = await loadProfiles('team')
   <section class="editorial-section" aria-labelledby="equipe"><div class="editorial-section__heading"><h2 id="equipe">L’équipe</h2><p>Un visage, un rôle et une courte présentation pour préparer la rencontre.</p></div>{content.items.length ? <div class="content-grid">{content.items.map((person) => <article class="content-card">{person.photo && <img class="profile-photo" src={person.photo.url} alt={person.photo.alt} loading="lazy" />}<div class="content-card__meta"><span>{person.role}</span>{content.mode === 'demo' && <span>Profil provisoire</span>}</div><h2>{person.name}</h2>{person.bio && <p>{person.bio}</p>}</article>)}</div> : <div class="status-panel"><h3>Les profils ne sont pas encore publiés</h3><p>L’équipe reste joignable depuis la page <a href="/contact">Contact</a>.</p></div>}</section>
 </EditorialLayout>
 <style>
-  .profile-photo { width: 100%; aspect-ratio: 4 / 3; margin-bottom: var(--space-5); border-radius: var(--radius-sm); object-fit: cover; }
+  .profile-photo { display: block; width: 100%; height: auto; margin-bottom: var(--space-5); border-radius: var(--radius-sm); }
 </style>

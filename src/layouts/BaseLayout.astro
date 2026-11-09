@@ -1,13 +1,13 @@
 ---
 import '../styles/global.css'
 import '@phosphor-icons/web/regular'
+import { ClientRouter } from 'astro:transitions'
 import { absoluteSiteUrl, readSiteOrigin, serializeJsonLd } from '../lib/site-origin'
 
 interface Props {
   title: string
   description?: string
   noindex?: boolean
-  forcedTheme?: 'paquis' | 'secheron'
   structuredData?: Record<string, unknown> | null
 }
 
@@ -15,7 +15,6 @@ const {
   title,
   description = 'Deux ludothèques de quartier pour jouer, découvrir et partager à Genève.',
   noindex = false,
-  forcedTheme,
   structuredData = null,
 } = Astro.props
 const origin = readSiteOrigin()
@@ -33,8 +32,9 @@ const jsonLd = organization ? [organization, ...(structuredData ? [structuredDat
 ---
 
 <!doctype html>
-<html lang="fr" data-ludo-theme={forcedTheme ?? 'paquis'} data-theme-locked={forcedTheme ?? undefined}>
+<html lang="fr" data-ludo-theme="paquis">
   <head>
+    <ClientRouter />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
@@ -57,21 +57,6 @@ const jsonLd = organization ? [organization, ...(structuredData ? [structuredDat
       rel="stylesheet"
     />
     <title>{title}</title>
-    <script is:inline>
-      const forcedTheme = document.documentElement.dataset.themeLocked;
-      (() => {
-        if (forcedTheme === 'paquis' || forcedTheme === 'secheron') {
-          document.documentElement.dataset.ludoTheme = forcedTheme
-          return
-        }
-        try {
-          const storedTheme = localStorage.getItem('ludo-theme')
-          document.documentElement.dataset.ludoTheme = storedTheme === 'secheron' ? 'secheron' : 'paquis'
-        } catch {
-          document.documentElement.dataset.ludoTheme = 'paquis'
-        }
-      })()
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>

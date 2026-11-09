@@ -47,7 +47,7 @@ const latestNews = home.news.items.slice(0, 3)
           <h1>Bienvenue à la Ludothèque Pâquis-Sécheron</h1>
           <p class="hero__lead">Aux Pâquis et à Sécheron, venez jouer sur place, découvrir de nouveaux jeux et partager un moment avec d’autres familles.</p>
           <div class="hero__actions">
-            <ButtonLink href="/infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
+            <ButtonLink href="#infos-pratiques" variant="brand" icon="clock">Voir les horaires</ButtonLink>
             <ButtonLink href="/top-3" variant="outline">Choisir un jeu</ButtonLink>
           </div>
         </div>
@@ -144,7 +144,7 @@ const latestNews = home.news.items.slice(0, 3)
                 title={item.title}
                 summary={item.summary}
                 href={`/actualites/${item.slug}`}
-                meta={['Actualité', item.dateLabel, item.location]}
+                meta={['Actualité', `Publié le ${item.dateLabel}`, item.location]}
                 image={item.image}
                 imagePlaceholder
                 linkLabel="Lire l’actualité"

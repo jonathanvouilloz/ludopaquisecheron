@@ -29,16 +29,16 @@ describe('shell multipage et parcours pratiques', () => {
     ])
   })
 
-  it('force le thème du lieu sans écraser le choix persistant', async () => {
+  it('garde le bleu sur les pages des deux lieux', async () => {
     const baseLayout = await read('../src/layouts/BaseLayout.astro')
     const header = await read('../src/components/Header.astro')
     const paquis = await read('../src/pages/paquis.astro')
     const secheron = await read('../src/pages/secheron.astro')
 
-    expect(baseLayout).toContain('data-theme-locked')
-    expect(baseLayout).toContain('const forcedTheme = document.documentElement.dataset.themeLocked;')
-    expect(header).toContain('if (!lockedTheme)')
-    expect(header).toContain('button.disabled = true')
+    expect(baseLayout).toContain('data-ludo-theme="paquis"')
+    expect(baseLayout).not.toContain('data-theme-locked')
+    expect(baseLayout).not.toContain('localStorage')
+    expect(header).not.toContain('data-theme-value')
     expect(paquis).toContain("item.key === 'paquis'")
     expect(secheron).toContain("item.key === 'secheron'")
     expect(paquis).toContain('placeKey="paquis"')
@@ -50,7 +50,8 @@ describe('shell multipage et parcours pratiques', () => {
     expect(practicalStatus.label).toBe('Informations provisoires')
     expect(Object.keys(practicalPlaces)).toEqual(['paquis', 'secheron'])
     expect(Object.values(practicalPlaces).every((place) => place.schedule.length > 0)).toBe(true)
-    expect(practicalLinks).toHaveLength(4)
+    expect(practicalLinks.map(({ href }) => href)).toContain('/infos-pratiques/reglement')
+    expect(practicalLinks).toHaveLength(5)
   })
 
   it('commence chaque nouvelle page par une question concrète', async () => {
@@ -71,24 +72,29 @@ describe('shell multipage et parcours pratiques', () => {
 
   it('active le formulaire uniquement avec une URL publique et garde les solutions de repli', async () => {
     const contact = await read('../src/pages/contact.astro')
+    const behavior = await read('../src/lib/contact-form.ts')
     expect(contact).toContain('publicContactEndpoint()')
     expect(contact).toContain('data-contact-endpoint={contactEndpoint ?? undefined}')
-    expect(contact).toContain('disabled={!contactEndpoint}')
+    expect(contact).toContain('type="submit" disabled')
+    expect(behavior).toMatch(/!form\.dataset\.contactEndpoint\s*\|\|\s*sending\s*\|\|\s*state\.submitted/)
     expect(contact).toContain('name="recipient"')
     expect(contact).toContain('value="general"')
     expect(contact).toContain('name="phone"')
     expect(contact).toContain('name="subject"')
     expect(contact).toContain('name="website"')
     expect(contact).not.toContain('type="file"')
-    expect(contact).toContain('Idempotency-Key')
-    expect(contact).toContain('idempotencyKey ??= crypto.randomUUID()')
-    expect(contact).toContain('response.status === 400')
-    expect(contact).toContain('response.status === 429')
-    expect(contact).toContain('response.status === 200 || response.status === 201')
-    expect(contact).toContain("receipt.accepted === true")
-    expect(contact).toContain("typeof receipt.receiptId === 'string'")
-    expect(contact).not.toContain('if (response.ok)')
-    expect(contact).not.toContain('console.')
+    expect(behavior).toContain('Idempotency-Key')
+    expect(behavior).toContain('contactSession.keyFor(snapshot)')
+    expect(behavior).toContain('response.status === 400')
+    expect(behavior).toContain('response.status === 429')
+    expect(behavior).toContain('response.status === 200 || response.status === 201')
+    expect(behavior).toContain("receipt.accepted === true")
+    expect(behavior).toMatch(/typeof receipt\.receiptId === ['"]string['"]/)
+    expect(behavior).not.toContain('if (response.ok)')
+    expect(behavior).not.toContain('console.')
+    expect(contact).toContain('astro:page-load')
+    expect(behavior).toContain('astro:before-swap')
+    expect(behavior).toContain('if (sending || state.submitted) return')
     expect(contact).toContain('mailto:')
     expect(contact).toContain('tel:')
   })
@@ -102,7 +108,7 @@ describe('shell multipage et parcours pratiques', () => {
       read('../src/pages/infos-pratiques/faq.astro'),
       read('../src/pages/infos-pratiques/annuaire.astro'),
     ])
-    const provisionalPages = await Promise.all([
+    const publishedReferencePages = await Promise.all([
       read('../src/pages/infos-pratiques/fonctionnement.astro'),
       read('../src/pages/infos-pratiques/inscription.astro'),
     ])
@@ -113,8 +119,10 @@ describe('shell multipage et parcours pratiques', () => {
     for (const page of dynamicPages) {
       expect(page).toMatch(/noindex=\{\w+Result\.source === 'fallback'\}/)
     }
-    for (const page of provisionalPages) {
-      expect(page).toMatch(/<PracticalLayout[^>]+\snoindex>/)
+    for (const page of publishedReferencePages) {
+      expect(page).toContain("noindex={regulation.source !== 'live'}")
+      expect(page).toContain('loadPublishedRegulation()')
+      expect(page).toContain("regulation.source !== 'live' && <ProvisionalNotice")
     }
   })
 
@@ -129,7 +137,8 @@ describe('shell multipage et parcours pratiques', () => {
     expect(page).toContain('par TWINT ou en espèces')
     expect(page).toContain('Aucun paiement n’est demandé en ligne')
     expect(page).toContain('Aucun compte en ligne n’est nécessaire')
-    expect(page).toContain('présentés directement dans le formulaire')
+    expect(page).toContain('présentés dans le formulaire')
+    expect(page).toContain('href="/infos-pratiques/reglement"')
     expect(page).not.toContain('<iframe')
     expect(page).not.toMatch(/href=\{membershipFormUrl \?\? ['"]{2}\}/)
 

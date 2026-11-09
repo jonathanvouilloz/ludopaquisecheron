@@ -9,6 +9,8 @@ interface Props {
     directionsUrl?: string
     phone: string | null
     schedule: Array<{ day: string; hours: string }>
+    photo?: { url: string; alt: string } | null
+    importantInfo?: string | null
   }
 }
 
@@ -32,10 +34,13 @@ const { location } = Astro.props
       <dd>{location.phone ? <a href={`tel:${location.phone.replaceAll(' ', '')}`}>{location.phone}</a> : 'Non publié'}</dd>
     </div>
   </dl>
+  {location.importantInfo && <p class="location-notice"><i class="ph ph-info" aria-hidden="true"></i>{location.importantInfo}</p>}
   <section class="location-card__schedule" aria-labelledby={`schedule-${location.key}`}>
     <h4 id={`schedule-${location.key}`}><i class="ph ph-clock" aria-hidden="true"></i>Horaires</h4>
     <ul>
       {location.schedule.map((slot) => <li><span>{slot.day}</span><strong>{slot.hours}</strong></li>)}
     </ul>
   </section>
+  {location.photo && <img class="location-photo" src={location.photo.url} alt={location.photo.alt} loading="lazy" decoding="async" />}
+  {location.directionsUrl && <a class="button button--outline location-map" href={location.directionsUrl} target="_blank" rel="noopener noreferrer"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Voir sur Google Maps</a>}
 </article>

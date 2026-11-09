@@ -8,9 +8,10 @@ import {
   loadTopThrees,
 } from './editorial'
 import { loadPracticalDirectory, loadPracticalFaqs, loadPracticalPlaces } from './practical'
+import { loadPublishedRegulation } from './regulation'
 
 export async function loadIndexableRoutes(): Promise<string[]> {
-  const [home, places, faqs, directory, news, activities, topThrees, gallery, team, committee, documents] = await Promise.all([
+  const [home, places, faqs, directory, news, activities, topThrees, gallery, team, committee, documents, regulation] = await Promise.all([
     loadHomepageData(),
     loadPracticalPlaces(),
     loadPracticalFaqs(),
@@ -22,6 +23,7 @@ export async function loadIndexableRoutes(): Promise<string[]> {
     loadProfiles('team'),
     loadProfiles('committee'),
     loadDocuments(),
+    loadPublishedRegulation(),
   ])
 
   const routes = new Set<string>(['/association'])
@@ -32,6 +34,11 @@ export async function loadIndexableRoutes(): Promise<string[]> {
     for (const place of places.data) routes.add(`/${place.key}`)
   }
   if (faqs.source !== 'fallback') routes.add('/infos-pratiques/faq')
+  if (regulation.source === 'live') {
+    routes.add('/infos-pratiques/reglement')
+    routes.add('/infos-pratiques/inscription')
+    routes.add('/infos-pratiques/fonctionnement')
+  }
   if (directory.source !== 'fallback') routes.add('/infos-pratiques/annuaire')
   if (news.mode === 'live') {
     routes.add('/actualites')

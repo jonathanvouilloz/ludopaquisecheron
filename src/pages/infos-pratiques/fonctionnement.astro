@@ -3,17 +3,19 @@ import PracticalLayout from '../../layouts/PracticalLayout.astro'
 import QuestionHero from '../../components/QuestionHero.astro'
 import ProvisionalNotice from '../../components/ProvisionalNotice.astro'
 import PracticalNav from '../../components/PracticalNav.astro'
+import { loadPublishedRegulation } from '../../data/regulation'
+const regulation = await loadPublishedRegulation()
 ---
 
-<PracticalLayout title="Comment fonctionne la ludothèque ?" description="Jeu sur place, inscription et emprunt : les étapes générales avant une visite." activePath="/infos-pratiques/fonctionnement" noindex>
+<PracticalLayout title="Comment fonctionne la ludothèque ?" description="Jeu sur place, inscription et emprunt : les étapes générales avant une visite." activePath="/infos-pratiques/fonctionnement" noindex={regulation.source !== 'live'}>
   <QuestionHero question="Comment fonctionne la ludothèque ?" answer="On peut venir jouer sur place. L’emprunt de jeux demande une inscription ; l’équipe vous explique les règles et vous aide à choisir." icon="arrows-clockwise" />
   <div class="shell practical-content practical-content--reading">
-    <ProvisionalNotice source="fallback" />
+    {regulation.source !== 'live' && <ProvisionalNotice source="fallback" />}
     <div class="steps-list">
       <section><span>1</span><div><h2>Venir pendant les horaires d’ouverture</h2><p>Choisissez les Pâquis ou Sécheron et consultez les horaires annoncés avant votre déplacement.</p></div></section>
       <section><span>2</span><div><h2>Jouer gratuitement sur place</h2><p>La consultation et le jeu sur place sont gratuits. L’équipe peut présenter les espaces, proposer un jeu adapté et aider à démarrer une partie.</p></div></section>
-      <section><span>3</span><div><h2>Emprunter après inscription</h2><p>Pour emprunter des jeux, une inscription familiale et une cotisation annuelle de 30 CHF sont nécessaires.</p></div></section>
-      <section><span>4</span><div><h2>Rapporter le jeu au lieu convenu</h2><p>Vérifiez les horaires de prêts et retours, notamment le samedi à Sécheron.</p></div></section>
+      <section><span>3</span><div><h2>Emprunter après inscription</h2><p>Pour emprunter des jeux, une <a href="/infos-pratiques/inscription">inscription familiale</a> et une cotisation annuelle{regulation.document ? ` de ${new Intl.NumberFormat('fr-CH', { style: 'currency', currency: regulation.document.currency }).format(regulation.document.annualFeeCents / 100)}` : ''} sont nécessaires. Consultez le <a href="/infos-pratiques/reglement">règlement publié</a>.</p></div></section>
+      <section><span>4</span><div><h2>Rapporter le jeu au lieu d’emprunt</h2><p>Les jeux doivent être rendus dans la ludothèque où ils ont été empruntés. Vérifiez les horaires du lieu avant votre déplacement.</p></div></section>
     </div>
     <PracticalNav />
   </div>

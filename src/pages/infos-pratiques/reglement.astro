@@ -1,0 +1,29 @@
+---
+import PracticalLayout from '../../layouts/PracticalLayout.astro'
+import QuestionHero from '../../components/QuestionHero.astro'
+import PracticalNav from '../../components/PracticalNav.astro'
+import { loadPublishedRegulation } from '../../data/regulation'
+
+const regulation = await loadPublishedRegulation()
+---
+
+<PracticalLayout title="Règlement de la ludothèque — Pâquis-Sécheron" description="Consultez le règlement publié des ludothèques Pâquis-Sécheron, également présenté lors de votre adhésion." activePath="/infos-pratiques/reglement" noindex={regulation.source !== 'live'}>
+  <QuestionHero question="Quelles sont les règles de la ludothèque ?" answer="Retrouvez ici le règlement présenté lors de l’adhésion, pour profiter des lieux et des jeux dans un cadre accueillant et respectueux." icon="book-open" />
+  <div class="shell practical-content practical-content--reading">
+    {regulation.document ? <article class="answer-panel prose regulation-content" aria-labelledby="reglement-title">
+      <h2 id="reglement-title">{regulation.document.title}</h2>
+      {regulation.document.html.map((block) => <Fragment set:html={block} />)}
+      <p class="regulation-note">Ce règlement est également présenté dans le <a href="/infos-pratiques/inscription">formulaire d’adhésion</a>.</p>
+    </article> : <section class="status-panel" aria-live="polite">
+      <h2>Le règlement est momentanément indisponible</h2>
+      <p>Vous pouvez <a href="/contact#contact-direct">contacter l’équipe</a> pour le consulter avant votre adhésion.</p>
+    </section>}
+    <PracticalNav />
+  </div>
+</PracticalLayout>
+
+<style>
+  .regulation-content :global(h2), .regulation-content :global(h3), .regulation-content :global(h4) { margin-top: var(--space-6); }
+  .regulation-content > h2:first-child { margin-top: 0; }
+  .regulation-note { margin-top: var(--space-6); color: var(--color-ink-muted); }
+</style>

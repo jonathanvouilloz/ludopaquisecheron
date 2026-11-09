@@ -11,6 +11,7 @@ const { place } = Astro.props
     {place.schedule.length ? <ul class="schedule-list">
       {place.schedule.map((slot) => <li><span>{slot.day}</span><strong>{slot.hours}</strong></li>)}
     </ul> : <p class="status-panel">Aucun horaire n’est publié pour ce lieu.</p>}
+    {place.photo && <img class="location-photo" src={place.photo.url} alt={place.photo.alt} loading="lazy" decoding="async" />}
   </section>
   <section class="answer-panel" aria-labelledby={`venir-${place.key}`}>
     <h2 id={`venir-${place.key}`}><i class="ph ph-map-pin" aria-hidden="true"></i> Venir sur place</h2>
@@ -22,6 +23,8 @@ const { place } = Astro.props
     </dl>
   </section>
 </div>
+
+{place.importantInfo && <p class="location-notice"><i class="ph ph-info" aria-hidden="true"></i>{place.importantInfo}</p>}
 
 {place.arrival.length > 0 && <section class="visit-checklist section--soft-block" aria-labelledby={`avant-${place.key}`}>
   <div>

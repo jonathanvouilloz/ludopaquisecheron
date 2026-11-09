@@ -8,8 +8,8 @@ import { loadPracticalDirectory } from '../../data/practical'
 const directoryResult = await loadPracticalDirectory()
 ---
 
-<PracticalLayout title="Annuaire — Ludothèque Pâquis-Sécheron" description="Coordonnées et itinéraires publiés pour joindre les lieux et contacts de la ludothèque." activePath="/infos-pratiques/annuaire" noindex={directoryResult.source === 'fallback'}>
-  <QuestionHero question="Qui dois-je appeler avant de venir ?" answer="Appelez directement le lieu que vous souhaitez visiter. L’adresse e-mail est commune aux deux ludothèques." icon="address-book" />
+<PracticalLayout title="Annuaire des ludothèques de la Ville de Genève" description="Adresses, téléphones, e-mails et itinéraires des ludothèques du réseau de la Ville de Genève." activePath="/infos-pratiques/annuaire" noindex={directoryResult.source === 'fallback'}>
+  <QuestionHero question="Quelle ludothèque contacter à Genève ?" answer="Retrouvez les coordonnées des ludothèques du réseau de la Ville de Genève. Contactez directement le lieu choisi pour connaître ses ouvertures et ses conditions d’accueil." icon="address-book" />
   <div class="shell practical-content">
     <ProvisionalNotice source={directoryResult.source} reason={directoryResult.reason} />
     <div class="directory-grid">
@@ -20,9 +20,9 @@ const directoryResult = await loadPracticalDirectory()
           {entry.descriptionMarkdown && <p>{entry.descriptionMarkdown}</p>}
           {entry.phone && <a class="contact-action" href={`tel:${entry.phone.replaceAll(' ', '')}`}><i class="ph ph-phone" aria-hidden="true"></i>{entry.phone}</a>}
           {entry.email && <a class="contact-action" href={`mailto:${entry.email}`}><i class="ph ph-envelope-simple" aria-hidden="true"></i>{entry.email}</a>}
-          {entry.website && <a class="contact-action" href={entry.website}><i class="ph ph-globe" aria-hidden="true"></i>Site internet</a>}
-          {entry.officialUrl && <a class="contact-action" href={entry.officialUrl}><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Fiche officielle</a>}
-          {entry.directionsUrl && <a class="contact-action" href={entry.directionsUrl}><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Itinéraire</a>}
+          {entry.website && <a class="contact-action" href={entry.website} target="_blank" rel="noopener noreferrer"><i class="ph ph-globe" aria-hidden="true"></i>Site internet</a>}
+          {entry.officialUrl && <a class="contact-action" href={entry.officialUrl} target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-square-out" aria-hidden="true"></i>Site de référence</a>}
+          {entry.directionsUrl && <a class="contact-action" href={entry.directionsUrl} target="_blank" rel="noopener noreferrer"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Ouvrir dans Google Maps</a>}
         </section>
       ))}
       {directoryResult.source === 'empty' && <section class="status-panel"><h2>Annuaire vide</h2><p>Aucun contact n’est actuellement publié dans LudoHub.</p></section>}
